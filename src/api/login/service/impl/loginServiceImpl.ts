@@ -16,7 +16,11 @@ export default class LoginServiceImpl implements LoginService {
    * @returns {any}
    */
   public login(data: LoginParams): Promise<LoginResultModel> {
-    return defHttp.post<LoginResultModel>({ url: '/user/register', data });
+    return defHttp.post<LoginResultModel>({ url: '/login', data });
+  }
+
+  public test(data) {
+    return defHttp.post({ url: '/login/test', data });
   }
 
   public queryRoleMenuList(params:string): Promise<LoginResultModel> {

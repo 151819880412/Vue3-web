@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import { ElLoading, ElMessage } from 'element-plus';
-import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type';
+// import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type';
 import Store from '@/store';
 
 
@@ -22,7 +22,8 @@ const instance = axios.create({
   timeout: 30000,
   responseType: 'json'
 });
-let loadingInstance: ILoadingInstance;
+// let loadingInstance: ILoadingInstance;
+let loadingInstance;
 
 // 移除重复请求
 const removePending = (config: AxiosRequestConfig) => {
@@ -43,13 +44,13 @@ const removePending = (config: AxiosRequestConfig) => {
 instance.interceptors.request.use((config: AxiosRequestConfig) => {
   let token = localStorage.getItem('token');
   let refreshToken = localStorage.getItem('refreshToken');
-  config.headers['Authorization'] = token;  // token
-  config.headers['refreshToken'] = refreshToken;  // token
+  config.headers!.Authorization = token as string;  // token
+  config.headers!.refreshToken = refreshToken as string;  // token
   loadingInstance = ElLoading.service(Store.state.loading);
 
   removePending(config);
   config.cancelToken = new CancelToken((c) => {
-    pending.push({ url: config.url, method: config.method, params: config.params, data: config.data, cancel: c });
+    pending.push({ url: config.url, method: config.method as Method, params: config.params, data: config.data, cancel: c });
   });
   // const {method, data} = config
   // const method: any = config;

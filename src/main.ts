@@ -5,7 +5,8 @@ import { setupRouterGuard } from '@/router/guard';
 import store from './store'
 
 import ElementPlus from 'element-plus';
-import 'element-plus/lib/theme-chalk/index.css';
+import 'element-plus/dist/index.css'
+// import 'element-plus/lib/theme-chalk/index.css';
 import locale from 'element-plus/lib/locale/lang/zh-cn';
 
 import Loading from "@/components/Loading/index"

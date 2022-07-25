@@ -21,7 +21,8 @@ export function createPermissionGuard(router: Router) {
     },
     getToken: 1,
     getSessionTimeout: 1,
-    afterLoginAction: () => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    afterLoginAction: () => {},
     getLastUpdateTime: (): number => {
       return 1;
     }
@@ -49,7 +50,9 @@ export function createPermissionGuard(router: Router) {
             next((to.query?.redirect as string) || '/');
             return;
           }
-        } catch { }
+        } catch (e){
+          console.log(e)
+        }
       }
       next();
       return;

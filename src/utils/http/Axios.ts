@@ -82,9 +82,10 @@ export class VAxios {
     // 请求侦听器配置处理
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
       // 如果启用了“取消重复请求”，则禁止取消重复请求
-      const {
-        headers: { ignoreCancelToken },
-      } = config;
+      // const {
+      //   headers: { ignoreCancelToken },
+      // } = config;
+      const ignoreCancelToken = config?.headers?.ignoreCancelToken
       const ignoreCancel =
         ignoreCancelToken !== undefined
           ? ignoreCancelToken

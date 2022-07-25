@@ -75,8 +75,7 @@ function createPageLoadingGuard(router: Router) {
 function createHttpGuard(router: Router) {
   console.log('createHttpGuard');
 
-  let axiosCanceler: Nullable<AxiosCanceler>;
-  axiosCanceler = new AxiosCanceler();
+  const axiosCanceler: Nullable<AxiosCanceler> = new AxiosCanceler();
   router.beforeEach(async () => {
     // 切换路由将删除上一个请求
     axiosCanceler?.removeAllPending();
@@ -110,10 +109,10 @@ export function createMessageGuard(router: Router) {
 
 
   router.beforeEach(async () => {
-    try {
-    } catch (error) {
-      console.warn('message guard error:' + error);
-    }
+    // try {
+    // } catch (error) {
+    //   console.warn('message guard error:' + error);
+    // }
     return true;
   });
 }

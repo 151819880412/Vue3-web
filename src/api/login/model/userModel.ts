@@ -3,7 +3,7 @@ import { UserInfo } from '#/store';
 
 export interface LoginResultModel extends Result{
   userId: string | number;
-  token: string;
+  accessToken: string;
   refreshToken: string;
   user: UserInfo;
   data: Object;

@@ -1,8 +1,7 @@
 const path = require('path')
 
+let url = 'http://localhost:8087'  //  服务
 // let url = 'http://192.168.29.12:8083'  //  服务
-// let url = 'http://192.168.29.150:8083'  //  服务
-let url = 'http://192.168.29.12:8083'  //  服务
 
 
 
@@ -34,8 +33,8 @@ module.exports = {
   //   },
   // },
   devServer: {
-    // host: ip || "localhost",
-    disableHostCheck: true,
+    host:  "localhost",
+    // disableHostCheck: true,
     port: 8081,
     open: true,
     proxy: {

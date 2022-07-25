@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { ref, toRefs, h , PropType,} from "vue";
+import { ref, toRefs, h , PropType} from "vue";
 import {
   ElInput,
   ElSelect,
@@ -78,6 +78,7 @@ export default {
      * @param {any} callback:Function
      * @returns {any}
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const validate = (callback:Function):void => {
       refDataForm.value?.validate?.((valid:boolean):void => {
         if (valid) {
@@ -225,6 +226,8 @@ export default {
               ];
           }
         };
+        let FormItem:object = components.FormItem
+
         return h(
           components.Form,
           {
@@ -241,7 +244,7 @@ export default {
                 .filter((item) => compA[item.type])
                 .map((item, inx) =>
                   h(
-                    components.FormItem,
+                    FormItem,
                     {
                       label: item.title,
                       prop: `dataForm.${inx}.value`,

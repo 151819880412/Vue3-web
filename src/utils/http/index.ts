@@ -9,7 +9,7 @@ import { isString } from '@/utils/is';
 import { formatRequestDate } from './helper';
 
 import { ElLoading, ElMessage } from 'element-plus';
-import { ILoadingInstance } from 'element-plus/lib/el-loading/src/loading.type';
+// import { LoadingOptionsResolved } from 'element-plus/lib/components/loading/src/types';
 import Store from '@/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -23,7 +23,8 @@ const globSetting = {
 };
 const urlPrefix = globSetting.urlPrefix;
 
-let loadingInstance: ILoadingInstance;
+// let loadingInstance: LoadingOptionsResolved;
+let loadingInstance;
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -51,12 +52,12 @@ const transform: AxiosTransform = {
     //   throw new Error('data数据为null');
     // }
     //  这里 code，data，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, data: result, message , type} = data;
+    const { code, data: result, message, type } = data;
 
     // 不返回code，根据统一处理
     // 服务器返回成功code 200 / 20000 都是成功
     const hasSuccess =
-      data && Reflect.has(data, 'code') && ((code === ResultEnum.SUCCESS || code === 20000)||type=='success');
+      data && Reflect.has(data, 'code') && ((code === ResultEnum.SUCCESS || code === 20000) || type == 'success');
     if (hasSuccess) {
       return result;
     }
@@ -76,9 +77,9 @@ const transform: AxiosTransform = {
 
     // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
-    if (options.errorMessageMode === 'modal') {
-    } else if (options.errorMessageMode === 'message') {
-    }
+    // if (options.errorMessageMode === 'modal') {
+    // } else if (options.errorMessageMode === 'message') {
+    // }
 
     throw new Error(timeoutMsg);
   },
@@ -141,12 +142,29 @@ const transform: AxiosTransform = {
     const token = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refreshToken');
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
-      config.headers.Authorization = options.authenticationScheme
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      config!.headers!.token = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token;
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        config!.headers!.Authorization = options.authenticationScheme
+        ? `${options.authenticationScheme} ${token}`
+        : token;
+
+        
+
+      // config.headers.accessToken = options.authenticationScheme
+      //   ? `${options.authenticationScheme} ${token}`
+      //   : token;
+      // config.headers.refreshToken = options.authenticationScheme
+      // ? `${options.authenticationScheme} ${token}`
+      // : token;
+
     }
     if (refreshToken && (config as Recordable)?.requestOptions?.withToken !== false) {
-      config.headers.refreshToken = options.authenticationScheme
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      config!.headers!.refreshToken = options.authenticationScheme
         ? `${options.authenticationScheme} ${refreshToken}`
         : refreshToken;
     }
@@ -157,17 +175,21 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    const { code ,type} = res.data;
-    const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000)||(type==='success');
-    switch (code) {
-      case 20001:
-        ElMessage.error(res.data.message);
-        break;
-      case 10000:
-        ElMessage.error(res.data.message);
-        break;
-      default:
-        break;
+    const { code, type } = res.data;
+    const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
+    // switch (code) {
+    //   case 20001:
+    //     ElMessage.error(res.data.message);
+    //     break;
+    //   case 10000:
+    //     ElMessage.error(res.data.message);
+    //     break;
+    //   default:
+    //     break;
+    // }
+    if (code !== 20000) {
+      ElMessage.error(res.data.message);
+      throw new Error(res.data.message);
     }
     loadingInstance.close();
     NProgress.done();
@@ -189,7 +211,7 @@ const transform: AxiosTransform = {
     const { code, message, config } = error || {};
     // 超时重新请求
     // 全局的请求次数,请求的间隙
-    const [RETRY_COUNT, RETRY_DELAY] = [config.requestOptions?.retrtyCount, config.requestOptions?.retrtyDelay];
+    const [RETRY_COUNT, RETRY_DELAY] = [config?.requestOptions?.retrtyCount, config?.requestOptions?.retrtyDelay];
     if (config && RETRY_COUNT) {
       // 设置用于跟踪重试计数的变量
       config.__retryCount = config.__retryCount || 0;
@@ -211,7 +233,7 @@ const transform: AxiosTransform = {
     }
 
     // const { response, code, message, config } = error || {};
-    const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
+    // const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
     // const msg: string = response?.data?.error?.message ?? '';
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
@@ -227,9 +249,9 @@ const transform: AxiosTransform = {
       }
 
       if (errMessage) {
-        if (errorMessageMode === 'modal') {
-        } else if (errorMessageMode === 'message') {
-        }
+        // if (errorMessageMode === 'modal') {
+        // } else if (errorMessageMode === 'message') {
+        // }
         return Promise.reject(error);
       }
     } catch (error) {

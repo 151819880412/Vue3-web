@@ -6,6 +6,7 @@ import { Menu } from '../types';
 
 export function createParamMenuGuard(router: Router) {
   const permissionStore = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     getIsDynamicAddedRoute: () => { },
     getBackMenuList: (): Array<Menu> => {
       return [];

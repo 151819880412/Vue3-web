@@ -1,7 +1,9 @@
 
 import { RouteRecordRaw } from 'vue-router';
 
-// import AppLayout from '@/views/layout/AppLayout.vue'
+const AppLayout = () => import('@/views/layout/AppLayout.vue')
+const Login = () => import('@/views/login/login.vue')
+
 
 
 
@@ -9,11 +11,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/login',
+    component: AppLayout,
+    children:[],
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login/login.vue'),
+    component: Login,
   },
   // {
   //   path: '/aaa',

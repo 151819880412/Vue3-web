@@ -7,6 +7,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "Loading",
   setup() {
     // 控制组件的状态

@@ -2,7 +2,16 @@
   <el-row :span="12" style="display: flex;justify-content: center;height:100%">
     <el-col :span="12" style="align-self: center;text-align: center;">
       <ElForms :rule="searchFormRule" ref="refDataForm" />
+        <el-input
+    v-model="input"
+    type="password"
+    placeholder="Please input password"
+    show-password
+  />
       <el-button type="primary" @click="toLogin" style="align-self: center">登录</el-button>
+
+      <el-button type="primary" @click="test" style="align-self: center">token测试</el-button>
+
     </el-col>
   </el-row>
 
@@ -22,6 +31,7 @@ import loginServiceImpl from '../../api/login/index';
 //   }
 // }
 export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "login",
   props: [],
   setup() {
@@ -63,13 +73,23 @@ export default defineComponent({
       refDataForm.value.validate((formData)=>login(formData))
     }
 
-    let login = (formData)=>{
-      console.log(formData)
-      loginServiceImpl.login(formData)
+    let test = async ()=>{
+      let data = await loginServiceImpl.test({username:1,password:1})
+      console.log(111,data)
+
     }
 
+    let login = async (formData)=>{
+      
+      let data = await loginServiceImpl.login(formData)
+      localStorage.setItem('token',data.accessToken)
+      console.log(data)
+    }
 
+  let input = 1
     return {
+      input,
+      test,
       toLogin,
       searchFormRule,
       refDataForm,

@@ -13,10 +13,10 @@ export default {
       return
     }
 	// 创建Loading实例，用于挂载
-    let instance = createApp(Loading)
+    const instance = createApp(Loading)
     // 创建div元素装载Loading对象
-    let div = document.createElement("div")
-    let body = document.body
+    const div = document.createElement("div")
+    const body = document.body
 	// 导入body中
     body.appendChild(div)
     this.loading = instance.mount(div)
