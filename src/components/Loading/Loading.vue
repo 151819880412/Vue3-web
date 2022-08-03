@@ -26,7 +26,7 @@ export default defineComponent({
   },
 });
 </script>
-<style scoped>
+<style  lang="stylus" scoped>
 #loading {
   width: 100%;
   height: 100%;

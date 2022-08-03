@@ -5,6 +5,6 @@
 <style lang="stylus">
 #app
   height 100%
-  width 1200px
+  width 100%
   margin 0 auto
 </style>

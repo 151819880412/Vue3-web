@@ -11,7 +11,10 @@
     "build/**/*.ts",
     "build/**/*.d.ts",
     "mock/**/*.ts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "src",
+    "types/*.d.ts",
+    "src/@types/*.d.ts",
   ],
   "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"],
   /*
@@ -29,6 +32,8 @@
   //   // "2.ts"
   // ],
   "compilerOptions": {
+    "importHelpers": true,
+    "types": ["webpack-env"],
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
@@ -81,8 +86,8 @@
     "alwaysStrict": true,
     // 不允许隐式的any，默认false(允许)
     "noImplicitAny": false,
-    // 不允许隐式的this，默认false(允许)
-    "noImplicitThis": false,
+    // 不允许隐式的this，默认false(允许) js/ts 混用时设为false
+    "noImplicitThis": true,
     // 是否严格的检查空值，默认false 检查有可能为null的地方
     "strictNullChecks": true,
     // 是否严格检查bind、call和apply的参数列表，默认false  检查是否有多余参数

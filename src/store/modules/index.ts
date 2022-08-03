@@ -12,8 +12,11 @@ files.keys().forEach((key) => {
       namespaced: false
     }
   }
-  modules[namespace][imported] = files(key)[imported]
+  if(files(key).default){
+    modules[namespace][imported] = files(key).default
+  }else{
+    modules[namespace][imported] = files(key)[imported]
+  }
 })
-
 
 export default modules

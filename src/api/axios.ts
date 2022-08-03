@@ -11,7 +11,7 @@ interface PendingType {
   method?: Method;
   params: any;
   data: any;
-  cancel: Function;
+  cancel: (str:string) => void;
 }
 
 // 取消重复请求
@@ -42,9 +42,11 @@ const removePending = (config: AxiosRequestConfig) => {
 
 // 添加请求拦截器
 instance.interceptors.request.use((config: AxiosRequestConfig) => {
-  let token = localStorage.getItem('token');
-  let refreshToken = localStorage.getItem('refreshToken');
+  const token = localStorage.getItem('token');
+  const refreshToken = localStorage.getItem('refreshToken');
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   config.headers!.Authorization = token as string;  // token
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   config.headers!.refreshToken = refreshToken as string;  // token
   loadingInstance = ElLoading.service(Store.state.loading);
 

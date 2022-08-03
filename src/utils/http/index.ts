@@ -8,11 +8,11 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString } from '@/utils/is';
 import { formatRequestDate } from './helper';
 
-import { ElLoading, ElMessage } from 'element-plus';
-// import { LoadingOptionsResolved } from 'element-plus/lib/components/loading/src/types';
-import Store from '@/store';
+import {  ElMessage } from 'element-plus';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import app from '@/main'
+import { LoadingType } from '@/@types/loading';
 
 const globSetting = {
   title: 1,
@@ -23,8 +23,7 @@ const globSetting = {
 };
 const urlPrefix = globSetting.urlPrefix;
 
-// let loadingInstance: LoadingOptionsResolved;
-let loadingInstance;
+const loadingInstance:LoadingType = app.$Loading
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -136,7 +135,7 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    loadingInstance = ElLoading.service(Store.state.loading);
+    loadingInstance.showLoading()
     NProgress.start();
     // 请求之前处理config
     const token = localStorage.getItem('token');
@@ -175,6 +174,7 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    console.log(res)
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
     // switch (code) {
@@ -191,7 +191,7 @@ const transform: AxiosTransform = {
       ElMessage.error(res.data.message);
       throw new Error(res.data.message);
     }
-    loadingInstance.close();
+    loadingInstance.hideLoading()
     NProgress.done();
     if (hasSuccess) {
       return res;
@@ -203,7 +203,8 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: async (error: any) => {
-    loadingInstance.close();
+    console.log(error)
+    loadingInstance.hideLoading();
     NProgress.done();
 
 
@@ -242,16 +243,23 @@ const transform: AxiosTransform = {
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        errMessage = 'apiTimeoutMessage';
+        errMessage = '请求超时';
       }
       if (err?.includes('Network Error')) {
-        errMessage = 'networkExceptionMsg';
+        errMessage = '网络异常';
+      }
+      if (message.indexOf('404') !== -1) {
+        errMessage = '找不到接口';
+      }
+      if (message.indexOf('400') !== -1) {
+        errMessage = '接口参数异常';
       }
 
       if (errMessage) {
         // if (errorMessageMode === 'modal') {
         // } else if (errorMessageMode === 'message') {
         // }
+        ElMessage.error(errMessage);
         return Promise.reject(error);
       }
     } catch (error) {

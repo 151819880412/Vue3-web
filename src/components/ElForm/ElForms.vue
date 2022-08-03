@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
-import { ref, toRefs, h , PropType} from "vue";
+import _ from 'lodash';
+import { ref, toRefs, h, PropType } from "vue";
 import {
   ElInput,
   ElSelect,
@@ -65,7 +65,7 @@ export default {
           trigger: ["Input"].includes(item.type) ? "blur" : "change",
         });
       }
-      
+
     });
 
 
@@ -79,8 +79,8 @@ export default {
      * @returns {any}
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    const validate = (callback:Function):void => {
-      refDataForm.value?.validate?.((valid:boolean):void => {
+    const validate = (callback: Function): void => {
+      refDataForm.value?.validate?.((valid: boolean): void => {
         if (valid) {
           const obj = rules.reduce(
             (sum, v) => ({ ...sum, [v.field]: v.value }),
@@ -97,7 +97,7 @@ export default {
      * @date 2022-07-20
      * @returns {any}
      */
-    const neoResetFields = ():void => {
+    const neoResetFields = (): void => {
       refDataForm.value?.resetFields?.();
       // refDataForm.value?.clearValidate?.();
     };
@@ -109,14 +109,23 @@ export default {
      * @param {any} field:string
      * @returns {any}
      */
-    const validateField = (field: string):void => {
+    const validateField = (field: string): void => {
       refDataForm.value!.validateField?.(field);
+    };
+
+    const rType = () => {
+      const obj = rules.reduce(
+        (sum, v) => ({ ...sum, [v.field]: v.value }),
+        {}
+      );
+      return obj;
     };
 
     expose({
       validate,
       neoResetFields,
       validateField,
+      rType
     });
 
     return () => {
@@ -226,7 +235,7 @@ export default {
               ];
           }
         };
-        let FormItem:object = components.FormItem
+        let FormItem: object = components.FormItem;
 
         return h(
           components.Form,

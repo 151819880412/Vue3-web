@@ -1,5 +1,5 @@
-import { LoginParams } from "../model/login";
-import { LoginResultModel } from "../model/userModel";
+import { ChangePwdParams, LoginParams } from "../model/login";
+import { ChangePwdResultModel, LoginResultModel } from "../model/userModel";
 
 /**
  * 用户登录 LoginService
@@ -11,7 +11,10 @@ export default interface LoginService {
   
   // 登录
   login(data: LoginParams): Promise<LoginResultModel>;
-
+  
+  // 修改密码
+  changePwd(data: ChangePwdParams): Promise<ChangePwdResultModel>;
+  
   // 权限
   queryRoleMenuList(userId:string): Promise<LoginResultModel>;
 

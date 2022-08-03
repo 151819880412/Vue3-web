@@ -4,8 +4,8 @@
 
 import { defHttp } from '@/utils/http';
 import LoginService from '../loginService';
-import { LoginResultModel } from '../../model/userModel';
-import { LoginParams } from '../../model/login';
+import { ChangePwdResultModel, LoginResultModel } from '../../model/userModel';
+import { LoginParams, ChangePwdParams } from '../../model/login';
 
 export default class LoginServiceImpl implements LoginService {
 
@@ -16,15 +16,19 @@ export default class LoginServiceImpl implements LoginService {
    * @returns {any}
    */
   public login(data: LoginParams): Promise<LoginResultModel> {
-    return defHttp.post<LoginResultModel>({ url: '/login', data });
+    return defHttp.post<LoginResultModel>({ url: '/auth/registerLogin', data });
+  }
+
+  public changePwd(data: ChangePwdParams): Promise<ChangePwdResultModel> {
+    return defHttp.post<ChangePwdResultModel>({ url: '/auth/changePwd', data });
   }
 
   public test(data) {
     return defHttp.post({ url: '/login/test', data });
   }
 
-  public queryRoleMenuList(params:string): Promise<LoginResultModel> {
-    return defHttp.get<LoginResultModel>({ url: '/genuine-system/systemResource/queryResourceByUserId/', params });
+  public queryRoleMenuList(userId:string): Promise<LoginResultModel> {
+    return defHttp.get<LoginResultModel>({ url: '/permission/queryRoleMenuList', params:{userId} });
   }
 
 }

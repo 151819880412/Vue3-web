@@ -38,6 +38,11 @@ export interface Result<T = any> {
   data: T;
 }
 
+export interface PageResult<T> extends Result<PageResult<T>>{
+  results:Array<T>,
+  total:number
+}
+
 // multipart/form-data: 上传问及那
 export interface UploadFileParams {
   // 其他参数
