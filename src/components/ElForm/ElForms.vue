@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash';
+import _ from "lodash";
 import { ref, toRefs, h, PropType } from "vue";
 import {
   ElInput,
@@ -20,58 +20,57 @@ import {
   ElCheckboxGroup,
   ElCheckbox,
 } from "element-plus";
-import { ElFormConfig, Options, Rules } from "#/form-config";
+import { FormInterface, Options, Rules } from "#/form-config";
+import { preProcessData } from "@/utils/objFilter";
+import { Generate } from "#/Generate";
 
 export default {
   name: "ElForms",
   props: {
-    rule: {
-      type: Array as PropType<ElFormConfig<Rules, Options>[]>,
+    formConfig: {
+      type: Array as PropType<FormInterface<Rules, Options>[]>,
     },
   },
-  // setup(props: Readonly<{ rule: ElFormConfig<Rules, Options>[]|undefined; }>, { expose }: any) {
+  // setup(props: Readonly<{ formConfig: FormInterface<Rules, Options>[]|undefined; }>, { expose }: any) {
   setup(props, { expose }: any) {
     const compA = {
-      Input: ElInput,
-      Select: ElSelect,
-      DatePicker: ElDatePicker,
-      TimePicker: ElTimePicker,
-      Cascader: ElCascader,
-      RadioGroup: ElRadioGroup,
-      CheckboxGroup: ElCheckboxGroup,
+      input: ElInput,
+      select: ElSelect,
+      datePicker: ElDatePicker,
+      timePicker: ElTimePicker,
+      cascader: ElCascader,
+      radioGroup: ElRadioGroup,
+      checkboxGroup: ElCheckboxGroup,
     };
     const comB = {
-      Option: ElOption,
-      Button: ElButton,
-      Form: ElForm,
-      FormItem: ElFormItem,
-      Radio: ElRadio,
-      Checkbox: ElCheckbox,
+      option: ElOption,
+      button: ElButton,
+      form: ElForm,
+      formItem: ElFormItem,
+      radio: ElRadio,
+      checkbox: ElCheckbox,
     };
     const components = { ...compA, ...comB };
-    const { rule } = toRefs(props);
-    const rules: Array<ElFormConfig<Rules, Options>> = rule.value as Array<
-      ElFormConfig<Rules, Options>
+    const { formConfig } = toRefs(props);
+    const rules: Array<FormInterface<Rules, Options>> = formConfig.value as Array<
+      FormInterface<Rules, Options>
     >;
-
     rules.forEach((item) => {
       if (item.required) {
-        const placeholder = ["Input"].includes(item.type)
+        const placeholder = ["input"].includes(item.type)
           ? `请输入${item.title ?? ""}`
           : `请选择${item.title ?? ""}`;
         item.rules.unshift({
           message: placeholder,
           required: true,
-          trigger: ["Input"].includes(item.type) ? "blur" : "change",
+          trigger: ["input"].includes(item.type) ? "blur" : "change",
         });
       }
-
     });
-
-
 
     const refDataForm = ref();
 
+    
     /**
      * 验证全部字段
      * @date 2022-07-20
@@ -82,11 +81,10 @@ export default {
     const validate = (callback: Function): void => {
       refDataForm.value?.validate?.((valid: boolean): void => {
         if (valid) {
-          const obj = rules.reduce(
-            (sum, v) => ({ ...sum, [v.field]: v.value }),
-            {}
-          );
-          return callback(_.pickBy(obj), valid);
+          const objType = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
+          const obj:Generate<typeof objType> = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
+          // return callback(_.omitBy(obj), valid);
+          return callback(preProcessData(obj), valid);
         }
         // return callback({},valid);
       });
@@ -110,14 +108,11 @@ export default {
      * @returns {any}
      */
     const validateField = (field: string): void => {
-      refDataForm.value!.validateField?.(field);
+      refDataForm.value.validateField?.(field);
     };
 
     const rType = () => {
-      const obj = rules.reduce(
-        (sum, v) => ({ ...sum, [v.field]: v.value }),
-        {}
-      );
+      const obj = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
       return obj;
     };
 
@@ -125,13 +120,12 @@ export default {
       validate,
       neoResetFields,
       validateField,
-      rType
+      rType,
     });
 
     return () => {
       if (rules.filter((item) => compA[item.type]).length) {
-        const SelectFun = (item: ElFormConfig<Rules, Options>) => {
-          // console.log(item)
+        const SelectFun = (item: FormInterface<Rules, Options>) => {
           const events = {};
           if (item.on) {
             Object.keys(item.on).forEach((eventName) => {
@@ -139,15 +133,15 @@ export default {
               events[`on${newName}`] = item.on?.[eventName];
             });
           }
-          const placeholder = ["Input"].includes(item.type)
+          const placeholder = ["input"].includes(item.type)
             ? `请输入${item.title ?? ""}`
             : `请选择${item.title ?? ""}`;
 
           switch (item.type) {
-            case "Select":
+            case "select":
               return [
                 h(
-                  components.Select,
+                  components.select,
                   {
                     placeholder,
                     ...item.props,
@@ -159,7 +153,7 @@ export default {
                   {
                     default: () =>
                       (item.options || []).map((v) =>
-                        h(components.Option, {
+                        h(components.option, {
                           label: v.label,
                           value: v.value,
                           key: v.value,
@@ -168,10 +162,10 @@ export default {
                   }
                 ),
               ];
-            case "RadioGroup":
+            case "radioGroup":
               return [
                 h(
-                  components.RadioGroup,
+                  components.radioGroup,
                   {
                     ...item.props,
                     modelValue: item.value,
@@ -182,7 +176,7 @@ export default {
                     default: () =>
                       (item.options || []).map((v) =>
                         h(
-                          components.Radio,
+                          components.radio,
                           {
                             label: v.value,
                             key: v.value,
@@ -195,10 +189,10 @@ export default {
                   }
                 ),
               ];
-            case "CheckboxGroup":
+            case "checkboxGroup":
               return [
                 h(
-                  components.CheckboxGroup,
+                  components.checkboxGroup,
                   {
                     ...item.props,
                     ...events,
@@ -209,7 +203,7 @@ export default {
                   () =>
                     item?.options?.map((o) =>
                       h(
-                        components.Checkbox,
+                        components.checkbox,
                         {
                           label: o.value,
                           key: o.value,
@@ -226,7 +220,7 @@ export default {
                   ...item,
                   ...item.props,
                   modelValue: item.value,
-                  "onUpdate:modelValue": (value) => (
+                  "onUpdate:modelValue": (value:string|number|Array<string>) => (
                     (item.value = value), item?.callback?.(value, item, this)
                   ),
                   ...events,
@@ -235,37 +229,62 @@ export default {
               ];
           }
         };
-        let FormItem: object = components.FormItem;
+        let formItem: object = components.formItem;
 
         return h(
-          components.Form,
+          components.form,
           {
             ref: refDataForm,
-            size: "default",
+            size: "large",
             labelWidth: 110,
             labelSuffix: "：",
             inline: false,
             model: { dataForm: rules },
           },
-          {
-            default: () =>
-              rules
-                .filter((item) => compA[item.type])
-                .map((item, inx) =>
-                  h(
-                    FormItem,
-                    {
-                      label: item.title,
-                      prop: `dataForm.${inx}.value`,
-                      rules: item.rules,
-                      key: item.field,
-                    },
-                    {
-                      default: () => SelectFun(item),
+          h(
+            "div",
+            { class: "el-row" },
+            {
+              default: () =>
+                rules
+                  .filter((item) => compA[item.type])
+                  .map((item, inx) => {
+                    let classArr = ["el-col"];
+                    for (const key in item?.col) {
+                      if (key == "span") {
+                        classArr.push(`el-col-${item.col[key]}`);
+                      } else {
+                        classArr.push(`el-col-${key}-${item.col[key]}`);
+                      }
                     }
-                  )
-                ),
-          }
+                    return h(
+                      "div",
+                      {
+                        // class: "el-col el-col-12 el-col-offset-0 el-col-xs-8 el-col-sm-6 el-col-md-4 el-col-lg-3 el-col-xl-1",
+                        class: classArr,
+                      },
+                      {
+                        default: () => {
+                          return [
+                            h(
+                              formItem,
+                              {
+                                label: item.title,
+                                prop: `dataForm.${inx}.value`,
+                                rules: item.rules,
+                                key: item.field,
+                              },
+                              {
+                                default: () => SelectFun(item),
+                              }
+                            ),
+                          ];
+                        },
+                      }
+                    );
+                  }),
+            }
+          )
         );
       }
       return null;
@@ -273,4 +292,8 @@ export default {
   },
 };
 </script>
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.icm-w-search{
+  width:100%
+}
+</style>

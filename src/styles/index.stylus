@@ -267,6 +267,7 @@ textarea {
   border-radius: 10px;
   background: #e8f2f2;
   padding: 20px 10px;
+  margin:0;
 }
 .lineHeight .el-form-item__label {
   line-height: 18px !important;

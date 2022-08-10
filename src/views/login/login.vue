@@ -1,12 +1,12 @@
 <template>
   <el-row :span="12" style="display: flex; justify-content: center; height: 100%">
     <el-col :span="12" style="align-self: center; text-align: center">
-      <ElForms :rule="loginFormRule" ref="refDataForm" />
+      <ElForms :formConfig= "loginFormRule" ref="refDataForm" />
       <el-button type="primary" @click="toLogin" style="align-self: center"
         >登录/注册</el-button
       >
       <!-- <el-button type="primary" @click="test" style="align-self: center">token测试</el-button> -->
-      <ElForms :rule="changeDataFormRule" ref="changeDataForm" />
+      <ElForms :formConfig= "changeDataFormRule" ref="changeDataForm" />
       <el-button type="primary" @click="changePwd" style="align-self: center"
         >修改密码</el-button
       >

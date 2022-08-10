@@ -1,3 +1,5 @@
+import { Result } from "#/axios";
+import { UserAddModel, UserChangeStateModel } from "../model/userModel";
 
 /**
  * 用户
@@ -8,7 +10,18 @@
 export default interface UserService {
   
   // 关联角色
-  relationRole(data);
+  relationRole(data): Promise<Result>;
 
+  // 新增用户
+  addUser(data:UserAddModel): Promise<Result>;
+
+  // 启用/禁用
+  changeState(data:UserChangeStateModel): Promise<Result>;
+
+  // 假删除
+  changeDelFlag(data:UserChangeStateModel): Promise<Result>;
+
+  // 删除用户
+  delUser(data:UserChangeStateModel): Promise<Result>;
 
 }

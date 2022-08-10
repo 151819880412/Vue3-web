@@ -32,6 +32,23 @@ export const router = createRouter({
 //   });
 // }
 
+// router.addRoute({
+//   path: '/system',
+//   component: import('@/views/layout/AppLayout.vue'),
+//   children:[
+//     {
+//       path: '/user',
+//       name: 'user',
+//       component: 'User',
+//     },
+//     {
+//       path: '/role',
+//       name: 'role',
+//       component: 'Role',
+//     },
+//   ],
+// })
+
 // config router
 export function setupRouter(app: App<Element>) {
   app.use(router);

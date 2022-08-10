@@ -11,6 +11,8 @@ import locale from 'element-plus/lib/locale/lang/zh-cn';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import './assets/iconfont/iconfont.css';
+import MainTable from '@/components/MainTable/MainTable.vue'
+import DialogMask from '@/components/DialogMask/DialogMask.vue'
 
 
 
@@ -38,6 +40,11 @@ const app = createApp(App) as CustomApp;
  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
+
+// 全局组件
+app.component("MainTable",MainTable);
+app.component("DialogMask",DialogMask);
+
 
 
 app.use(store)

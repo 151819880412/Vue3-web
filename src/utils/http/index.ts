@@ -51,14 +51,14 @@ const transform: AxiosTransform = {
     //   throw new Error('data数据为null');
     // }
     //  这里 code，data，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, data: result, message, type } = data;
+    const { code, message, type } = data;
 
     // 不返回code，根据统一处理
     // 服务器返回成功code 200 / 20000 都是成功
     const hasSuccess =
       data && Reflect.has(data, 'code') && ((code === ResultEnum.SUCCESS || code === 20000) || type == 'success');
     if (hasSuccess) {
-      return result;
+      return data;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
@@ -174,7 +174,7 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    console.log(res)
+    // console.log(res)
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
     // switch (code) {
@@ -203,7 +203,7 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: async (error: any) => {
-    console.log(error)
+    // console.log(error)
     loadingInstance.hideLoading();
     NProgress.done();
 

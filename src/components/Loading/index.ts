@@ -22,7 +22,6 @@ export default {
     body.appendChild(div);
     this.loading = instance.mount(div) as object;
     // 挂载vue身上
-    console.log(111)
     app.config.globalProperties.$Loading = this.loading;
     app.$Loading = this.loading;
   }

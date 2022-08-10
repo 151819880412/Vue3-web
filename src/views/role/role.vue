@@ -2,12 +2,12 @@
   <div>
     <el-row :span="12" style="display: flex; justify-content: center; height: 100%">
       <el-col :span="12" style="align-self: center; text-align: center">
-        <ElForms :rule="addRoleConfig" ref="refDataForm" />
+        <ElForms :formConfig= "addRoleConfig" ref="refDataForm" />
         <el-button type="primary" @click="toAddRole" style="align-self: center"
           >新增角色</el-button
         >
         <!-- <el-button type="primary" @click="test" style="align-self: center">token测试</el-button> -->
-        <ElForms :rule="changeDataFormRule" ref="changeDataForm" />
+        <ElForms :formConfig= "changeDataFormRule" ref="changeDataForm" />
         <el-button type="primary" @click="changePwd" style="align-self: center"
           >修改密码</el-button
         >
@@ -20,7 +20,7 @@
 import ElForms from "@/components/ElForm/ElForms.vue";
 import loginServiceImpl from "@/api/login";
 import { defineComponent, Ref, ref } from "vue";
-import { ElFormConfig, Options, Rules } from "#/form-config";
+import { FormInterface, Options, Rules } from "#/form-config";
 import roleServiceImpl from "@/api/role/index";
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -28,7 +28,7 @@ export default defineComponent({
   props: [],
   setup() {
     const refDataForm = ref();
-    const configArr: Array<ElFormConfig<Rules, Options>> = [
+    const configArr: Array<FormInterface<Rules, Options>> = [
       {
         type: "Input",
         title: "角色名",
@@ -41,10 +41,10 @@ export default defineComponent({
       },
     ];
 
-    const addRoleConfig: Ref<Array<ElFormConfig<Rules, Options>>> = ref(configArr);
+    const addRoleConfig: Ref<Array<FormInterface<Rules, Options>>> = ref(configArr);
 
     const changeDataForm = ref();
-    const configArr2: Array<ElFormConfig<Rules, Options>> = [
+    const configArr2: Array<FormInterface<Rules, Options>> = [
       {
         type: "Input",
         title: "用户名",
@@ -83,7 +83,7 @@ export default defineComponent({
       },
     ];
 
-    const changeDataFormRule: Ref<Array<ElFormConfig<Rules, Options>>> = ref(configArr2);
+    const changeDataFormRule: Ref<Array<FormInterface<Rules, Options>>> = ref(configArr2);
 
     // methods
     const toAddRole = () => {

@@ -105,17 +105,17 @@ export class VAxios {
 
     // 响应结果拦截器处理
     this.axiosInstance.interceptors.response.use((res: AxiosResponse<any>) => {
-      console.log(res)
       res && axiosCanceler.removePending(res.config);
       if (responseInterceptors && isFunction(responseInterceptors)) {
         res = responseInterceptors(res);
       }
+      // console.log(res)
       return res;
     }, undefined);
 
     // 响应结果拦截器错误捕获
     this.axiosInstance.interceptors.response.use(undefined, (err) => {
-      console.log(err)
+      // console.log(err)
       if (responseInterceptorsCatch && isFunction(responseInterceptorsCatch)) {
         err = responseInterceptorsCatch(err);
       }

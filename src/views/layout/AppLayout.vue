@@ -61,9 +61,6 @@ export default defineComponent({
   background-color: #304156;
   transition: width 0.28s;
 }
-.el-main {
-  background-color: #E9EEF3;
-}
 .appLayout{
   width:100%
 }

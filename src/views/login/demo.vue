@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ElForms :rule="searchFormRule" ref="refDataForm" />
+    <ElForms :formConfig= "searchFormRule" ref="refDataForm" />
     <button @click="handleQuery">111</button>
     <h1>{{name}}</h1>
     <h1>{{age}}</h1>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { ElFormConfig, Options, Rules } from "#/form-config";
+import { FormInterface, Options, Rules } from "#/form-config";
 import ElForms from "@/components/ElForm/ElForms.vue";
 
 import {  defineComponent, Ref, ref, toRefs, reactive, toRef } from "vue";
@@ -24,7 +24,7 @@ export default defineComponent({
   setup() {
 
     const refDataForm = ref();
-    let configArr:Array<ElFormConfig<Rules,Options>> = [
+    let configArr:Array<FormInterface<Rules,Options>> = [
       {
         type: "Input",
         title: "注册账号",
@@ -32,7 +32,7 @@ export default defineComponent({
         value: "",
         maxlength: 20,
         required:true,
-        callback: (value:string, b:ElFormConfig<Rules,Options>, c) => {
+        callback: (value:string, b:FormInterface<Rules,Options>, c) => {
           console.log(value, b, c);
         },
         rules:[{ message: "请输入端口", required: true, trigger: "blur" }],
@@ -99,7 +99,7 @@ export default defineComponent({
       },
     ]
 
-    const searchFormRule:Ref<Array<ElFormConfig<Rules,Options>>>  = ref(configArr);
+    const searchFormRule:Ref<Array<FormInterface<Rules,Options>>>  = ref(configArr);
 
     // methods
     function handleQuery() {

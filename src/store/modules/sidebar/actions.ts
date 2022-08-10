@@ -38,7 +38,6 @@ export const actions: ActionTree<SidebarState, StateType> & Actions = {
   [SidebarActionTypes.ACTION_SIDEBAR](
     { commit }: AugmentedActionContext,
   ) {
-    console.log(111)
     commit(SidebarMutationTypes.SET_SIDEBAR);
   },
   // 无参
