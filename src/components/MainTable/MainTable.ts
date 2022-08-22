@@ -1,4 +1,3 @@
-import { UserPageModel } from "@/api/user/model/userModel";
 
 export type attrsType = {
   rowClassName?: ({ row, rowIndex }) => | string | undefined;
@@ -36,8 +35,8 @@ export type tableConfigType<T> = {
   columns?: Array<columnsType>;
 };
 
-export const tableConfigTypes = function (): tableConfigType<UserPageModel> {
-  return {} as tableConfigType<UserPageModel>;
+export const tableConfigTypes = function<T> (): tableConfigType<T> {
+  return {} as tableConfigType<T>;
 };
 
 

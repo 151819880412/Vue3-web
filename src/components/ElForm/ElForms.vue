@@ -30,6 +30,9 @@ export default {
     formConfig: {
       type: Array as PropType<FormInterface<Rules, Options>[]>,
     },
+    formData:{
+      type:Object
+    }
   },
   // setup(props: Readonly<{ formConfig: FormInterface<Rules, Options>[]|undefined; }>, { expose }: any) {
   setup(props, { expose }: any) {
@@ -55,6 +58,7 @@ export default {
     const rules: Array<FormInterface<Rules, Options>> = formConfig.value as Array<
       FormInterface<Rules, Options>
     >;
+    console.log(rules)
     rules.forEach((item) => {
       if (item.required) {
         const placeholder = ["input"].includes(item.type)
@@ -84,7 +88,7 @@ export default {
           const objType = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
           const obj:Generate<typeof objType> = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
           // return callback(_.omitBy(obj), valid);
-          return callback(preProcessData(obj), valid);
+          return callback(preProcessData(Object.assign({},props.formData,obj)), valid);
         }
         // return callback({},valid);
       });
@@ -154,9 +158,9 @@ export default {
                     default: () =>
                       (item.options || []).map((v) =>
                         h(components.option, {
-                          label: v.label,
-                          value: v.value,
-                          key: v.value,
+                          label: v[item?.queryOptionsFn?.label||1] || v.label,
+                          value: v[item?.queryOptionsFn?.value||1] || v.value,
+                          key: v[item?.queryOptionsFn?.value||1] || v.value,
                         })
                       ),
                   }
@@ -178,8 +182,8 @@ export default {
                         h(
                           components.radio,
                           {
-                            label: v.value,
-                            key: v.value,
+                            label: v[item?.queryOptionsFn?.label||1] || v.label,
+                            key: v[item?.queryOptionsFn?.value||1] || v.value,
                           },
                           {
                             default: () => v.label,
@@ -201,14 +205,14 @@ export default {
                     "onUpdate:modelValue": (value) => (item.value = value),
                   },
                   () =>
-                    item?.options?.map((o) =>
+                    item?.options?.map((v) =>
                       h(
                         components.checkbox,
                         {
-                          label: o.value,
-                          key: o.value,
+                          label: v[item?.queryOptionsFn?.label||1] || v.label,
+                          key: v[item?.queryOptionsFn?.value||1] || v.value,
                         },
-                        () => [o.label]
+                        () => [v.label]
                       )
                     )
                 ),

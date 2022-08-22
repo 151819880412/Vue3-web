@@ -13,6 +13,12 @@ export declare interface FormInterface<R, O> {
   props?: any,
   col?: ColType,
   on: Array<string>,
+  queryOptionsFn?:{
+    url:string,
+    data:string,
+    label:string,
+    value:string
+  }
 }
 
 export declare interface Rules {

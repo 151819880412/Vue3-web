@@ -5,11 +5,11 @@
 import { defHttp } from '@/utils/http';
 import UserService from '../userService';
 import { PageResult, Result } from '#/axios';
-import { UserAddModel, UserChangeStateModel, UserPageModel } from '../../model/userModel';
+import { UserAddModel, UserChangeStateModel, UserEditorModel, UserPageModel } from '../../model/userModel';
 
 export default class UserServiceImpl implements UserService {
 
-  public addUser(data:UserAddModel): Promise<Result>{
+  public addUser(data: UserAddModel): Promise<Result> {
     return defHttp.post({ url: '/user/register', data });
   }
 
@@ -19,7 +19,7 @@ export default class UserServiceImpl implements UserService {
    * @param {any} data
    * @returns {any}
    */
-  public relationRole(data){
+  public relationRole(data) {
     return defHttp.post({ url: '/user/relation', data });
   }
 
@@ -31,19 +31,19 @@ export default class UserServiceImpl implements UserService {
    * @param {any} data
    * @returns {any}
    */
-  public queryUserPage(currentPage:number,pageSize:number,data): Promise<PageResult<UserPageModel>>{
-    return defHttp.post<PageResult<UserPageModel>>({ url: `/user/page/${currentPage}/${pageSize}`, data});
+  public queryUserPage(currentPage: number, pageSize: number, data): Promise<PageResult<UserPageModel>> {
+    return defHttp.post<PageResult<UserPageModel>>({ url: `/user/page/${currentPage}/${pageSize}`, data });
   }
-  
-  
+
+
   /**
    * 启用禁用
    * @date 2022-08-09
    * @param {any} data:UserChangeStateModel
    * @returns {any}
    */
-  public changeState(data:UserChangeStateModel): Promise<PageResult<UserPageModel>>{
-    return defHttp.post<PageResult<UserPageModel>>({ url: `/user/changeState`, data});
+  public changeState(data: UserChangeStateModel): Promise<Result> {
+    return defHttp.post<Result>({ url: `/user/changeState`, data });
   }
 
   /**
@@ -52,8 +52,8 @@ export default class UserServiceImpl implements UserService {
    * @param {any} data:UserChangeStateModel
    * @returns {any}
    */
-  public changeDelFlag(data:UserChangeStateModel): Promise<PageResult<UserPageModel>>{
-    return defHttp.post<PageResult<UserPageModel>>({ url: `/user/changeDelFlag`, data});
+  public changeDelFlag(data: UserChangeStateModel): Promise<Result> {
+    return defHttp.post<Result>({ url: `/user/changeDelFlag`, data });
   }
 
   /**
@@ -62,8 +62,32 @@ export default class UserServiceImpl implements UserService {
    * @param {any} data:UserChangeStateModel
    * @returns {any}
    */
-  public delUser(data:UserChangeStateModel): Promise<PageResult<UserPageModel>>{
-    return defHttp.post<PageResult<UserPageModel>>({ url: `/user/delUser`, data});
+  public delUser(data: UserChangeStateModel): Promise<Result> {
+    return defHttp.post<Result>({ url: `/user/delUser`, data });
+  }
+
+  /**
+   * 根据id查询
+   * @date 2022-08-09
+   * @param {any} data:UserChangeStateModel
+   * @returns {any}
+   */
+  public queryUserById(data: UserChangeStateModel): Promise<Result> {
+    return defHttp.post<Result>({ url: `/user/queryUserById`, data });
+  }
+
+  /**
+   * 编辑用户
+   * @date 2022-08-09
+   * @param {any} data:UserEditorModel
+   * @returns {any}
+   */
+   public editorUser(data: UserEditorModel): Promise<Result> {
+    return defHttp.post<Result>({ url: `/user/editor`, data });
+  }
+
+  public queryOptions(url:string,data:object): Promise<Result>{
+    return defHttp.post<Result>({ url: url, data});
   }
 
 }

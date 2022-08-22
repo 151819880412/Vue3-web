@@ -23,3 +23,9 @@ export interface UserQueryModel {
   username?: string;
   state?: string | number;
 }
+
+export interface UserEditorModel {
+  username: string;
+  password: string;
+  roles: Array<string>;
+}

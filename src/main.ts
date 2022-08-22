@@ -1,4 +1,4 @@
-import { createApp ,App as AppType} from 'vue'
+import { createApp ,App as AppType, defineAsyncComponent} from 'vue'
 import App from './App.vue'
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
@@ -12,7 +12,8 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import './assets/iconfont/iconfont.css';
 import MainTable from '@/components/MainTable/MainTable.vue'
-import DialogMask from '@/components/DialogMask/DialogMask.vue'
+// import DialogMask from '@/components/DialogMask/DialogMask.vue'
+const DialogMask = defineAsyncComponent(() => import('@/components/DialogMask/DialogMask.vue'))
 
 
 

@@ -22,8 +22,8 @@ const globSetting = {
   uploadUrl: 1,
 };
 const urlPrefix = globSetting.urlPrefix;
-
-const loadingInstance:LoadingType = app.$Loading
+console.log(app)
+const loadingInstance:LoadingType = app?.$Loading
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -135,7 +135,7 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    loadingInstance.showLoading()
+    loadingInstance?.showLoading()
     NProgress.start();
     // 请求之前处理config
     const token = localStorage.getItem('token');
@@ -191,7 +191,7 @@ const transform: AxiosTransform = {
       ElMessage.error(res.data.message);
       throw new Error(res.data.message);
     }
-    loadingInstance.hideLoading()
+    loadingInstance?.hideLoading()
     NProgress.done();
     if (hasSuccess) {
       return res;
@@ -203,8 +203,8 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: async (error: any) => {
-    // console.log(error)
-    loadingInstance.hideLoading();
+    console.log(error)
+    loadingInstance?.hideLoading();
     NProgress.done();
 
 
