@@ -2,6 +2,8 @@ import type { Router } from 'vue-router';
 
 
 import { PageEnum } from '@/enums/pageEnum';
+import useDefaultActiveStore from '@/piniaStore/defaultActive';
+// import { SidebarActionTypes } from '@/store/modules/sidebar/action-types';
 
 
 const PAGE_NOT_FOUND_ROUTE = {
@@ -37,6 +39,9 @@ export function createPermissionGuard(router: Router) {
       next(userStore.getUserInfo.homePath);
       return;
     }
+    const store = useDefaultActiveStore()
+    store.setDefaultActive(to.path)
+    // store.dispatch(SidebarActionTypes.DEFAULT_ACTIVE,to.path)
 
     const token = userStore.getToken;
 

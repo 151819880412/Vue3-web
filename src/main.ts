@@ -3,6 +3,9 @@ import App from './App.vue'
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import store from './store'
+// import piniaStore from '@/piniaStore/index.js'
+import { createPinia } from 'pinia'
+
 
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'
@@ -46,7 +49,8 @@ const app = createApp(App) as CustomApp;
 app.component("MainTable",MainTable);
 app.component("DialogMask",DialogMask);
 
-
+// 安装 Pinia
+app.use(createPinia())
 
 app.use(store)
 // app.use(router)

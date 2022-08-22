@@ -4,11 +4,13 @@ import { StateType } from '@/@types';
 
 
 export interface SidebarState{
-  isCollapse:boolean
+  isCollapse:boolean,
+  defaultActive:string
 }
 
  const state: SidebarState = {
   isCollapse:false,
+  defaultActive:"/"
 }
 
 type SidebarStateType = typeof state;
