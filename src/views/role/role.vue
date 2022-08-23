@@ -47,14 +47,19 @@
     </MainTable>
 
     <DialogMask ref="dialogMask">
-      <template #dialogMaskSlot>
+      <template v-slot:dialogMaskSlot>
         <el-tree
-          :data="treeData"
+          :props="{
+            label: 'menuName',
+            children: 'children',
+          }"
           show-checkbox
-          node-key="id"
-          :default-expanded-keys="[2, 3]"
-          :default-checked-keys="[5]"
-          :props="defaultProps"
+          :data="treeData"
+          @check="handleCheckChange"
+          highlight-current
+          default-expand-all
+          node-key="menuId"
+          :default-checked-keys="defaultCheckedKeys"
         />
       </template>
     </DialogMask>
@@ -62,7 +67,6 @@
 </template>
 
 <script lang="ts">
-import ElForms from "@/components/ElForm/ElForms.vue";
 import {
   defineComponent,
   ref,
@@ -80,8 +84,14 @@ import SearchForm from "@/components/SearchForm/SearchForm.vue";
 import DialogMask from "@/components/DialogMask/DialogMask.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { tableConfigType } from "@/components/MainTable/MainTable";
-import { UserQueryModel } from "../../api/user/model/userModel";
-import { RoleAddModel, RolePageModel } from "@/api/role/service/model/roleModel";
+import {
+  RoleAddModel,
+  RoleEditorModel,
+  RolePageModel,
+  RoleQueryModel,
+} from "@/api/role/service/model/roleModel";
+import { MenuPageModel } from "@/api/login/model/menuModel";
+import { flatten } from "@/utils";
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -105,84 +115,123 @@ export default defineComponent({
       changeDataFormRule,
     } = loginHooks();
 
-    const queryArr: Array<FormInterface<Rules, Options>> = [
-      {
-        type: "input",
-        title: "角色名",
-        field: "roleName",
-        value: "",
-        maxlength: 40,
-        required: false,
-        rules: [{ message: "请输入角色名", required: false, trigger: "blur" }],
-        col: {
-          span: 12,
-        },
-        on: [],
-        props: {
-          clearable: true,
-        },
-      },
-      {
-        type: "select",
-        title: "状态",
-        field: "state",
-        value: "",
-        maxlength: 40,
-        required: false,
-        rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
-        col: {
-          span: 12,
-        },
-        on: [],
-        options: [
-          {
-            label: "启用",
-            value: 0,
-          },
-          {
-            label: "禁用",
-            value: 1,
-          },
-        ],
-        props: {
-          clearable: true,
-        },
-      },
-    ];
+    interface Tree<RolePageModel> {
+      roleName: string;
+      children: Tree<RolePageModel>[];
+      roleId: string;
+    }
 
-    const dialogArr = [
-      {
-        type: "input",
-        title: "角色名",
-        field: "roleName",
-        value: "",
-        maxlength: 40,
-        required: true,
-        rules: [{ message: "请输入角色名", required: true, trigger: "blur" }],
-        col: {
-          span: 12,
-        },
-        on: [],
-      },
-    ];
-
-    const queryFormConfig: Array<FormInterface<Rules, Options>> = reactive(queryArr);
-
-    const dialogArrConfig: Array<FormInterface<Rules, Options>> = reactive(dialogArr);
-
-    type userType = {
-      tableData: Array<object>;
-      treeData: Array<object>;
-      searchFormData: UserQueryModel;
+    type roleType = {
+      tableData: tableConfigType<RolePageModel>;
+      treeData: Array<Tree<MenuPageModel>>;
+      searchFormData: RoleQueryModel;
+      defaultCheckedKeys: Array<string>;
+      dialogFormConfig: Array<FormInterface<Rules, Options>>;
+      queryFormConfig: Array<FormInterface<Rules, Options>>;
     };
 
-    let userModel: userType = reactive<userType>({
-      tableData: [],
-      treeData: [],
-      searchFormData: {},
-    });
+    const initState = (): roleType => {
+      return {
+        tableData: {
+          attrs: {
+            border: true,
+          },
+          data: [],
+          columns: [
+            {
+              type: "selection",
+            },
+            {
+              type: "index",
+              label: "序号",
+            },
+            {
+              label: "角色名",
+              prop: "roleName",
+              showOverflowTooltip: true,
+            },
+            {
+              label: "状态",
+              prop: "state",
+              slot: "statusTxtSlot",
+              align: "center",
+            },
+            {
+              label: "操作",
+              width: 200,
+              slot: "handleSlot",
+              align: "center",
+            },
+          ],
+        },
+        treeData: [],
+        searchFormData: {},
+        defaultCheckedKeys: [],
+        dialogFormConfig: [
+          {
+            type: "input",
+            title: "角色名",
+            field: "roleName",
+            value: "",
+            maxlength: 40,
+            required: true,
+            rules: [{ message: "请输入角色名", required: true, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            on: [],
+          },
+        ],
+        queryFormConfig: [
+          {
+            type: "input",
+            title: "角色名",
+            field: "roleName",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请输入角色名", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            on: [],
+            props: {
+              clearable: true,
+            },
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            on: [],
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+          },
+        ],
+      };
+    };
 
-    let data: ToRefs<userType> = toRefs(userModel);
+    const roleModel: roleType = reactive(initState());
+
+    let data: ToRefs<roleType> = toRefs(roleModel);
 
     let formatters = (data: { state: number }): string => {
       switch (data.state) {
@@ -198,11 +247,11 @@ export default defineComponent({
     /**
      * 搜索提交
      * @date 2022-08-04
-     * @param {UserQueryModel} searchFormData
+     * @param {RoleQueryModel} searchFormData
      * @returns {Promise<void>}
      */
-    const submitSearch = (searchFormData: UserQueryModel): void => {
-      userModel.searchFormData = searchFormData;
+    const submitSearch = (searchFormData: RoleQueryModel): void => {
+      roleModel.searchFormData = searchFormData;
     };
 
     /**
@@ -210,10 +259,11 @@ export default defineComponent({
      * @date 2022-08-05
      * @returns {void}
      */
-    const openDialog = (): void => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      dialogMask.value!.dialogFormVisible = true;
-      dialogMask?.value?.initConfig(dialogArrConfig);
+    const openDialog = async (): Promise<void> => {
+      roleModel.defaultCheckedKeys = [];
+      roleModel.treeData = []
+      await dialogMask?.value?.initConfig(roleModel.dialogFormConfig);
+      dialogMask.value?.openDialog("Add");
     };
 
     /**
@@ -222,7 +272,7 @@ export default defineComponent({
      * @param {any} formData
      * @returns {any}
      */
-    const submitDialog = async (formData: RoleAddModel): Promise<boolean> => {
+    const submitDialogAdd = async (formData: RoleAddModel): Promise<boolean> => {
       let { message } = await roleServiceImpl.addRole(formData);
       ElMessage({
         message,
@@ -233,40 +283,14 @@ export default defineComponent({
 
     const dialogMask = ref<InstanceType<typeof DialogMask>>();
 
-    const tableData: tableConfigType<RolePageModel> = {
-      attrs: {
-        border: true,
-      },
-      data: [],
-      columns: [
-        {
-          type: "selection",
-        },
-        {
-          type: "index",
-          label: "序号",
-        },
-        {
-          label: "角色名",
-          prop: "roleName",
-          showOverflowTooltip: true,
-        },
-        {
-          label: "状态",
-          prop: "state",
-          slot: "statusTxtSlot",
-          align: "center",
-        },
-        {
-          label: "操作",
-          width: 200,
-          slot: "handleSlot",
-          align: "center",
-        },
-      ],
-    };
-
-    const editState = (row: RolePageModel, fnStr: string) => {
+    /**
+     * 修改状态
+     * @date 2022-08-22
+     * @param {any} row:RolePageModel
+     * @param {any} fnStr:string
+     * @returns {any}
+     */
+    const editState = (row: RolePageModel, fnStr: string): void => {
       ElMessageBox.confirm("是否确认操作?", "提示", {
         confirmButtonText: "确认",
         cancelButtonText: "取消",
@@ -278,26 +302,68 @@ export default defineComponent({
             message,
             type: "success",
           });
-          userModel.searchFormData = JSON.parse(JSON.stringify(userModel.searchFormData));
+          roleModel.searchFormData = JSON.parse(JSON.stringify(roleModel.searchFormData));
         })
         .catch((e) => {
           console.log(e);
         });
     };
 
-    const roleAuthorization = async (row: RolePageModel) => {
-      let data = await roleServiceImpl.queryRoleById({ roleId: row.roleId });
-      // const res = await loginServiceImpl.queryRoleMenuList(row.roleId);
-      // userModel.treeData = res.data;
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      dialogMask.value!.dialogFormVisible = true;
-      console.log(data)
-      // dialogMask?.value?.initConfig(dialogArrConfig, data.data);
+    /**
+     * 角色授权
+     * @date 2022-08-22
+     * @param {any} row:RolePageModel
+     * @returns {any}
+     */
+    const roleAuthorization = async (row: RolePageModel): Promise<void> => {
+
+
+      roleModel.defaultCheckedKeys = [];
+      let { data } = await roleServiceImpl.queryRoleById({ roleId: row.roleId });
+      await dialogMask?.value?.initConfig(roleModel.dialogFormConfig, data);
+      roleModel.treeData = data.menus;
+      flatten(JSON.parse(JSON.stringify(data.menus))).forEach(item => {
+        if (item.isCheck) {
+          roleModel.defaultCheckedKeys.push(item.menuId);
+        }
+      });
+      roleModel.treeData = data.menus;
+      dialogMask.value?.openDialog("Editor");
+    };
+
+    /**
+     * 编辑提交
+     * @date 2022-08-18
+     * @param {any} formData:RoleAddModel
+     * @returns {any}
+     */
+    const submitDialogEditor = async (formData: RoleAddModel): Promise<boolean> => {
+      const obj: RoleEditorModel = { ...formData, menus: roleModel.defaultCheckedKeys };
+      console.log(obj);
+      let { message } = await roleServiceImpl.editorRole(obj);
+      ElMessage({
+        message,
+        type: "success",
+      });
+      return true;
     };
 
     const defaultProps = {
       children: "children",
       label: "name",
+    };
+
+    const handleCheckChange = (
+      data: Tree<RolePageModel>,
+      row: {
+        checkedKeys: Array<string>;
+        checkedNodes: Array<RolePageModel>;
+        halfCheckedKeys: Array<string | undefined>;
+        halfCheckedNodes: Array<string | undefined>;
+      }
+    ) => {
+      console.log(data, row);
+      roleModel.defaultCheckedKeys = row.checkedKeys.filter((item) => item !== "1");
     };
 
     return {
@@ -310,23 +376,19 @@ export default defineComponent({
       relationRoleForm,
       ...data,
       formatters,
-      queryFormConfig,
       submitSearch,
       openDialog,
       dialogMask,
-      dialogArrConfig,
-      submitDialog,
+      submitDialogAdd,
       roleServiceImpl,
-      tableData,
       editState,
       roleAuthorization,
       defaultProps,
+      handleCheckChange,
+      submitDialogEditor,
     };
   },
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    ElForms,
-    // eslint-disable-next-line vue/no-unused-components
     SearchForm,
   },
 });

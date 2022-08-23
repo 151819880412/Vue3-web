@@ -297,7 +297,8 @@ export default defineComponent({
      * @returns {void}
      */
     const openDialog = async (): Promise<void> => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      userModel.defaultCheckedKeys = [];
+      userModel.treeData[0].children = []
       await dialogMask?.value?.initConfig(userModel.dialogFormConfig);
       dialogMask.value?.openDialog('Add');
     };
@@ -350,7 +351,6 @@ export default defineComponent({
      * @returns {any}
      */
     const relationRole = async (row: UserPageModel) => {
-      console.log(111);
       const { data } = await userServiceImpl.queryUserById({ userId: row.userId });
       userModel.defaultCheckedKeys = [];
       await dialogMask?.value?.initConfig(userModel.dialogFormConfig, data);

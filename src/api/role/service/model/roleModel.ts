@@ -1,6 +1,6 @@
 export interface RoleQueryModel {
-  roleName: string;
-  state: string | number;
+  roleName?: string;
+  state?: string | number;
 }
 
 export interface RolePageModel {
@@ -15,6 +15,11 @@ export interface RolePageModel {
 
 export interface RoleAddModel {
   roleName: string;
+}
+
+export interface RoleEditorModel {
+  roleName: string;
+  menus: Array<string>;
 }
 
 export interface RoleChangeStateModel {

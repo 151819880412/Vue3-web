@@ -4,7 +4,7 @@
 
 import { PageResult, Result } from '#/axios';
 import { defHttp } from '@/utils/http';
-import { RoleAddModel, RoleChangeStateModel, RolePageModel, RoleQueryModel } from '../model/roleModel';
+import { RoleAddModel, RoleChangeStateModel, RoleEditorModel, RolePageModel, RoleQueryModel } from '../model/roleModel';
 import RoleService from '../roleService';
 
 export default class RoleServiceImpl implements RoleService {
@@ -71,4 +71,13 @@ export default class RoleServiceImpl implements RoleService {
     return defHttp.post<Result>({ url: `/role/queryRoleById`, data });
   }
 
+    /**
+   * 编辑角色
+   * @date 2022-08-09
+   * @param {any} data:RoleEditorModel
+   * @returns {any}
+   */
+     public editorRole(data: RoleEditorModel): Promise<Result> {
+      return defHttp.post<Result>({ url: `/role/editor`, data });
+    }
 }
