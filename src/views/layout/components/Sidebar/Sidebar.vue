@@ -14,14 +14,19 @@ import SidebarItem from "./SidebarItem.vue";
 import { computed, defineComponent, ref } from "vue";
 import { useState } from "@/utils/useState";
 import useDefaultActiveStore from "@/piniaStore/defaultActive";
+import { usePermissionStoreWithOut } from "@/piniaStore/modules/permission";
+import { AppRouteRecordRaw } from "@/router/types";
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Sidebar",
   props: [],
   setup() {
+  const permissionStore = usePermissionStoreWithOut();
+
     const store = useDefaultActiveStore()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sidebar: any = useState(["sidebar"]);
-    console.log(sidebar);
+    // console.log(sidebar);
     const isCollapse = ref(false);
     const handleOpen = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
@@ -29,31 +34,7 @@ export default defineComponent({
     const handleClose = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
     };
-    const navs = [
-      {
-        title: "权限",
-        icon: '<span class="iconfont icon-zhanghaoquanxianguanli"/>',
-        inSide: true,
-        name: "Auth",
-        path: "/auth",
-        children: [
-          {
-            title: "用户",
-            icon: '<span class="iconfont icon-yonghu"/>',
-            inSide: true,
-            name: "User",
-            path: "/user",
-          },
-          {
-            title: "角色",
-            icon: '<span class="iconfont icon-jiaose"/>',
-            inSide: true,
-            name: "Role",
-            path: "/role",
-          },
-        ],
-      },
-    ];
+    const navs: AppRouteRecordRaw[] = permissionStore.getMenuList
 
     return {
       isCollapse,

@@ -223,6 +223,7 @@ export default {
                   placeholder,
                   ...item,
                   ...item.props,
+                  autocomplete:"new-password",
                   modelValue: item.value,
                   "onUpdate:modelValue": (value:string|number|Array<string>) => (
                     (item.value = value), item?.callback?.(value, item, this)

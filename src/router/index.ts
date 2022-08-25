@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import routes from './routes';
 import type { App } from 'vue';
-
+import { basicRoutes } from './routes/index';
 
 
 // 白名单应该包含基本静态路由
@@ -12,11 +11,10 @@ const getRouteNames = (array: any[]) =>
     WHITE_NAME_LIST.push(item.name);
     getRouteNames(item.children || []);
   });
-getRouteNames([]);
 
 export const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes: routes as unknown as RouteRecordRaw[],
+  routes: basicRoutes as unknown as RouteRecordRaw[],
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
@@ -32,22 +30,10 @@ export const router = createRouter({
 //   });
 // }
 
-// router.addRoute({
-//   path: '/system',
-//   component: import('@/views/layout/AppLayout.vue'),
-//   children:[
-//     {
-//       path: '/user',
-//       name: 'user',
-//       component: 'User',
-//     },
-//     {
-//       path: '/role',
-//       name: 'role',
-//       component: 'Role',
-//     },
-//   ],
-// })
+setTimeout(() => {
+  console.log(router, router.getRoutes());
+}, 3333);
+
 
 // config router
 export function setupRouter(app: App<Element>) {

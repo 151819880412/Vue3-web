@@ -13,6 +13,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import app from '@/main'
 import { LoadingType } from '@/@types/loading';
+import { router } from '@/router';
 
 const globSetting = {
   title: 1,
@@ -177,16 +178,11 @@ const transform: AxiosTransform = {
     // console.log(res)
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
-    // switch (code) {
-    //   case 20001:
-    //     ElMessage.error(res.data.message);
-    //     break;
-    //   case 10000:
-    //     ElMessage.error(res.data.message);
-    //     break;
-    //   default:
-    //     break;
-    // }
+    if(code==30001){
+      router.push({
+        path:'login'
+      })
+    }
     if (code !== 20000) {
       ElMessage.error(res.data.message);
       throw new Error(res.data.message);

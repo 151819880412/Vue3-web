@@ -1,55 +1,27 @@
+import { usePermissionStoreWithOut } from '@/piniaStore/modules/permission';
 import type { Router } from 'vue-router';
-// import { configureDynamicParamsMenu } from '../helper/menuHelper';
 import { Menu } from '../types';
-// import { PermissionModeEnum } from '@/enums/appEnum';
 
 
 export function createParamMenuGuard(router: Router) {
-  const permissionStore = {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    getIsDynamicAddedRoute: () => { },
-    getBackMenuList: (): Array<Menu> => {
-      return [];
-    },
-    getFrontMenuList: (): Array<Menu> => {
-      return [];
-    },
-  };
+  const permissionStore = usePermissionStoreWithOut();
   router.beforeEach(async (to, _, next) => {
-    // filter no name route
+    // 筛选无名称路由
     if (!to.name) {
       next();
       return;
     }
 
-    // menu has been built.
-    if (!permissionStore.getIsDynamicAddedRoute) {
+    // 菜单已经建立
+    if (permissionStore.getIsDynamicAddedRoute) {
       next();
       return;
     }
 
-    // let menus: Menu[] = [];
-    // if (isBackMode()) {
-    //   menus = permissionStore.getBackMenuList;
-    // } else if (isRouteMappingMode()) {
-    //   menus = permissionStore.getFrontMenuList;
-    // }
-    // menus.forEach((item) => configureDynamicParamsMenu(item, to.params));
-
+    let menus: Menu[] = [];
+    menus = permissionStore.getMenuList;
+    console.log(menus)
     next();
   });
 }
 
-// const getPermissionMode = () => {
-//   // const appStore = useAppStoreWithOut();
-//   // return appStore.getProjectConfig.permissionMode;
-//   return 'BACK';
-// };
-
-// const isBackMode = () => {
-//   return getPermissionMode() === PermissionModeEnum.BACK;
-// };
-
-// const isRouteMappingMode = () => {
-//   return getPermissionMode() === PermissionModeEnum.ROUTE_MAPPING;
-// };

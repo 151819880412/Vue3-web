@@ -4,7 +4,6 @@ import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import store from './store'
 // import piniaStore from '@/piniaStore/index.js'
-import { createPinia } from 'pinia'
 
 
 import ElementPlus from 'element-plus';
@@ -24,6 +23,7 @@ import Loading from "@/components/Loading/index"
 
 import './styles/index.stylus'
 import { LoadingType } from './@types/loading';
+import { setupStore } from './piniaStore';
 
 // createApp(App).use(store).use(router).use(ElementPlus,{locale})
 // .component('forms',forms)
@@ -33,7 +33,8 @@ interface CustomApp extends AppType{
 }
 
 const app = createApp(App) as CustomApp;
-
+  // 配置 store
+  setupStore(app);
  // Configure routing
  setupRouter(app);
 
@@ -50,7 +51,7 @@ app.component("MainTable",MainTable);
 app.component("DialogMask",DialogMask);
 
 // 安装 Pinia
-app.use(createPinia())
+// app.use(createPinia())
 
 app.use(store)
 // app.use(router)

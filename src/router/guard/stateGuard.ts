@@ -1,21 +1,17 @@
 import type { Router } from 'vue-router';
-// import { useAppStore } from '@/store/modules/app';
-// import { useMultipleTabStore } from '@/store/modules/multipleTab';
-// import { useUserStore } from '@/store/modules/user';
-// import { usePermissionStore } from '@/store/modules/permission';
 import { PageEnum } from '@/enums/pageEnum';
-// import { removeTabChangeListener } from '@/logics/mitt/routeChange';
+import { usePermissionStore } from '@/piniaStore/modules/permission';
 
 export function createStateGuard(router: Router) {
   router.afterEach((to) => {
     // const tabStore = useMultipleTabStore();
     // const userStore = useUserStore();
     // const appStore = useAppStore();
-    // const permissionStore = usePermissionStore();
+    const permissionStore = usePermissionStore();
     // 只需进入登录页面并清除身份验证信息
     if (to.path === PageEnum.BASE_LOGIN) {
       // appStore.resetAllState();
-      // permissionStore.resetState();
+      permissionStore.resetState();
       // tabStore.resetState();
       // userStore.resetState();
       // removeTabChangeListener();
