@@ -21,14 +21,14 @@ export const router = createRouter({
 
 
 // reset router
-// export function resetRouter() {
-//   router.getRoutes().forEach((route) => {
-//     const { name } = route;
-//     if (name && !WHITE_NAME_LIST.includes(name as string)) {
-//       router.hasRoute(name) && router.removeRoute(name);
-//     }
-//   });
-// }
+export function resetRouter() {
+  router.getRoutes().forEach((route) => {
+    const { name } = route;
+    if (name && !WHITE_NAME_LIST.includes(name as string)) {
+      router.hasRoute(name) && router.removeRoute(name);
+    }
+  });
+}
 
 setTimeout(() => {
   console.log(router, router.getRoutes());

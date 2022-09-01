@@ -5,6 +5,7 @@ import { store } from '@/piniaStore/index';
 
 
 import { AppRouteRecordRaw} from '@/router/types';
+import { useAppStoreWithOut } from './app';
 
 const AppLayout = () => import('@/views/layout/AppLayout.vue');
 const User = () => import('@/views/user/user.vue');
@@ -62,6 +63,8 @@ export const usePermissionStore = defineStore({
     // 构建路由
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       // const userStore = useUserStore();
+      const appStore = useAppStoreWithOut();
+      console.log(appStore)
 
       let routes: AppRouteRecordRaw[] = [];
       const roleList = [];
