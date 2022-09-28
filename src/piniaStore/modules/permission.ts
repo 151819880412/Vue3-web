@@ -5,11 +5,15 @@ import { store } from '@/piniaStore/index';
 
 
 import { AppRouteRecordRaw} from '@/router/types';
-import { useAppStoreWithOut } from './app';
+// import { useAppStoreWithOut } from './app';
+import { USER_INFO_KEY } from '@/enums/cacheEnum';
+import { Persistent } from '@/utils/cache/persistent';
+import { UserInfo } from '../../../types/store';
 
-const AppLayout = () => import('@/views/layout/AppLayout.vue');
-const User = () => import('@/views/user/user.vue');
-const Role = () => import('@/views/role/role.vue');
+// const AppLayout = () => import('@/views/layout/AppLayout.vue');
+// const User = () => import('@/views/user/user.vue');
+// const Role = () => import('@/views/role/role.vue');
+// const Menu = () => import('@/views/menu/menu.vue')
 
 
 interface PermissionState {
@@ -63,8 +67,8 @@ export const usePermissionStore = defineStore({
     // 构建路由
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       // const userStore = useUserStore();
-      const appStore = useAppStoreWithOut();
-      console.log(appStore)
+      // const appStore = useAppStoreWithOut();
+      // console.log(appStore)
 
       let routes: AppRouteRecordRaw[] = [];
       const roleList = [];
@@ -109,41 +113,73 @@ export const usePermissionStore = defineStore({
       };
 
       console.log(JSON.parse(JSON.stringify(routes)));
-      routes = [{
-        path: '/system',
-        name: 'System',
-        component: AppLayout,
-        meta: {
-          // hideChildrenInMenu: true,
-          icon: '<span class="iconfont icon-zhanghaoquanxianguanli"/>',
-          title: '系统',
-          // orderNo: 100000,
-        },
-        children: [
-          {
-            path: '/user',
-            name: 'User',
-            component: User,
-            meta: {
-              // hideChildrenInMenu: true,
-              icon: '<span class="iconfont icon-yonghu"/>',
-              title: '用户',
-              // orderNo: 100000,
-            },
-          },
-          {
-            path: '/role',
-            name: 'role',
-            component: Role,
-            meta: {
-              // hideChildrenInMenu: true,
-              icon: '<span class="iconfont icon-jiaose"/>',
-              title: '角色',
-              // orderNo: 100000,
-            },
-          },
-        ],
-      }];
+      const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth?[Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth]:[]
+      // 待优化
+      const treeFor = (arr)=>{
+        for (let i = 0; i < arr.length; i++) {
+          if(arr[i]?.children){
+            treeFor(arr[i]?.children)
+          }
+          arr[i].meta={
+            title:arr[i].menuName
+          }
+          if(!arr[i].parentId){
+            arr[i].component = () => import('@/views/layout/AppLayout.vue');
+          }else{
+            arr[i].component = () => import(`@/views/${arr[i].path.split('/')[arr[i].path.split('/').length-1]}/${arr[i].path.split('/')[arr[i].path.split('/').length-1]}.vue`);
+          }
+        }
+      }
+      treeFor(arr)
+      routes = arr as unknown as Array<AppRouteRecordRaw>
+      console.log(routes)
+
+      // routes = [{
+      //   path: '/system',
+      //   name: 'System',
+      //   component: AppLayout,
+      //   meta: {
+      //     // hideChildrenInMenu: true,
+      //     icon: '<span class="iconfont icon-zhanghaoquanxianguanli"/>',
+      //     title: '系统',
+      //     // orderNo: 100000,
+      //   },
+      //   children: [
+      //     {
+      //       path: '/user',
+      //       name: 'User',
+      //       component: User,
+      //       meta: {
+      //         // hideChildrenInMenu: true,
+      //         icon: '<span class="iconfont icon-yonghu"/>',
+      //         title: '用户',
+      //         // orderNo: 100000,
+      //       },
+      //     },
+      //     {
+      //       path: '/role',
+      //       name: 'role',
+      //       component: Role,
+      //       meta: {
+      //         // hideChildrenInMenu: true,
+      //         icon: '<span class="iconfont icon-jiaose"/>',
+      //         title: '角色',
+      //         // orderNo: 100000,
+      //       },
+      //     },
+      //     {
+      //       path: '/menu',
+      //       name: 'Menu',
+      //       component: Menu,
+      //       meta: {
+      //         // hideChildrenInMenu: true,
+      //         icon: '<span class="iconfont icon-jiaose"/>',
+      //         title: '菜单',
+      //         // orderNo: 100000,
+      //       },
+      //     },
+      //   ],
+      // }];
       this.setMenuList(routes);
       patchHomeAffix(routes);
       return routes;

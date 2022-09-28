@@ -5,17 +5,22 @@ import { Memory } from './memory';
 import { toRaw } from 'vue';
 import { UserInfo } from '#/store';
 import { pick, omit } from 'lodash-es';
-import { useAppStore } from '@/piniaStore/modules/app';
+import { APP_LOCAL_CACHE_KEY, APP_SESSION_CACHE_KEY, LOCK_INFO_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
 
 interface LockInfo {
   pwd?: string | undefined;
   isLock?: boolean;
 }
 
+export interface Token {
+  token: string,
+  refreshToken: string;
+}
+
 interface BasicStore {
-  TOKEN_KEY: string | number | null | undefined;
-  USER_INFO_KEY: UserInfo;
-  LOCK_INFO_KEY: LockInfo;
+  [TOKEN_KEY]: Token;
+  [USER_INFO_KEY]: UserInfo;
+  [LOCK_INFO_KEY]: LockInfo;
 }
 
 type LocalStore = BasicStore;
@@ -30,107 +35,86 @@ const ss = createSessionStorage();
 
 const localMemory = new Memory();
 const sessionMemory = new Memory();
-console.log(localMemory, sessionMemory, ls);
 
 function initPersistentMemory() {
-  const localCache = ls.get('COMMON__LOCAL__KEY__');
-  const sessionCache = ss.get('COMMON__SESSION__KEY__');
+  const localCache = ls.get(APP_LOCAL_CACHE_KEY);
+  const sessionCache = ss.get(APP_SESSION_CACHE_KEY);
   localCache && localMemory.resetCache(localCache);
   sessionCache && sessionMemory.resetCache(sessionCache);
 }
 
 export class Persistent {
 
-  static getLocal<T>(key: any) {
-    console.log(999)
-  // static getLocal<T>(key: LocalKeys) {
-    return localMemory.get(key)?.value as Nullable<T>;
+  static getLocal<T>(key: LocalKeys) {
+    return localMemory.get(key) as Nullable<T>;
   }
-  static setLocal(key: any, value: any, immediate = false): void {
-    console.log(999)
-  // static setLocal(key: LocalKeys, value: LocalStore[LocalKeys], immediate = false): void {
-    localMemory.set(key, toRaw(value));
-    immediate && ls.set('COMMON__LOCAL__KEY__', localMemory.getCache);
+  static setLocal(key: LocalKeys, value: LocalStore[LocalKeys],): void {
+    localMemory.set(key, value);
+    console.log(key, value, APP_LOCAL_CACHE_KEY, localMemory.getCache);
+    ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
   }
-  static removeLocal(key: LocalKeys, immediate = false): void {
+  static removeLocal(key: LocalKeys,): void {
     localMemory.remove(key);
-    immediate && ls.set('COMMON__LOCAL__KEY__', localMemory.getCache);
+    ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
   }
-  static clearLocal(immediate = false): void {
+  static clearLocal(): void {
     localMemory.clear();
-    console.log(immediate && ls.clear())
-    immediate && ls.clear();
+    ls.clear();
   }
 
   static getSession<T>(key: SessionKeys) {
-    return sessionMemory.get(key)?.value as Nullable<T>;
+    return sessionMemory.get(key) as Nullable<T>;
   }
-  static setSession(key: SessionKeys, value: SessionStore[SessionKeys], immediate = false): void {
+  static setSession(key: SessionKeys, value: SessionStore[SessionKeys],): void {
     sessionMemory.set(key, toRaw(value));
-    immediate && ss.set('COMMON__SESSION__KEY__', sessionMemory.getCache);
+    ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
   }
-  static removeSession(key: SessionKeys, immediate = false): void {
+  static removeSession(key: SessionKeys,): void {
     sessionMemory.remove(key);
-    immediate && ss.set('COMMON__SESSION__KEY__', sessionMemory.getCache);
+    ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
   }
-  static clearSession(immediate = false): void {
+  static clearSession(): void {
     sessionMemory.clear();
-    immediate && ss.clear();
+    ss.clear();
   }
 
-  static clearAll(immediate = false) {
+  static clearAll() {
     sessionMemory.clear();
     localMemory.clear();
-    if (immediate) {
-      ls.clear();
-      ss.clear();
-    }
+    ls.clear();
+    ss.clear();
   }
 }
 
-// window.addEventListener('beforeunload', function () {
-//   console.log(22222222222);
-//   // TOKEN_KEY 在登录或注销时已经写入到storage了，此处为了解决同时打开多个窗口时token不同步的问题
-//   // LOCK_INFO_KEY 在锁屏和解锁时写入，此处也不应修改
-//   ls.set('COMMON__LOCAL__KEY__', {
-//     ...omit(localMemory.getCache, 'LOCK_INFO_KEY'),
-//     ...pick(ls.get('COMMON__LOCAL__KEY__'), ['TOKEN_KEY', 'USER_INFO_KEY', 'LOCK_INFO_KEY']),
-//   });
-//   ss.set('COMMON__SESSION__KEY__', {
-//     ...omit(sessionMemory.getCache, 'LOCK_INFO_KEY'),
-//     ...pick(ss.get('COMMON__SESSION__KEY__'), ['TOKEN_KEY', 'USER_INFO_KEY', 'LOCK_INFO_KEY']),
-//   });
-// });
+window.addEventListener('beforeunload', function () {
+  console.log(22222222222, { ...omit(localMemory.getCache, LOCK_INFO_KEY) });
 
-setTimeout(() => {
-  console.log(4444);
-  ls.set('COMMON__LOCAL__KEY__', {
-    ...omit(localMemory.getCache, 'LOCK_INFO_KEY'),
-    ...pick(ls.get('COMMON__LOCAL__KEY__'), ['TOKEN_KEY', 'USER_INFO_KEY', 'LOCK_INFO_KEY']),
+  // TOKEN_KEY 在登录或注销时已经写入到storage了，此处为了解决同时打开多个窗口时token不同步的问题
+  // LOCK_INFO_KEY 在锁屏和解锁时写入，此处也不应修改
+  ls.set(APP_LOCAL_CACHE_KEY, {
+    ...omit(localMemory.getCache, LOCK_INFO_KEY),
+    ...pick(ls.get(APP_LOCAL_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY]),
   });
-  // ss.set('COMMON__SESSION__KEY__', {
-  //   ...omit(sessionMemory.getCache, 'LOCK_INFO_KEY'),
-  //   ...pick(ss.get('COMMON__SESSION__KEY__'), ['TOKEN_KEY', 'USER_INFO_KEY', 'LOCK_INFO_KEY']),
-  // });
-  const appStore = useAppStore();
-  console.log('appStore',appStore)
-}, 4444);
+  ss.set(APP_SESSION_CACHE_KEY, {
+    ...omit(sessionMemory.getCache, LOCK_INFO_KEY),
+    ...pick(ss.get(APP_SESSION_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY]),
+  });
+});
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function storageChange(e: any) {
-  console.log(33333333,e);
   const { key, newValue, oldValue } = e;
 
   if (!key) {
     Persistent.clearAll();
     return;
   }
-
   if (!!newValue && !!oldValue) {
-    if ('COMMON__LOCAL__KEY__' === key) {
+    if (APP_LOCAL_CACHE_KEY === key) {
       Persistent.clearLocal();
     }
-    if ('COMMON__SESSION__KEY__' === key) {
+    if (APP_SESSION_CACHE_KEY === key) {
       Persistent.clearSession();
     }
   }

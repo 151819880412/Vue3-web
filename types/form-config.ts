@@ -1,4 +1,5 @@
 export declare interface FormInterface<R, O> {
+  labelWidth?:string|number,
   type: string,
   title: string,
   field: string,

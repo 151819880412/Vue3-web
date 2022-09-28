@@ -8,12 +8,14 @@ import { RequestEnum, ResultEnum, ContentTypeEnum } from '@/enums/httpEnum';
 import { isString } from '@/utils/is';
 import { formatRequestDate } from './helper';
 
-import {  ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import app from '@/main'
+import app from '@/main';
 import { LoadingType } from '@/@types/loading';
 import { router } from '@/router';
+import { TOKEN_KEY } from '@/enums/cacheEnum';
+import { Persistent, Token } from '../cache/persistent';
 
 const globSetting = {
   title: 1,
@@ -23,8 +25,8 @@ const globSetting = {
   uploadUrl: 1,
 };
 const urlPrefix = globSetting.urlPrefix;
-console.log(app)
-const loadingInstance:LoadingType = app?.$Loading
+console.log(app);
+const loadingInstance: LoadingType = app?.$Loading;
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -136,11 +138,11 @@ const transform: AxiosTransform = {
    * @description: 请求拦截器处理
    */
   requestInterceptors: (config, options) => {
-    loadingInstance?.showLoading()
+    loadingInstance?.showLoading();
     NProgress.start();
     // 请求之前处理config
-    const token = localStorage.getItem('token');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const token: string | undefined = Persistent.getLocal<Token>(TOKEN_KEY)?.token;
+    const refreshToken: string | undefined = Persistent.getLocal<Token>(TOKEN_KEY)?.refreshToken;
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       config!.headers!.token = options.authenticationScheme
@@ -148,11 +150,11 @@ const transform: AxiosTransform = {
         : token;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        config!.headers!.Authorization = options.authenticationScheme
+      config!.headers!.Authorization = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token;
 
-        
+
 
       // config.headers.accessToken = options.authenticationScheme
       //   ? `${options.authenticationScheme} ${token}`
@@ -178,16 +180,16 @@ const transform: AxiosTransform = {
     // console.log(res)
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
-    if(code==30001){
+    if (code == 30001) {
       router.push({
-        path:'login'
-      })
+        path: '/login'
+      });
     }
     if (code !== 20000) {
       ElMessage.error(res.data.message);
       throw new Error(res.data.message);
     }
-    loadingInstance?.hideLoading()
+    loadingInstance?.hideLoading();
     NProgress.done();
     if (hasSuccess) {
       return res;
@@ -199,7 +201,7 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: async (error: any) => {
-    console.log(error)
+    console.log(error);
     loadingInstance?.hideLoading();
     NProgress.done();
 

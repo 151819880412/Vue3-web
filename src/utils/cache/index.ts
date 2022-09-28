@@ -16,12 +16,12 @@ export const createStorage = (storage: Storage = localStorage, options: Options 
 };
 
 export const createSessionStorage = (options: Options = {}) => {
-  console.log('createSessionStorage', JSON.parse(JSON.stringify({ ...options })));
+  // console.log('createSessionStorage', JSON.parse(JSON.stringify({ ...options })));
   return createStorage(sessionStorage, { ...options});
 };
 
 export const createLocalStorage = (options: Options = {}) => {
-  console.log('createLocalStorage', JSON.parse(JSON.stringify({ ...options })));
+  // console.log('createLocalStorage', JSON.parse(JSON.stringify({ ...options })));
   return createStorage(localStorage, { ...options});
 };
 

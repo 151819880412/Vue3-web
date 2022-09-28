@@ -26,6 +26,7 @@ import { FormInterface, Rules, Options } from "#/form-config";
 import { UserAddModel } from "@/api/user/model/userModel";
 import userServiceImpl from "@/api/user/index";
 import { ElMessage } from "element-plus";
+import EventBus from "@/utils/mitt/mitt";
 
 
 export default defineComponent({
@@ -85,6 +86,9 @@ export default defineComponent({
         case 'Editor':
           state.title = '编 辑';
           break;
+        case 'Del':
+          state.title = '删 除';
+          break;
         default:
           break;
       }
@@ -103,6 +107,7 @@ export default defineComponent({
       const configCopy = JSON.parse(JSON.stringify(config));
       if (data) {
         state.formData = data
+        console.log(state.formData)
         const row = JSON.parse(JSON.stringify(data));
         configCopy.forEach((item) => {
           if (row[item.field]) {
@@ -133,16 +138,22 @@ export default defineComponent({
           let data = await Pctx?.proxy?.[submitDialog](formData);
           if (data) {
             closeDialog();
-            if (Pctx && Pctx.proxy) {
-              Pctx.proxy.searchFormData = JSON.parse(
-                JSON.stringify(Pctx?.proxy?.searchFormData)
-              );
+            if (Pctx && Pctx.proxy ) {
+              if(Pctx.proxy.searchFormData){
+                Pctx.proxy.searchFormData = JSON.parse(
+                  JSON.stringify(Pctx?.proxy?.searchFormData)
+                );
+              }else{
+                EventBus.emit('refresh')
+              }
             }
           }
         } catch (error) {
-          console.log(error)
-          console.error("父组件缺少 " + submitDialog + " 提交方法");
-          ElMessage.error("父组件缺少 " + submitDialog + " 提交方法")
+          if((error as Error).message=='Pctx?.proxy?.[submitDialog] is not a function'){
+            console.log(error)
+            console.error("父组件缺少 " + submitDialog + " 提交方法");
+            ElMessage.error("父组件缺少 " + submitDialog + " 提交方法")
+          }
         }
       };
       dialogMask.value.validate(res);

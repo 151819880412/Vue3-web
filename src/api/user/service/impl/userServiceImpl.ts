@@ -90,4 +90,14 @@ export default class UserServiceImpl implements UserService {
     return defHttp.post<Result>({ url: url, data});
   }
 
+  /**
+   * 查询用户权限
+   * @date 2022-09-28
+   * @param {any} userId:string
+   * @returns {any}
+   */
+  public queryUserAuthById(userId:string): Promise<Result>{
+    return defHttp.get<Result>({ url: `/user/queryUserAuthById`, params:{userId}});
+  }
+
 }

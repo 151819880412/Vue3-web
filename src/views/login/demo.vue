@@ -19,6 +19,7 @@ import {  defineComponent, Ref, ref, toRefs, reactive, toRef } from "vue";
 
 
 export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "login",
   props: [],
   setup() {

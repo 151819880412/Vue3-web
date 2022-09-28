@@ -2,8 +2,8 @@
     <!-- 有子节点渲染这个 -->
     <el-sub-menu :index="menu.path" v-if="menu.children">
       <template #title>
-        <el-icon v-html="menu.meta.icon"></el-icon>
-        <span>{{ menu.meta.title }}</span>
+        <el-icon v-html="menu.meta?.icon"></el-icon>
+        <span>{{ menu.meta?.title }}</span>
       </template>
       <!-- 递归调用本身，该组件在index.ts中全局注册了 -->
       <SidebarItem
@@ -15,8 +15,8 @@
     </el-sub-menu>
     <!-- 没有子节点渲染这个 -->
     <el-menu-item v-else :index="menu.path" @click="skip(menu)">
-      <el-icon v-html="menu.meta.icon"></el-icon>
-      <span>{{ menu.meta.title }}</span>
+      <el-icon v-html="menu.meta?.icon"></el-icon>
+      <span>{{ menu.meta?.title }}</span>
     </el-menu-item>
 </template>
 

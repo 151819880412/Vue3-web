@@ -3,8 +3,10 @@ import { FormInterface, Options, Rules } from "#/form-config";
 import { Ref, ref } from "vue";
 import loginServiceImpl from "@/api/login/index";
 import { useRouter } from "vue-router";
+import { Persistent } from "@/utils/cache/persistent";
+import { TOKEN_KEY, USER_INFO_KEY } from "@/enums/cacheEnum";
 export default function () {
-  const router = useRouter()
+  const router = useRouter();
   const refDataForm = ref();
   const configArr: Array<FormInterface<Rules, Options>> = [
     {
@@ -16,8 +18,8 @@ export default function () {
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
       on: [],
-      col:{
-        span:24
+      col: {
+        span: 24
       }
     },
     {
@@ -29,8 +31,8 @@ export default function () {
       required: true,
       rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
       on: [],
-      col:{
-        span:24
+      col: {
+        span: 24
       },
       props: {
         "show-password": true,
@@ -51,8 +53,8 @@ export default function () {
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
       on: [],
-      col:{
-        span:24
+      col: {
+        span: 24
       },
     },
     {
@@ -64,8 +66,8 @@ export default function () {
       required: true,
       rules: [{ message: "请输入旧密码", required: true, trigger: "blur" }],
       on: [],
-      col:{
-        span:24
+      col: {
+        span: 24
       },
       props: {
         "show-password": true,
@@ -80,8 +82,8 @@ export default function () {
       required: true,
       rules: [{ message: "请输入新密码", required: true, trigger: "blur" }],
       on: [],
-      col:{
-        span:24
+      col: {
+        span: 24
       },
       props: {
         "show-password": true,
@@ -93,20 +95,23 @@ export default function () {
 
   // methods
   const getToken = async (formData) => {
-    const {data} = await loginServiceImpl.login(formData);
-    localStorage.setItem("token", data.accessToken);
+    const { data } = await loginServiceImpl.login(formData);
+    // localStorage.setItem("token", data.accessToken);
+    Persistent.setLocal(TOKEN_KEY, { token: data.accessToken, refreshToken: data.refreshToken });
+    Persistent.setLocal(USER_INFO_KEY, data);
     router.push({
-      path:'home'
-    })
-    console.log(data);
+      path: 'home'
+    });
   };
   const toLogin = () => {
+    // Persistent.setLocal(TOKEN_KEY,111)
+
     refDataForm.value.validate((formData) => getToken(formData));
-  }
+  };
 
   const changePwd = () => {
     const reset = async (formData) => {
-      const {data} = await loginServiceImpl.changePwd(formData);
+      const { data } = await loginServiceImpl.changePwd(formData);
       console.log(data);
     };
     changeDataForm.value.validate((formData) => reset(formData));

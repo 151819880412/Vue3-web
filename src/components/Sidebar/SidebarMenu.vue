@@ -51,8 +51,12 @@ export default defineComponent({
       },
     ];
     const defaultActive = "/a";
-    function handleOpen() {}
-    function handleClose() {}
+    function handleOpen() {
+        console.log(1)
+    }
+    function handleClose() {
+        console.log(1)
+    }
     return {
       isCollapse,
       menus,

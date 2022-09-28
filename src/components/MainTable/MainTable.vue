@@ -6,7 +6,9 @@
       </el-icon>
       <span> 数据列表</span>
       <div style="float: right">
-        <el-button type="primary" @click="add">新增</el-button>
+        <slot name="MainTableBtn">
+          <el-button type="primary" @click="add" >新增</el-button>
+        </slot>
         <slot name="tableBtn"></slot>
       </div>
     </el-col>
@@ -22,23 +24,23 @@
          -->
       <el-skeleton :rows="5" animated :loading="loading" :throttle="500">
         <el-table
-          :data="tableData.data"
+          v-bind="tableData?.tableProps"
           style="width: 100%"
           empty-text="暂无数据"
-          :height="tableData?.attrs?.height"
-          :max-height="tableData?.attrs?.maxHeight"
-          :stripe="tableData?.attrs?.stripe || false"
-          :border="tableData?.attrs?.border || false"
-          :size="tableData?.attrs?.size || ''"
-          :fit="tableData?.attrs?.fit || true"
-          :show-header="tableData?.attrs?.showHeader || true"
-          :highlight-current-row="tableData?.attrs?.highlight || false"
-          :current-row-key="tableData?.attrs?.currentRowKey || ''"
-          :row-class-name="tableData?.attrs?.rowClassName"
-          :cell-class-name="tableData?.attrs?.cellClassName"
-          :cell-style="tableData?.attrs?.cellStyle"
-          :header-row-class-name="tableData?.attrs?.headerRowClassName"
-          :header-row-style="tableData?.attrs?.headerRowStyle"
+          :height="tableData?.tableProps?.height"
+          :max-height="tableData?.tableProps?.maxHeight"
+          :stripe="tableData?.tableProps?.stripe || false"
+          :border="tableData?.tableProps?.border || false"
+          :size="tableData?.tableProps?.size || ''"
+          :fit="tableData?.tableProps?.fit || true"
+          :show-header="tableData?.tableProps?.showHeader || true"
+          :highlight-current-row="tableData?.tableProps?.highlightCurrentRow || false"
+          :current-row-key="tableData?.tableProps?.currentRowKey || ''"
+          :row-class-name="tableData?.tableProps?.rowClassName"
+          :cell-class-name="tableData?.tableProps?.cellClassName"
+          :cell-style="tableData?.tableProps?.cellStyle"
+          :header-row-class-name="tableData?.tableProps?.headerRowClassName"
+          :header-row-style="tableData?.tableProps?.headerRowStyle"
         >
           <template v-for="column in tableData.columns" :key="column.key">
             <el-table-column
@@ -81,7 +83,7 @@
       </el-skeleton>
     </el-col>
 
-    <el-col style="padding: 12px">
+    <el-col style="padding: 12px" v-show="total>=0">
       <el-skeleton :rows="5" animated :loading="loading" :throttle="500">
         <el-pagination
           v-model:currentPage="currentPage"
@@ -105,12 +107,14 @@ import {
   ComponentInternalInstance,
   defineComponent,
   inject,
+  onBeforeUnmount,
   onMounted,
   reactive,
   ref,
   toRefs,
   watch,
 } from "vue";
+import EventBus from "@/utils/mitt/mitt";
 // type aa = {
 //   a:string,
 //   b:bb
@@ -136,10 +140,14 @@ export default defineComponent({
     },
     searchData: {
       type: Object,
-      required: true,
+      required: false,
+        default: () => {
+          return {}
+        },
     },
     tableConfig: {
       type: tableConfigTypes,
+      // type: Object,
       required: true,
     },
     // aaa:{
@@ -148,6 +156,14 @@ export default defineComponent({
     // },
   },
   setup(props) {
+
+    const refreshTable = () => {
+      initTableData(1, 10, props.searchData);
+    }
+
+    EventBus.on('refresh',refreshTable)
+
+
     let loading = ref(true);
 
     let tableData = reactive(props.tableConfig);
@@ -155,8 +171,13 @@ export default defineComponent({
     let searchFormData = reactive(props.searchData);
     onMounted(() => {
       initTableData(1, 10, props.searchData);
-      console.log(props.searchData)
+      // console.log(props.searchData)
     });
+
+    onBeforeUnmount(() => {
+      EventBus.off('refresh',refreshTable)
+
+    })
 
     const initTableData = async (
       currentPage: number,
@@ -166,11 +187,10 @@ export default defineComponent({
       let { data } = await props.searchFn(currentPage, pageSize, searchData);
       page.total = data.total;
       loading.value = false;
-      tableData.data = data.results;
+      tableData.tableProps.data = data.results;
     };
 
-    const ddd = toRefs(props.searchData);
-
+    
     watch(
       () => props.searchData,
       (newValue, oldValue) => {
@@ -178,13 +198,14 @@ export default defineComponent({
         console.log(newValue, "tttttnewValue", oldValue, "tttttoldValue");
         initTableData(1, pageObj.pageSize, newValue as object);
       }
-    );
-    watch(
-      () => ddd,
-      (newValue, oldValue) => {
-        console.log(newValue, "tttttnewValue", oldValue, "tttttoldValue");
-      }
-    );
+      );
+      // const ddd = toRefs(props.searchData);
+    // watch(
+    //   () => ddd,
+    //   (newValue, oldValue) => {
+    //     console.log(newValue, "tttttnewValue", oldValue, "tttttoldValue");
+    //   }
+    // );
 
     let Pctx: ComponentInternalInstance | null | undefined = inject("Pctx");
 
@@ -222,6 +243,7 @@ export default defineComponent({
       searchFormData,
       loading,
       tableData,
+      refreshTable,
     };
   },
   components: {},

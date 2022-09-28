@@ -19,35 +19,35 @@ export class Memory<T = any, V = any> {
     return this.cache[key];
   }
 
-  set<K extends keyof T>(key: K, value: V) {
-    console.log(333,key,value);
-    // const item = this.get(key);
-    // if (item) {
-    //   item.value = value;
-    // } else {
-    //   item = { value };
-    //   this.cache[key] = item;
-    // }
+  set<K extends keyof T>(key: K, value: any) {
+    // console.log(333,key,value,this.get(key));
+    let item = this.get(key);
+    if (item) {
+      item = value;
+      this.cache[key] = item;
+    } else {
+      item = value
+      this.cache[key] = item;
+    }
     return value;
   }
 
   remove<K extends keyof T>(key: K) {
-    alert(1)
     const item = this.get(key);
     Reflect.deleteProperty(this.cache, key);
     if (item) {
-      return item.value;
+      return item;
     }
     return null;
   }
 
   resetCache(cache: { [K in keyof T]: Cache }) {
-    console.log(JSON.parse(JSON.stringify(cache)))
+    // console.log(JSON.parse(JSON.stringify(cache)))
     Object.keys(cache).forEach((key) => {
       const k = key as keyof T;
       const item = cache[k];
       if (item) {
-        this.set(k, item.value);
+        this.set(k, item);
       }
     });
   }

@@ -49,6 +49,7 @@
     <DialogMask ref="dialogMask">
       <template v-slot:dialogMaskSlot>
         <el-tree
+        ref="treeDataRef"
           :props="{
             label: 'menuName',
             children: 'children',
@@ -82,7 +83,7 @@ import { FormInterface, Options, Rules } from "#/form-config";
 import roleServiceImpl from "@/api/role/index";
 import SearchForm from "@/components/SearchForm/SearchForm.vue";
 import DialogMask from "@/components/DialogMask/DialogMask.vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElTree } from "element-plus";
 import { tableConfigType } from "@/components/MainTable/MainTable";
 import {
   RoleAddModel,
@@ -121,22 +122,23 @@ export default defineComponent({
       roleId: string;
     }
 
-    type roleType = {
+    type RoleType = {
       tableData: tableConfigType<RolePageModel>;
       treeData: Array<Tree<MenuPageModel>>;
       searchFormData: RoleQueryModel;
       defaultCheckedKeys: Array<string>;
       dialogFormConfig: Array<FormInterface<Rules, Options>>;
       queryFormConfig: Array<FormInterface<Rules, Options>>;
+      selectTreeList: Array<string>;
     };
 
-    const initState = (): roleType => {
+    const initState = (): RoleType => {
       return {
         tableData: {
-          attrs: {
+          tableProps: {
             border: true,
+            data:[]
           },
-          data: [],
           columns: [
             {
               type: "selection",
@@ -226,12 +228,13 @@ export default defineComponent({
             },
           },
         ],
+        selectTreeList:[]
       };
     };
 
-    const roleModel: roleType = reactive(initState());
+    const roleModel: RoleType = reactive(initState());
 
-    let data: ToRefs<roleType> = toRefs(roleModel);
+    let data: ToRefs<RoleType> = toRefs(roleModel);
 
     let formatters = (data: { state: number }): string => {
       switch (data.state) {
@@ -262,6 +265,7 @@ export default defineComponent({
     const openDialog = async (): Promise<void> => {
       roleModel.defaultCheckedKeys = [];
       roleModel.treeData = []
+      roleModel.selectTreeList = []
       await dialogMask?.value?.initConfig(roleModel.dialogFormConfig);
       dialogMask.value?.openDialog("Add");
     };
@@ -282,6 +286,7 @@ export default defineComponent({
     };
 
     const dialogMask = ref<InstanceType<typeof DialogMask>>();
+    const treeDataRef = ref<InstanceType<typeof ElTree>>()
 
     /**
      * 修改状态
@@ -338,7 +343,7 @@ export default defineComponent({
      * @returns {any}
      */
     const submitDialogEditor = async (formData: RoleAddModel): Promise<boolean> => {
-      const obj: RoleEditorModel = { ...formData, menus: roleModel.defaultCheckedKeys };
+      const obj: RoleEditorModel = { ...formData, menus: roleModel.selectTreeList };
       console.log(obj);
       let { message } = await roleServiceImpl.editorRole(obj);
       ElMessage({
@@ -363,7 +368,18 @@ export default defineComponent({
       }
     ) => {
       console.log(data, row);
+      let idArr:string[] = [];
+      treeDataRef.value?.getCheckedNodes().forEach(item=>{
+        idArr.push(item.menuId)
+      })
+      treeDataRef.value?.getHalfCheckedNodes().forEach(item=>{
+        idArr.push(item.menuId)
+      })
+      // [...treeDataRef.value?.getCheckedNodes(), ...treeDataRef.value?.getHalfCheckedNodes()].forEach(item=>{
+      //   idArr.push(item.menuId)
+      // })
       roleModel.defaultCheckedKeys = row.checkedKeys.filter((item) => item !== "1");
+      roleModel.selectTreeList = idArr
     };
 
     return {
@@ -379,6 +395,7 @@ export default defineComponent({
       submitSearch,
       openDialog,
       dialogMask,
+      treeDataRef,
       submitDialogAdd,
       roleServiceImpl,
       editState,

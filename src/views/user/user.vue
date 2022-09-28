@@ -101,7 +101,7 @@ export default defineComponent({
       roleId: string;
     }
 
-    interface userType {
+    interface UserType {
       searchFormData: UserQueryModel;
       treeData: Array<Tree<RolePageModel>>,
       defaultCheckedKeys: Array<string>;
@@ -110,16 +110,16 @@ export default defineComponent({
       queryFormConfig: Array<FormInterface<Rules, Options>>;
     }
 
-    const initState = (): userType => {
+    const initState = (): UserType => {
       return {
         tableData: {
-          attrs: {
+          tableProps: {
             rowClassName: function ({ rowIndex }) {
               return rowIndex % 2 == 0 ? "selfClass" : "dubbleClass";
             },
             border: true,
+            data:[],
           },
-          data: [],
           columns: [
             {
               type: "selection",
@@ -259,10 +259,10 @@ export default defineComponent({
       };
     };
 
-    const userModel: userType = reactive(initState());
-    // const userModel = reactive<userType>(initState());
+    const userModel = reactive<UserType>(initState());
+    // const userModel = reactive<UserType>(initState());
 
-    let userData: ToRefs<userType> = toRefs(userModel);
+    let userData: ToRefs<UserType> = toRefs(userModel);
 
     /**
      * 状态转文字

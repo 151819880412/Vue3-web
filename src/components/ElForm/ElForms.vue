@@ -7,6 +7,7 @@ import _ from "lodash";
 import { ref, toRefs, h, PropType } from "vue";
 import {
   ElInput,
+  ElInputNumber,
   ElSelect,
   ElOption,
   ElDatePicker,
@@ -19,6 +20,7 @@ import {
   ElRadio,
   ElCheckboxGroup,
   ElCheckbox,
+  ElSwitch,
 } from "element-plus";
 import { FormInterface, Options, Rules } from "#/form-config";
 import { preProcessData } from "@/utils/objFilter";
@@ -38,12 +40,14 @@ export default {
   setup(props, { expose }: any) {
     const compA = {
       input: ElInput,
+      inputNumber:ElInputNumber,
       select: ElSelect,
       datePicker: ElDatePicker,
       timePicker: ElTimePicker,
       cascader: ElCascader,
       radioGroup: ElRadioGroup,
       checkboxGroup: ElCheckboxGroup,
+      switch:ElSwitch,
     };
     const comB = {
       option: ElOption,
@@ -58,7 +62,6 @@ export default {
     const rules: Array<FormInterface<Rules, Options>> = formConfig.value as Array<
       FormInterface<Rules, Options>
     >;
-    console.log(rules)
     rules.forEach((item) => {
       if (item.required) {
         const placeholder = ["input"].includes(item.type)
@@ -278,6 +281,7 @@ export default {
                                 prop: `dataForm.${inx}.value`,
                                 rules: item.rules,
                                 key: item.field,
+                                labelWidth: item.labelWidth,
                               },
                               {
                                 default: () => SelectFun(item),

@@ -27,4 +27,7 @@ export default interface UserService {
   // 根据id查询用户
   queryUserById(data:UserChangeStateModel): Promise<Result>;
 
+  // 根据id查询用户
+  queryUserAuthById(userId:string): Promise<Result>;
+
 }
