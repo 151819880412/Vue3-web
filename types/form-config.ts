@@ -1,10 +1,11 @@
 export declare interface FormInterface<R, O> {
-  labelWidth?:string|number,
+  labelWidth?: string | number,
   type: string,
   title: string,
   field: string,
   value: any,
   maxlength?: number,
+  isShow?: boolean,
   required: boolean,
   // eslint-disable-next-line @typescript-eslint/ban-types
   callback?: Function,
@@ -13,13 +14,16 @@ export declare interface FormInterface<R, O> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: any,
   col?: ColType,
-  on: Array<string>,
-  queryOptionsFn?:{
-    url:string,
-    data:string,
-    label:string,
-    value:string
-  }
+  on?: {
+    [propname: string]: (val: string | number | Array<string> | Array<number>) => void;
+  },
+  // on: Array<string>,
+  queryOptionsFn?: {
+    url: string,
+    data: string,
+    label: string,
+    value: string;
+  };
 }
 
 export declare interface Rules {
@@ -33,9 +37,13 @@ export declare interface Rules {
 export declare interface Options {
   label: string,
   value: string | number,
+  // 动态控制是否显示
+  hide?: Array<string>;
+  // 动态控制是否禁用
+  disabled?: Array<string>;
 }
 
-export declare interface ColType  {
+export declare interface ColType {
   span?: number;
   offset?: number;
   pull?: number;

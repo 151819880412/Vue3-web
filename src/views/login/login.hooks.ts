@@ -17,8 +17,7 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
-      on: [],
-      col: {
+            col: {
         span: 24
       }
     },
@@ -30,8 +29,7 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
-      on: [],
-      col: {
+            col: {
         span: 24
       },
       props: {
@@ -52,8 +50,7 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
-      on: [],
-      col: {
+            col: {
         span: 24
       },
     },
@@ -65,8 +62,7 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入旧密码", required: true, trigger: "blur" }],
-      on: [],
-      col: {
+            col: {
         span: 24
       },
       props: {
@@ -81,8 +77,7 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入新密码", required: true, trigger: "blur" }],
-      on: [],
-      col: {
+            col: {
         span: 24
       },
       props: {

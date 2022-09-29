@@ -115,6 +115,14 @@ export const usePermissionStore = defineStore({
       console.log(JSON.parse(JSON.stringify(routes)));
       const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth?[Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth]:[]
       // 待优化
+      const renderComponent = (str:string)=>{
+        switch (str) {
+          case 'LAYOUT':
+            return () => import('@/views/layout/AppLayout.vue');
+          default:
+            return () => import(`@/views${str}.vue`);
+        }
+      }
       const treeFor = (arr)=>{
         for (let i = 0; i < arr.length; i++) {
           if(arr[i]?.children){
@@ -123,11 +131,7 @@ export const usePermissionStore = defineStore({
           arr[i].meta={
             title:arr[i].menuName
           }
-          if(!arr[i].parentId){
-            arr[i].component = () => import('@/views/layout/AppLayout.vue');
-          }else{
-            arr[i].component = () => import(`@/views/${arr[i].path.split('/')[arr[i].path.split('/').length-1]}/${arr[i].path.split('/')[arr[i].path.split('/').length-1]}.vue`);
-          }
+          arr[i].component = renderComponent(arr[i].componentPath);
         }
       }
       treeFor(arr)

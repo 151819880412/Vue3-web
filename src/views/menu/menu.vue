@@ -83,8 +83,13 @@ export default defineComponent({
               showOverflowTooltip: true,
             },
             {
-              label: "路径",
+              label: "路由地址",
               prop: "path",
+              showOverflowTooltip: true,
+            },
+            {
+              label: "组件路径",
+              prop: "componentPath",
               showOverflowTooltip: true,
             },
             {
@@ -109,6 +114,7 @@ export default defineComponent({
             type: "input",
             title: "名称",
             field: "menuName",
+            isShow: true,
             value: "",
             maxlength: 40,
             required: true,
@@ -116,26 +122,46 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             props: {
               clearable: true,
             },
           },
           {
             type: "input",
-            title: "路径",
+            title: "路由地址",
             field: "path",
             value: "",
             maxlength: 40,
             required: true,
-            rules: [{ message: "请输入路径", required: true, trigger: "blur" }],
+            rules: [{ message: "请输入路由地址", required: true, trigger: "blur" }],
             col: {
               span: 12,
             },
-            on: [],
+            // on: {
+            //   change: (val) => {
+            //     console.log(val);
+            //   },
+            // },
             props: {
               clearable: true,
             },
+            isShow: true,
+          },
+          {
+            type: "input",
+            title: "组件路径",
+            field: "componentPath",
+            value: "",
+            maxlength: 40,
+            required: true,
+            rules: [{ message: "请输入组件路径", required: true, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            props: {
+              clearable: true,
+            },
+            isShow: true,
           },
           {
             type: "inputNumber",
@@ -148,10 +174,46 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             props: {
               min: 1
             },
+            isShow: true,
+          },
+          {
+            type: "select",
+            title: "类型",
+            field: "type",
+            value: "",
+            maxlength: 40,
+            required: true,
+            rules: [{ message: "请选择类型", required: true, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "目录",
+                value: 0,
+              },
+              {
+                label: "菜单",
+                value: 1,
+              },
+              {
+                label: "按钮",
+                value: 2,
+                hide:['path','componentPath']
+              },
+              {
+                label: "页面(待扩展)",
+                value: 3,
+                hide:['path','componentPath']
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow: true,
           },
           {
             type: "switch",
@@ -164,12 +226,12 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             props: {
               clearable: true,
               activeValue: 1,
               inactiveValue: 0,
             },
+            isShow: true,
           },
         ]
       };
@@ -201,7 +263,6 @@ export default defineComponent({
         col: {
           span: 12,
         },
-        on: [],
         props: {
           clearable: true,
           disabled: true
@@ -229,7 +290,7 @@ export default defineComponent({
       return true;
     };
 
-    const editorMenu = async (formData: MenuListModel) => {
+    const editorMenu = async (formData: any) => {
       let { data } = await menuServiceImpl.queryMenuById(formData.menuId);
       await dialogMask?.value?.initConfig(menuModel.dialogFormConfig, data);
       dialogMask.value?.openDialog("Editor");
@@ -246,10 +307,10 @@ export default defineComponent({
 
     const delMenu = async (formData: MenuListModel) => {
       let { data } = await menuServiceImpl.queryMenuById(formData.menuId);
-      console.log(menuModel.dialogFormConfig)
-      const config = JSON.parse(JSON.stringify(menuModel.dialogFormConfig))
+      console.log(menuModel.dialogFormConfig);
+      const config = JSON.parse(JSON.stringify(menuModel.dialogFormConfig));
       config.forEach(item => {
-        item.props.disabled = true
+        item.props.disabled = true;
       });
       await dialogMask?.value?.initConfig(config, data);
       dialogMask.value?.openDialog("Del");

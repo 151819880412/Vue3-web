@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogFormVisible" :title="title" destroy-on-close draggable :close-on-click-modal="false"
     :before-close="closeDialog">
-    <ElForms :formConfig="formConfig" :formData="formData" ref="dialogMask" />
+    <ElForms :formConfig="state.formConfig" :formData="formData" ref="dialogMask" />
     <slot name="dialogMaskSlot"></slot>
     <template #footer>
       <span class="dialog-footer">
@@ -27,6 +27,7 @@ import { UserAddModel } from "@/api/user/model/userModel";
 import userServiceImpl from "@/api/user/index";
 import { ElMessage } from "element-plus";
 import EventBus from "@/utils/mitt/mitt";
+import _ from "lodash";
 
 
 export default defineComponent({
@@ -43,7 +44,13 @@ export default defineComponent({
      * @date 2022-08-05
      * @returns {any}
      */
-    const initState = () => {
+    interface DialogMaskType {
+      formConfig: Array<FormInterface<Rules, Options>>;
+      formData: object;
+      title:string,
+      titleType:string
+    }
+    const initState = ():DialogMaskType => {
       return {
         formConfig: [],
         formData:{},
@@ -60,7 +67,7 @@ export default defineComponent({
      * @returns {void}
      */
     const resetState = (): void => {
-      Object.assign(state, initState());
+      Object.assign({},state, initState());
     };
 
     /**
@@ -104,13 +111,13 @@ export default defineComponent({
      * @returns {any}
      */
     const initConfig = async (config: Array<FormInterface<Rules, Options>>, data?: object): Promise<void> => {
-      const configCopy = JSON.parse(JSON.stringify(config));
+      const configCopy =  _.cloneDeep(config)
       if (data) {
         state.formData = data
-        console.log(state.formData)
         const row = JSON.parse(JSON.stringify(data));
-        configCopy.forEach((item) => {
-          if (row[item.field]) {
+        configCopy.forEach((item:FormInterface<Rules, Options>) => {
+          // 判断不为null和undefind
+          if ((row[item.field]??'')!=='') {
             item.value = row[item.field];
           }
         });
@@ -127,7 +134,7 @@ export default defineComponent({
           item.options = JSON.parse(JSON.stringify(p[index].data.results));
         }
       });
-      state.formConfig = JSON.parse(JSON.stringify(configCopy));
+      state.formConfig = _.cloneDeep(configCopy)
     };
 
     const submitDialog = (): void => {
@@ -166,6 +173,7 @@ export default defineComponent({
       dialogFormVisible,
       closeDialog,
       ...states,
+      state,
       dialogMask,
       initConfig,
       submitDialog,
