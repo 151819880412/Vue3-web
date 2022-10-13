@@ -37,7 +37,6 @@ export default defineComponent({
           console.log(value, b, c);
         },
         rules:[{ message: "请输入端口", required: true, trigger: "blur" }],
-        on:[],
       },
       {
         type: "RadioGroup",
@@ -51,7 +50,6 @@ export default defineComponent({
           { label: "示例2", value: "2" },
         ],
         rules:[],
-        on:[],
       },
       {
         type: "Select",
@@ -65,7 +63,6 @@ export default defineComponent({
           { label: "示例2", value: "2" },
         ],
         rules:[],
-        on:[],
       },
       {
         type: "CheckboxGroup",
@@ -79,7 +76,6 @@ export default defineComponent({
           { label: "示例2", value: "2" },
         ],
         rules:[],
-        on:[],
       },
       {
         type: "DatePicker",
@@ -96,7 +92,6 @@ export default defineComponent({
           endPlaceholder: "结束日期",
         },
         rules:[],
-        on:[],
       },
     ]
 

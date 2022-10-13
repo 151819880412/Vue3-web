@@ -1,10 +1,7 @@
 
 import { defineStore } from 'pinia';
 import { store } from '@/piniaStore/index';
-
-
-
-import { AppRouteRecordRaw} from '@/router/types';
+import { AppRouteRecordRaw } from '@/router/types';
 // import { useAppStoreWithOut } from './app';
 import { USER_INFO_KEY } from '@/enums/cacheEnum';
 import { Persistent } from '@/utils/cache/persistent';
@@ -14,7 +11,7 @@ import { UserInfo } from '../../../types/store';
 // const User = () => import('@/views/user/user.vue');
 // const Role = () => import('@/views/role/role.vue');
 // const Menu = () => import('@/views/menu/menu.vue')
-
+import files from './file';
 
 interface PermissionState {
   // 路由是否动态添加
@@ -71,11 +68,9 @@ export const usePermissionStore = defineStore({
       // console.log(appStore)
 
       let routes: AppRouteRecordRaw[] = [];
-      const roleList = [];
+      // const roleList = [];
       // const roleList = toRaw(userStore.getRoleList) || [];
       // const permissionMode = PermissionModeEnum.ROUTE_MAPPING
-      console.log(roleList);
-      console.log(JSON.parse(JSON.stringify(routes)));
 
 
       /**
@@ -112,78 +107,30 @@ export const usePermissionStore = defineStore({
         return;
       };
 
-      console.log(JSON.parse(JSON.stringify(routes)));
-      const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth?[Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth]:[]
+      const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth ? [Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth] : [];
       // 待优化
-      const renderComponent = (str:string)=>{
+      const renderComponent = (str: string) => {
         switch (str) {
           case 'LAYOUT':
             return () => import('@/views/layout/AppLayout.vue');
           default:
-            return () => import(`@/views${str}.vue`);
+            return () => import(`@/views${files.keys().filter(item => item == '.' + str + '.vue')[0].slice(1)}`);
         }
-      }
-      const treeFor = (arr)=>{
+      };
+      const treeFor = (arr) => {
         for (let i = 0; i < arr.length; i++) {
-          if(arr[i]?.children){
-            treeFor(arr[i]?.children)
+          if (arr[i]?.children) {
+            treeFor(arr[i]?.children);
           }
-          arr[i].meta={
-            title:arr[i].menuName
-          }
+          arr[i].meta = {
+            title: arr[i].menuName
+          };
           arr[i].component = renderComponent(arr[i].componentPath);
         }
-      }
-      treeFor(arr)
-      routes = arr as unknown as Array<AppRouteRecordRaw>
-      console.log(routes)
+      };
+      treeFor(arr);
+      routes = arr as unknown as Array<AppRouteRecordRaw>;
 
-      // routes = [{
-      //   path: '/system',
-      //   name: 'System',
-      //   component: AppLayout,
-      //   meta: {
-      //     // hideChildrenInMenu: true,
-      //     icon: '<span class="iconfont icon-zhanghaoquanxianguanli"/>',
-      //     title: '系统',
-      //     // orderNo: 100000,
-      //   },
-      //   children: [
-      //     {
-      //       path: '/user',
-      //       name: 'User',
-      //       component: User,
-      //       meta: {
-      //         // hideChildrenInMenu: true,
-      //         icon: '<span class="iconfont icon-yonghu"/>',
-      //         title: '用户',
-      //         // orderNo: 100000,
-      //       },
-      //     },
-      //     {
-      //       path: '/role',
-      //       name: 'role',
-      //       component: Role,
-      //       meta: {
-      //         // hideChildrenInMenu: true,
-      //         icon: '<span class="iconfont icon-jiaose"/>',
-      //         title: '角色',
-      //         // orderNo: 100000,
-      //       },
-      //     },
-      //     {
-      //       path: '/menu',
-      //       name: 'Menu',
-      //       component: Menu,
-      //       meta: {
-      //         // hideChildrenInMenu: true,
-      //         icon: '<span class="iconfont icon-jiaose"/>',
-      //         title: '菜单',
-      //         // orderNo: 100000,
-      //       },
-      //     },
-      //   ],
-      // }];
       this.setMenuList(routes);
       patchHomeAffix(routes);
       return routes;

@@ -219,7 +219,7 @@ export default defineComponent({
             type: "switch",
             title: "是否显示",
             field: "delFlag",
-            value: 1,
+            value: 0,
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入是否显示", required: true, trigger: "blur" }],
@@ -228,8 +228,8 @@ export default defineComponent({
             },
             props: {
               clearable: true,
-              activeValue: 1,
-              inactiveValue: 0,
+              activeValue: 0,
+              inactiveValue: 1,
             },
             isShow: true,
           },
@@ -241,9 +241,9 @@ export default defineComponent({
 
     let formatters = (data: { delFlag: number; }): string => {
       switch (data.delFlag) {
-        case 1:
-          return "显示";
         case 0:
+          return "显示";
+        case 1:
           return "隐藏";
         default:
           return "";
@@ -267,6 +267,7 @@ export default defineComponent({
           clearable: true,
           disabled: true
         },
+        isShow:true,
       }];
       const arr = JSON.parse(JSON.stringify(menuModel.dialogFormConfig));
       let { data } = await menuServiceImpl.queryMenuById(row.menuId);
@@ -290,7 +291,7 @@ export default defineComponent({
       return true;
     };
 
-    const editorMenu = async (formData: any) => {
+    const editorMenu = async (formData: MenuListModel) => {
       let { data } = await menuServiceImpl.queryMenuById(formData.menuId);
       await dialogMask?.value?.initConfig(menuModel.dialogFormConfig, data);
       dialogMask.value?.openDialog("Editor");

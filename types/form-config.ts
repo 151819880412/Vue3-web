@@ -24,6 +24,7 @@ export declare interface FormInterface<R, O> {
     label: string,
     value: string;
   };
+  _index?:number,
 }
 
 export declare interface Rules {

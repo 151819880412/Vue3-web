@@ -17,9 +17,10 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
-            col: {
+      col: {
         span: 24
-      }
+      },
+      isShow:true,
     },
     {
       type: "input",
@@ -29,12 +30,13 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
-            col: {
+      col: {
         span: 24
       },
       props: {
         "show-password": true,
       },
+      isShow:true,
     },
   ];
 
@@ -50,9 +52,10 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
-            col: {
+      col: {
         span: 24
       },
+      isShow:true,
     },
     {
       type: "input",
@@ -62,12 +65,13 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入旧密码", required: true, trigger: "blur" }],
-            col: {
+      col: {
         span: 24
       },
       props: {
         "show-password": true,
       },
+      isShow:true,
     },
     {
       type: "input",
@@ -77,12 +81,13 @@ export default function () {
       maxlength: 20,
       required: true,
       rules: [{ message: "请输入新密码", required: true, trigger: "blur" }],
-            col: {
+      col: {
         span: 24
       },
       props: {
         "show-password": true,
       },
+      isShow:true,
     },
   ];
 

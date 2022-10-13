@@ -70,7 +70,8 @@ export default {
     // console.log(formDatas)
 
 
-    rules.value.forEach((item) => {
+    rules.value.forEach((item,index) => {
+      item._index = index
       if (item.required) {
         const placeholder = ["input"].includes(item.type)
           ? `请输入${item.title ?? ""}`
@@ -338,7 +339,7 @@ export default {
                 rules.value
                   // 动态显示隐藏 会有卡顿 待优化
                   .filter((item) => compA[item.type] && item.isShow)
-                  .map((item, inx) => {
+                  .map((item) => {
                     let classArr = ["el-col"];
                     for (const key in item?.col) {
                       if (key == "span") {
@@ -360,7 +361,7 @@ export default {
                               formItem,
                               {
                                 label: item.title,
-                                prop: `dataForm.${inx}.value`,
+                                prop: `dataForm.${item._index}.value`,
                                 rules: item.rules,
                                 key: item.field,
                                 labelWidth: item.labelWidth,
@@ -378,7 +379,7 @@ export default {
           )
         );
       }
-      return rules;
+      return null;
     };
 
     return renderConponents;

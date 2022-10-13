@@ -161,7 +161,6 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
           },
           {
             type: "input",
@@ -174,7 +173,6 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
           },
           // {
           //   type: "select",
@@ -187,7 +185,6 @@ export default defineComponent({
           //   col: {
           //     span: 12,
           //   },
-          //   on: [],
           //   props: {
           //     multiple: true,
           //   },
@@ -215,7 +212,6 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             props: {
               clearable: true,
             }
@@ -231,7 +227,6 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             options: [
               {
                 label: "启用",

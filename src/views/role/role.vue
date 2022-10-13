@@ -181,7 +181,7 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
+            isShow:true,
           },
         ],
         queryFormConfig: [
@@ -196,10 +196,10 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             props: {
               clearable: true,
             },
+            isShow:true,
           },
           {
             type: "select",
@@ -212,7 +212,6 @@ export default defineComponent({
             col: {
               span: 12,
             },
-            on: [],
             options: [
               {
                 label: "启用",
@@ -226,6 +225,7 @@ export default defineComponent({
             props: {
               clearable: true,
             },
+            isShow:true,
           },
         ],
         selectTreeList:[]
