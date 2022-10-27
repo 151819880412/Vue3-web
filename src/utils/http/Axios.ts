@@ -9,6 +9,7 @@ import { isFunction } from '@/utils/is';
 import { omit } from 'lodash-es';
 import { ContentTypeEnum } from '@/enums/httpEnum';
 import { RequestEnum } from '@/enums/httpEnum';
+import { globSetting } from '.';
 
 export * from './axiosTransform';
 
@@ -85,7 +86,7 @@ export class VAxios {
       // const {
       //   headers: { ignoreCancelToken },
       // } = config;
-      const ignoreCancelToken = config?.headers?.ignoreCancelToken
+      const ignoreCancelToken = config?.headers?.ignoreCancelToken;
       const ignoreCancel =
         ignoreCancelToken !== undefined
           ? ignoreCancelToken
@@ -126,8 +127,8 @@ export class VAxios {
   /**
    * @description:  File Upload
    */
-  uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
-    const formData = new window.FormData();
+  async uploadFile<T = any>(config: AxiosRequestConfig, params: UploadFileParams): Promise<T> {
+    const formData = new FormData();
 
     if (params.data) {
       Object.keys(params.data).forEach((key) => {
@@ -143,22 +144,25 @@ export class VAxios {
         formData.append(key, params.data[key]);
       });
     }
-    formData.append(params.name || 'file', params.file, params.filename);
+    // formData.append(params.name || 'file', params.file, params.filename);
+    formData.append("file", new Blob([params.file], {type:'multipart/form-data; charset=utf-8',}),params.filename);
     const customParams = omit(params, 'file', 'filename', 'file');
 
-    Object.keys(customParams).forEach((key) => {
-      formData.append(key, customParams[key]);
+    Object.keys(customParams).forEach(() => {
+      // formData.append(key, customParams[key]);
     });
 
-    return this.axiosInstance.request<T>({
+    return (await this.axiosInstance.request<T>({
       ...config,
+      url: globSetting.urlPrefix + config.url,
       method: 'POST',
       data: formData,
       headers: {
-        'Content-type': ContentTypeEnum.FORM_DATA,
+        'Content-type': 'multipart/form-data; charset=utf-8',
+        'Accept': 'multipart/form-data; charset=utf-8',
         ignoreCancelToken: true,
       },
-    });
+    })).data;
   }
 
   // 支持表单数据

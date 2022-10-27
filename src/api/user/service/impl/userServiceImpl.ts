@@ -4,7 +4,7 @@
 
 import { defHttp } from '@/utils/http';
 import UserService from '../userService';
-import { PageResult, Result } from '#/axios';
+import { PageResult, Result, UploadFileParams } from '#/axios';
 import { UserAddModel, UserChangeStateModel, UserEditorModel, UserPageModel } from '../../model/userModel';
 
 export default class UserServiceImpl implements UserService {
@@ -82,12 +82,12 @@ export default class UserServiceImpl implements UserService {
    * @param {any} data:UserEditorModel
    * @returns {any}
    */
-   public editorUser(data: UserEditorModel): Promise<Result> {
+  public editorUser(data: UserEditorModel): Promise<Result> {
     return defHttp.post<Result>({ url: `/user/editor`, data });
   }
 
-  public queryOptions(url:string,data:object): Promise<Result>{
-    return defHttp.post<Result>({ url: url, data});
+  public queryOptions(url: string, data: object): Promise<Result> {
+    return defHttp.post<Result>({ url: url, data });
   }
 
   /**
@@ -96,8 +96,19 @@ export default class UserServiceImpl implements UserService {
    * @param {any} userId:string
    * @returns {any}
    */
-  public queryUserAuthById(userId:string): Promise<Result>{
-    return defHttp.get<Result>({ url: `/user/queryUserAuthById`, params:{userId}});
+  public queryUserAuthById(userId: string): Promise<Result> {
+    return defHttp.get<Result>({ url: `/user/queryUserAuthById`, params: { userId } });
+  }
+
+  /**
+   * 上传文件
+   * 如果使用原始 post 方法需要修改 conf,使其深拷贝 formData 文件
+   * @date 2022-10-14
+   * @param {any} file
+   * @returns {any}
+   */
+  public uploadFile(data:UploadFileParams): Promise<Result> {
+    return defHttp.uploadFile<Result>({ url: `/file/upload`},data);
   }
 
 }

@@ -33,3 +33,11 @@ export function flatten(arr: Array<any>) {
   }
   ));
 }
+
+// 获取 uuid
+export const getUuid = function ():string {
+  return (
+    new Date().getTime().toString(36).substring(2, 12) +
+    Math.ceil(Math.random() * 100000000).toString(36)
+  )
+}

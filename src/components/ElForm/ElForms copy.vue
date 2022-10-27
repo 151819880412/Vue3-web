@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import { ref, h, PropType, toRefs, reactive, Ref } from "vue";
+import _ from "lodash";
+import { ref, toRefs, h, PropType } from "vue";
 import {
   ElInput,
   ElInputNumber,
@@ -31,22 +32,22 @@ export default {
     formConfig: {
       type: Array as PropType<FormInterface<Rules, Options>[]>,
     },
-    formData: {
-      type: Object
+    formData:{
+      type:Object
     }
   },
   // setup(props: Readonly<{ formConfig: FormInterface<Rules, Options>[]|undefined; }>, { expose }: any) {
   setup(props, { expose }: any) {
     const compA = {
       input: ElInput,
-      inputNumber: ElInputNumber,
+      inputNumber:ElInputNumber,
       select: ElSelect,
       datePicker: ElDatePicker,
       timePicker: ElTimePicker,
       cascader: ElCascader,
       radioGroup: ElRadioGroup,
       checkboxGroup: ElCheckboxGroup,
-      switch: ElSwitch,
+      switch:ElSwitch,
     };
     const comB = {
       option: ElOption,
@@ -57,20 +58,11 @@ export default {
       checkbox: ElCheckbox,
     };
     const components = { ...compA, ...comB };
-    // 将 props 参数转换为响应式
     const { formConfig } = toRefs(props);
-    let rules = reactive(formConfig || []) as Ref<FormInterface<Rules, Options>[]>;
-    // let rules: Array<FormInterface<Rules, Options>> = formConfig.value as Array<
-    //   FormInterface<Rules, Options>
-    // >;
-
-    // const {formData} = toRefs(props);
-    // let formDatas = reactive(formData||{})
-    // console.log(formDatas)
-
-
-    rules.value.forEach((item,index) => {
-      item._index = index
+    const rules: Array<FormInterface<Rules, Options>> = formConfig.value as Array<
+      FormInterface<Rules, Options>
+    >;
+    rules.forEach((item) => {
       if (item.required) {
         const placeholder = ["input"].includes(item.type)
           ? `请输入${item.title ?? ""}`
@@ -82,9 +74,10 @@ export default {
         });
       }
     });
+
     const refDataForm = ref();
 
-
+    
     /**
      * 验证全部字段
      * @date 2022-07-20
@@ -95,10 +88,10 @@ export default {
     const validate = (callback: Function): void => {
       refDataForm.value?.validate?.((valid: boolean): void => {
         if (valid) {
-          const objType = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
-          const obj: Generate<typeof objType> = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
+          const objType = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
+          const obj:Generate<typeof objType> = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
           // return callback(_.omitBy(obj), valid);
-          return callback(preProcessData(Object.assign({}, props.formData, obj)), valid);
+          return callback(preProcessData(Object.assign({},props.formData,obj)), valid);
         }
         // return callback({},valid);
       });
@@ -126,7 +119,7 @@ export default {
     };
 
     const rType = () => {
-      const obj = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
+      const obj = rules.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
       return obj;
     };
 
@@ -137,8 +130,8 @@ export default {
       rType,
     });
 
-    const renderConponents = () => {
-      if (rules.value.filter((item) => compA[item.type]).length) {
+    return () => {
+      if (rules.filter((item) => compA[item.type]).length) {
         const SelectFun = (item: FormInterface<Rules, Options>) => {
           const events = {};
           if (item.on) {
@@ -160,26 +153,7 @@ export default {
                     placeholder,
                     ...item.props,
                     modelValue: item.value,
-                    "onUpdate:modelValue": (value) => {
-                      rules.value.forEach(items => {
-                        // 控制显示隐藏
-                        if (item.options?.filter(item3 => item3.value == value)[0].hide?.includes(items.field)) {
-                          items.isShow = false;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].hide?.includes(items.field)) {
-                          items.isShow = true;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = false;
-                        }
-                        if (item.options?.filter(item3 => item3.value == value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = true;
-                        }
-                      });
-                      return (item.value = value), item?.callback?.(value, item, this);
-                    },
+                    "onUpdate:modelValue": (value) => (item.value = value),
                     ...events,
                     class: "icm-w-search",
                   },
@@ -187,9 +161,9 @@ export default {
                     default: () =>
                       (item.options || []).map((v) =>
                         h(components.option, {
-                          label: v[item?.queryOptionsFn?.label || 1] || v.label,
-                          value: v[item?.queryOptionsFn?.value || 1] || v.value,
-                          key: v[item?.queryOptionsFn?.value || 1] || v.value,
+                          label: v[item?.queryOptionsFn?.label||1] || v.label,
+                          value: v[item?.queryOptionsFn?.value||1] || v.value,
+                          key: v[item?.queryOptionsFn?.value||1] || v.value,
                         })
                       ),
                   }
@@ -202,26 +176,7 @@ export default {
                   {
                     ...item.props,
                     modelValue: item.value,
-                    "onUpdate:modelValue": (value) => {
-                      rules.value.forEach(items => {
-                        // 控制显示隐藏
-                        if (item.options?.filter(item3 => item3.value == value)[0].hide?.includes(items.field)) {
-                          items.isShow = false;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].hide?.includes(items.field)) {
-                          items.isShow = true;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = false;
-                        }
-                        if (item.options?.filter(item3 => item3.value == value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = true;
-                        }
-                      });
-                      return (item.value = value), item?.callback?.(value, item, this);
-                    },
+                    "onUpdate:modelValue": (value) => (item.value = value),
                     ...events,
                   },
                   {
@@ -230,8 +185,8 @@ export default {
                         h(
                           components.radio,
                           {
-                            label: v[item?.queryOptionsFn?.label || 1] || v.label,
-                            key: v[item?.queryOptionsFn?.value || 1] || v.value,
+                            label: v[item?.queryOptionsFn?.label||1] || v.label,
+                            key: v[item?.queryOptionsFn?.value||1] || v.value,
                           },
                           {
                             default: () => v.label,
@@ -250,34 +205,15 @@ export default {
                     ...events,
                     ...item,
                     modelValue: item.value,
-                    "onUpdate:modelValue": (value) => {
-                      rules.value.forEach(items => {
-                        // 控制显示隐藏
-                        if (item.options?.filter(item3 => item3.value == value)[0].hide?.includes(items.field)) {
-                          items.isShow = false;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].hide?.includes(items.field)) {
-                          items.isShow = true;
-                          items.value = '';
-                        }
-                        if (item.options?.filter(item3 => item3.value == item.value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = false;
-                        }
-                        if (item.options?.filter(item3 => item3.value == value)[0].disabled?.includes(items.field)) {
-                          items.props.disabled = true;
-                        }
-                      });
-                      return (item.value = value), item?.callback?.(value, item, this);
-                    },
+                    "onUpdate:modelValue": (value) => (item.value = value),
                   },
                   () =>
                     item?.options?.map((v) =>
                       h(
                         components.checkbox,
                         {
-                          label: v[item?.queryOptionsFn?.label || 1] || v.label,
-                          key: v[item?.queryOptionsFn?.value || 1] || v.value,
+                          label: v[item?.queryOptionsFn?.label||1] || v.label,
+                          key: v[item?.queryOptionsFn?.value||1] || v.value,
                         },
                         () => [v.label]
                       )
@@ -290,28 +226,11 @@ export default {
                   placeholder,
                   ...item,
                   ...item.props,
-                  autocomplete: "new-password",
+                  autocomplete:"new-password",
                   modelValue: item.value,
-                  "onUpdate:modelValue": (value) => {
-                    rules.value.forEach(items => {
-                      // 控制显示隐藏
-                      if (item.options?.filter(item3 => item3.value == value)[0].hide?.includes(items.field)) {
-                        items.isShow = false;
-                        items.value = '';
-                      }
-                      if (item.options?.filter(item3 => item3.value == item.value)[0].hide?.includes(items.field)) {
-                        items.isShow = true;
-                        items.value = '';
-                      }
-                      if (item.options?.filter(item3 => item3.value == item.value)[0].disabled?.includes(items.field)) {
-                        items.props.disabled = false;
-                      }
-                      if (item.options?.filter(item3 => item3.value == value)[0].disabled?.includes(items.field)) {
-                        items.props.disabled = true;
-                      }
-                    });
-                    return (item.value = value), item?.callback?.(value, item, this);
-                  },
+                  "onUpdate:modelValue": (value:string|number|Array<string>) => (
+                    (item.value = value), item?.callback?.(value, item, this)
+                  ),
                   ...events,
                   class: "icm-w-search",
                 }),
@@ -328,17 +247,16 @@ export default {
             labelWidth: 110,
             labelSuffix: "：",
             inline: false,
-            model: { dataForm: rules.value },
+            model: { dataForm: rules },
           },
           h(
             "div",
             { class: "el-row" },
             {
               default: () =>
-                rules.value
-                  // 动态显示隐藏 会有卡顿 待优化
-                  .filter((item) => compA[item.type] && item.isShow)
-                  .map((item) => {
+                rules
+                  .filter((item) => compA[item.type])
+                  .map((item, inx) => {
                     let classArr = ["el-col"];
                     for (const key in item?.col) {
                       if (key == "span") {
@@ -360,7 +278,7 @@ export default {
                               formItem,
                               {
                                 label: item.title,
-                                prop: `dataForm.${item._index}.value`,
+                                prop: `dataForm.${inx}.value`,
                                 rules: item.rules,
                                 key: item.field,
                                 labelWidth: item.labelWidth,
@@ -380,8 +298,6 @@ export default {
       }
       return null;
     };
-
-    return renderConponents;
   },
 };
 </script>

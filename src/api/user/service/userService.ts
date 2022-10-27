@@ -1,4 +1,4 @@
-import { Result } from "#/axios";
+import { Result, UploadFileParams } from "#/axios";
 import { UserAddModel, UserChangeStateModel } from "../model/userModel";
 
 /**
@@ -29,5 +29,8 @@ export default interface UserService {
 
   // 根据id查询用户
   queryUserAuthById(userId:string): Promise<Result>;
+
+  // 上传文件
+  uploadFile(file:UploadFileParams): Promise<Result>;
 
 }
