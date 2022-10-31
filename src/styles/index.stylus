@@ -48,10 +48,6 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
-html {
-    font-size: 62.5%;
-    color: #222;
-}
  
 ::selection {
     background-color: #b3d4fc;
@@ -81,7 +77,6 @@ li {
 body {
     font:1.2rem "simhei",Arial,Helvetica,sans-serif;
     line-height: 1.5;
-    background-color: #f7f7f7;
 }
  
 a {
@@ -122,7 +117,6 @@ html {
   margin: 0;
   height: 100%;
   padding: 0;
-  background: #fff;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

@@ -13,6 +13,16 @@
           <router-view class="appLayout" />
         </el-main>
       </el-container>
+
+      <!-- <el-header><SidebarNav /></el-header>
+      <el-main><el-header>
+          <Header></Header>
+        </el-header>
+        <el-main>
+          <router-view class="appLayout" />
+        </el-main></el-main> -->
+
+
     </el-container>
   </div>
 </template>
@@ -22,6 +32,7 @@ import { defineComponent, reactive, ref, watch} from "vue";
 import SidebarNav from "./components/Sidebar/Sidebar.vue";
 import Header from "./components/Header/Header.vue";
 import { useState } from "@/utils/useState";
+import { useDark, useToggle } from '@vueuse/core';
 
 
 export default defineComponent({
@@ -38,8 +49,19 @@ export default defineComponent({
         width.value = '200px'
       }
     });
+    const isDark = useDark({
+      // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
+      storageKey: 'useDarkKEY',
+      // 暗黑class名字
+      valueDark: 'dark',
+      // 高亮class名字
+      valueLight: 'light',
+    });
+
+    const toggle = useToggle(isDark);
     return{
       width,
+      toggle,
     }
   },
   components: {
@@ -51,11 +73,19 @@ export default defineComponent({
 </script>
 
 <style scoped lang="stylus">
+.common-layout{
+  // background: #f0f2f5  
+}
 .el-container {
   height: 100vh;
 }
 .el-header {
-  background-color: #B3C0D1;
+  // background-color: white;
+  padding 0
+  height: 80px
+}
+.el-main{
+  padding:0  
 }
 .el-aside {
   background-color: #304156;
@@ -63,6 +93,9 @@ export default defineComponent({
 }
 .appLayout{
   width:100%
+  height: 100%
+  padding 1rem
+  box-sizing:border-box
 }
 
 </style>

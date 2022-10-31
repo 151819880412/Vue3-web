@@ -11,8 +11,16 @@ import 'element-plus/dist/index.css'
 // import 'element-plus/lib/theme-chalk/index.css';
 import locale from 'element-plus/lib/locale/lang/zh-cn';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import './styles/index.stylus'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
-import './assets/iconfont/iconfont.css';
+
+// import './assets/iconfont/iconfont.css';
+// import './assets/icons/index.js';
+import SvgIcon from '@/components/Icon/SvgIcon.vue'
+import './assets/icons' // icon
+
+
 import MainTable from '@/components/MainTable/MainTable.vue'
 // import DialogMask from '@/components/DialogMask/DialogMask.vue'
 const DialogMask = defineAsyncComponent(() => import('@/components/DialogMask/DialogMask.vue'))
@@ -21,7 +29,6 @@ const DialogMask = defineAsyncComponent(() => import('@/components/DialogMask/Di
 
 import Loading from "@/components/Loading/index"
 
-import './styles/index.stylus'
 import { LoadingType } from './@types/loading';
 import { setupStore } from './piniaStore';
 
@@ -49,6 +56,7 @@ const app = createApp(App) as CustomApp;
 // 全局组件
 app.component("MainTable",MainTable);
 app.component("DialogMask",DialogMask);
+app.component("SvgIcon",SvgIcon);
 
 // 安装 Pinia
 // app.use(createPinia())
