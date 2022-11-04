@@ -2,14 +2,14 @@
     <!-- 有子节点渲染这个 -->
     <el-sub-menu :index="menu.path" v-if="menu.children">
       <template #title>
-        <el-icon v-html="menu.meta?.icon"></el-icon>
+        <!-- <el-icon v-html="menu.meta?.icon"></el-icon> -->
+        <el-icon><House /></el-icon>
         <span>{{ menu.meta?.title }}</span>
       </template>
       <!-- 递归调用本身，该组件在index.ts中全局注册了 -->
       <SidebarItem
         v-for="item in menu.children"
         :menu="item"
-        :isCollapse="isCollapse"
         :key="item.path"
       />
     </el-sub-menu>
@@ -28,9 +28,6 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "SidebarItem",
   props: {
-    isCollapse: {
-      type: Boolean,
-    },
     menu: {
       type: Object as PropType<AppRouteRecordRaw>,
       required:true

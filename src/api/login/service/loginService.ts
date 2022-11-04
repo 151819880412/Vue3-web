@@ -1,3 +1,4 @@
+import { Result } from "#/axios";
 import { ChangePwdParams, LoginParams } from "../model/login";
 import { ChangePwdResultModel, LoginResultModel } from "../model/userModel";
 
@@ -17,5 +18,8 @@ export default interface LoginService {
   
   // 权限
   queryRoleMenuList(userId:string): Promise<LoginResultModel>;
+
+  // 登出
+  logOut(userId:string): Promise<Result>;
 
 }

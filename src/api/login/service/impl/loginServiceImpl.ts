@@ -6,6 +6,7 @@ import { defHttp } from '@/utils/http';
 import LoginService from '../loginService';
 import { ChangePwdResultModel, LoginResultModel } from '../../model/userModel';
 import { LoginParams, ChangePwdParams } from '../../model/login';
+import { Result } from '#/axios';
 
 export default class LoginServiceImpl implements LoginService {
 
@@ -29,6 +30,10 @@ export default class LoginServiceImpl implements LoginService {
 
   public queryRoleMenuList(userId:string): Promise<LoginResultModel> {
     return defHttp.get<LoginResultModel>({ url: '/permission/queryRoleMenuList', params:{userId} });
+  }
+
+  public logOut(userId:string): Promise<Result> {
+    return defHttp.get<LoginResultModel>({ url: '/auth/logOut', params:{userId} });
   }
 
 }

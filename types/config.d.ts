@@ -13,9 +13,12 @@ import { CacheTypeEnum } from '/@/enums/cacheEnum';
 export type LocaleType = 'zh_CN' | 'en' | 'ru' | 'ja' | 'ko';
 
 export interface MenuSetting {
+  // 是否折叠
+  collapsed: boolean;
+  // 默认展示页面
+  defaultActive: string;
   bgColor: string;
   fixed: boolean;
-  collapsed: boolean;
   canDrag: boolean;
   show: boolean;
   hidden: boolean;
@@ -81,6 +84,13 @@ export interface TransitionSetting {
 }
 
 export interface ProjectConfig {
+  // 锁屏时间
+  lockTime: number;
+  // 主题色
+  themeColor: string;
+  // 菜单设置
+  menuSetting: MenuSetting;
+
   // 权限相关信息的存储位置
   permissionCacheType: CacheTypeEnum;
   // 是否显示配置按钮
@@ -97,8 +107,7 @@ export interface ProjectConfig {
   grayMode: boolean;
   // Whether to turn on the color weak mode
   colorWeak: boolean;
-  // Theme color
-  themeColor: string;
+
 
   // The main interface is displayed in full screen, the menu is not displayed, and the top
   fullContent: boolean;
@@ -110,16 +119,14 @@ export interface ProjectConfig {
   showFooter: boolean;
   // menuType: MenuTypeEnum;
   headerSetting: HeaderSetting;
-  // menuSetting
-  menuSetting: MenuSetting;
+
   // Multi-tab settings
   multiTabsSetting: MultiTabsSetting;
   // Animation configuration
   transitionSetting: TransitionSetting;
   // pageLayout whether to enable keep-alive
   openKeepAlive: boolean;
-  // Lock screen time
-  lockTime: number;
+
   // Show breadcrumbs
   showBreadCrumb: boolean;
   // Show breadcrumb icon

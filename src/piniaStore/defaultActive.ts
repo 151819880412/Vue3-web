@@ -1,3 +1,10 @@
+/**
+ * 已废弃，并入到app里面
+ * @date 2022-11-02
+ * @param {any} 
+ * @param {any}
+ * @returns {any}
+ */
 import { defineStore } from "pinia";
 
 interface DefaultActiveStoreState {

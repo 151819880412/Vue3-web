@@ -11,7 +11,8 @@ import { UserInfo } from '../../../types/store';
 // const User = () => import('@/views/user/user.vue');
 // const Role = () => import('@/views/role/role.vue');
 // const Menu = () => import('@/views/menu/menu.vue')
-import files from './file';
+// import files from './file';
+const files = require.context('@/views', true, /\.vue$/)
 
 interface PermissionState {
   // 路由是否动态添加

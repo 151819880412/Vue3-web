@@ -1,6 +1,9 @@
 <!-- src\layout\AppLayout.vue -->
 <template>
-  <div class="common-layout">
+  <transition name="fade-bottom" mode="out-in" v-if="useLockInfo?.isLock">
+    <LockPage >{{useLockInfo?.isLock}}</LockPage>
+  </transition>
+  <div class="common-layout" v-bind="lockEvents" v-else>
     <el-container>
       <el-aside :width="width" class="aside">
         <SidebarNav />
@@ -28,46 +31,72 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch} from "vue";
+import { computed, defineComponent } from "vue";
 import SidebarNav from "./components/Sidebar/Sidebar.vue";
 import Header from "./components/Header/Header.vue";
-import { useState } from "@/utils/useState";
-import { useDark, useToggle } from '@vueuse/core';
+// import { useState } from "@/utils/useState";
+import { setThemeColor } from "@/utils";
+import { Persistent } from "@/utils/cache/persistent";
+import { PROJ_CFG_KEY } from "@/enums/cacheEnum";
+import { ProjectConfig } from "#/config";
+import { useAppStoreWithOut } from "@/piniaStore/modules/app";
+import { useLockPage } from "../hooks/useLockPage";
+import { useLockStore } from "@/piniaStore/modules/lock";
+import LockPage from "@/components/LockPage/LockPage.vue";
 
 
 export default defineComponent({
   name: "sidebarNav",
   props: [],
   setup() {
-    const sidebar:any = useState(['sidebar'])
-    let width = ref('200px')
-    let sidebarState = reactive(sidebar)
-    watch(sidebarState, (newValue,) => {
-      if(newValue.sidebar.isCollapse){
-        width.value = '70px'
-      }else{
-        width.value = '200px'
-      }
-    });
-    const isDark = useDark({
-      // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
-      storageKey: 'useDarkKEY',
-      // 暗黑class名字
-      valueDark: 'dark',
-      // 高亮class名字
-      valueLight: 'light',
-    });
+    // let width = ref('200px');
+    // 设置侧边栏宽度
+    // const sidebar: any = useState(['sidebar']);
+    // let sidebarState = reactive(sidebar);
+    // watch(sidebarState, (newValue,) => {
+    //   if (newValue.sidebar.isCollapse) {
+    //     width.value = '70px';
+    //   } else {
+    //     width.value = '200px';
+    //   }
+    // });
 
-    const toggle = useToggle(isDark);
-    return{
-      width,
+    // 设置明亮/暗黑主题
+    const appStore = useAppStoreWithOut();
+    const toggle: (value?: boolean | undefined) => boolean = appStore.setDarkMode();
+    // 设置主题色
+    setThemeColor(Persistent.getLocal<ProjectConfig>(PROJ_CFG_KEY)?.themeColor || '#0084f4');
+
+    // 设置侧边栏宽度
+    // watch(appStore.getProjectConfig.menuSetting, (newValue) => {
+    //   if (newValue.collapsed) {
+    //     width.value = '70px';
+    //   } else {
+    //     width.value = '200px';
+    //   }
+    // });
+    const width = computed(() => appStore.getProjectConfig.menuSetting.collapsed?'70px':'200px')
+
+    // 锁屏
+    const lockEvents = useLockPage();
+
+    const useLock = useLockStore()
+    const useLockInfo = computed(() => useLock.getLockInfo)
+
+    console.log(useLockInfo,111)
+
+    return {
       toggle,
-    }
+      width,
+      lockEvents,
+      useLockInfo
+    };
   },
   components: {
     // Loading
     SidebarNav,
-    Header
+    Header,
+    LockPage,
   },
 });
 </script>

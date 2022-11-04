@@ -31,6 +31,7 @@ export interface RequestOptions {
   withRefreshToken?: boolean;
 }
 
+// 没有返回数据的时候使用 Result 有返回数据的时候应该继承 Result
 export interface Result<T = any> {
   code: number;
   type: 'success' | 'error' | 'warning';

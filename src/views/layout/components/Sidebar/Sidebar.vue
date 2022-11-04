@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-menu class="menus" :collapse="sidebar.isCollapse" @open="handleOpen" @close="handleClose"
-      background-color="#304156" text-color="#bfcbd9" :unique-opened="true" active-text-color="#409EFF"
-      :collapse-transition="false" :default-active="defaultActive" mode="vertical">
-      <SidebarItem :isCollapse="isCollapse" v-for="item in navs" :key="item.path" :menu="item" :index="item.path" />
+    <el-menu class="menus" :collapse="collapsed" @open="handleOpen" @close="handleClose" background-color="#304156"
+      text-color="#bfcbd9" :unique-opened="true" active-text-color="#409EFF" :collapse-transition="false"
+      :default-active="defaultActive" mode="vertical">
+      <SidebarItem v-for="item in navs" :key="item.path" :menu="item" :index="item.path" />
     </el-menu>
   </div>
 </template>
@@ -11,38 +11,42 @@
 <script lang="ts">
 import SidebarItem from "./SidebarItem.vue";
 
-import { computed, defineComponent, ref } from "vue";
-import { useState } from "@/utils/useState";
-import useDefaultActiveStore from "@/piniaStore/defaultActive";
+import { computed, defineComponent } from "vue";
+// import { useState } from "@/utils/useState";
+// import useDefaultActiveStore from "@/piniaStore/defaultActive";
 import { usePermissionStoreWithOut } from "@/piniaStore/modules/permission";
 import { AppRouteRecordRaw } from "@/router/types";
+import { useAppStoreWithOut } from "@/piniaStore/modules/app";
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Sidebar",
   props: [],
   setup() {
-  const permissionStore = usePermissionStoreWithOut();
+    const permissionStore = usePermissionStoreWithOut();
+    const navs: AppRouteRecordRaw[] = permissionStore.getMenuList;
 
-    const store = useDefaultActiveStore()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sidebar: any = useState(["sidebar"]);
+    // 默认展示页面
+    // const store = useDefaultActiveStore();
+    // const sidebar: any = useState(["sidebar"]);
     // console.log(sidebar);
-    const isCollapse = ref(false);
+
     const handleOpen = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
     };
     const handleClose = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
     };
-    const navs: AppRouteRecordRaw[] = permissionStore.getMenuList
+
+    const appStore = useAppStoreWithOut();
 
     return {
-      isCollapse,
       handleOpen,
       handleClose,
       navs,
-      ...sidebar,
-      defaultActive: computed(() => store.defaultActive),
+      // ...sidebar,
+      // defaultActive: computed(() => store.defaultActive),
+      defaultActive: computed(() => appStore.getProjectConfig.menuSetting.defaultActive),
+      collapsed: computed(() => appStore.getProjectConfig.menuSetting.collapsed),
     };
   },
   components: {

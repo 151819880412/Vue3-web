@@ -5,7 +5,8 @@ import { Memory } from './memory';
 import { toRaw } from 'vue';
 import { UserInfo } from '#/store';
 import { pick, omit } from 'lodash-es';
-import { APP_LOCAL_CACHE_KEY, APP_SESSION_CACHE_KEY, LOCK_INFO_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
+import { APP_LOCAL_CACHE_KEY, APP_SESSION_CACHE_KEY, LOCK_INFO_KEY, TOKEN_KEY, USER_INFO_KEY, PROJ_CFG_KEY } from '@/enums/cacheEnum';
+import { ProjectConfig } from '#/config';
 
 interface LockInfo {
   pwd?: string | undefined;
@@ -21,6 +22,7 @@ interface BasicStore {
   [TOKEN_KEY]: Token;
   [USER_INFO_KEY]: UserInfo;
   [LOCK_INFO_KEY]: LockInfo;
+  [PROJ_CFG_KEY]: ProjectConfig
 }
 
 type LocalStore = BasicStore;
@@ -46,12 +48,12 @@ function initPersistentMemory() {
 export class Persistent {
 
   static getLocal<T>(key: LocalKeys) {
-    return localMemory.get(key) as Nullable<T>;
+    return localMemory.get(key)?.value as Nullable<T>;
   }
   static setLocal(key: LocalKeys, value: LocalStore[LocalKeys],): void {
     localMemory.set(key, value);
     console.log(key, value, APP_LOCAL_CACHE_KEY, localMemory.getCache);
-    ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
+    // ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);  // 刷新的时候统一写入storage
   }
   static removeLocal(key: LocalKeys,): void {
     localMemory.remove(key);
@@ -87,16 +89,15 @@ export class Persistent {
 }
 
 window.addEventListener('beforeunload', function () {
-  console.log(22222222222, { ...omit(localMemory.getCache, LOCK_INFO_KEY) });
-
+  console.log(22222222222, ls);
   // TOKEN_KEY 在登录或注销时已经写入到storage了，此处为了解决同时打开多个窗口时token不同步的问题
   // LOCK_INFO_KEY 在锁屏和解锁时写入，此处也不应修改
   ls.set(APP_LOCAL_CACHE_KEY, {
-    ...omit(localMemory.getCache, LOCK_INFO_KEY),
-    ...pick(ls.get(APP_LOCAL_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY]),
+    ...omit(localMemory.getCache),
+    ...pick(ls.get(APP_LOCAL_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY]),
   });
   ss.set(APP_SESSION_CACHE_KEY, {
-    ...omit(sessionMemory.getCache, LOCK_INFO_KEY),
+    ...omit(sessionMemory.getCache),
     ...pick(ss.get(APP_SESSION_CACHE_KEY), [TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY]),
   });
 });

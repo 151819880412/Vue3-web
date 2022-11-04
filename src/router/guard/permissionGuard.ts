@@ -3,7 +3,7 @@ import type { Router, RouteRecordRaw } from 'vue-router';
 import { usePermissionStoreWithOut } from '@/piniaStore/modules/permission';
 
 import { PageEnum } from '@/enums/pageEnum';
-import useDefaultActiveStore from '@/piniaStore/defaultActive';
+import { useAppStoreWithOut } from '@/piniaStore/modules/app';
 
 const PAGE_NOT_FOUND_ROUTE = {
   name: 'PageNotFound'
@@ -24,7 +24,7 @@ export function createPermissionGuard(router: Router) {
     getToken: '1',
     getSessionTimeout: 1,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    afterLoginAction: () => {},
+    afterLoginAction: () => { },
     getLastUpdateTime: (): number => {
       return 1;
     }
@@ -43,8 +43,9 @@ export function createPermissionGuard(router: Router) {
     }
 
     // 设置菜单默认选中页面
-    const store = useDefaultActiveStore()
-    store.setDefaultActive(to.path)
+    const appStore = useAppStoreWithOut();
+    // store.setDefaultActive(to.path)
+    appStore.setProjectConfig({ menuSetting: { defaultActive: to.path } });
     // store.dispatch(SidebarActionTypes.DEFAULT_ACTIVE,to.path)
 
     const token = userStore.getToken;
@@ -59,8 +60,8 @@ export function createPermissionGuard(router: Router) {
             next((to.query?.redirect as string) || '/');
             return;
           }
-        } catch (e){
-          console.log(e)
+        } catch (e) {
+          console.log(e);
         }
       }
       next();
@@ -110,7 +111,7 @@ export function createPermissionGuard(router: Router) {
     routes.forEach((route) => {
       router.addRoute(route as unknown as RouteRecordRaw);
     });
-    
+
     permissionStore.setDynamicAddedRoute(true);
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {

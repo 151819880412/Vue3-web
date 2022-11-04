@@ -11,14 +11,13 @@
 <script lang='ts'>
 import SvgIcon from '@/components/Icon/SvgIcon.vue';
 import { createVNode,} from "vue";
-import { useDark, useToggle } from '@vueuse/core';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface theme {
   value: boolean,
   // idDrak: WritableComputedRef<boolean>
 }
 import { reactive, toRefs, defineComponent, ToRefs } from 'vue';
+import { useAppStoreWithOut } from '@/piniaStore/modules/app';
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'theme',
@@ -46,17 +45,9 @@ export default defineComponent({
       className: "moon",
       size: '1.5rem'
     });
-
-    const isDark = useDark({
-      // 存储到localStorage/sessionStorage中的Key 根据自己的需求更改
-      storageKey: 'useDarkKEY',
-      // 暗黑class名字
-      valueDark: 'dark',
-      // 高亮class名字
-      valueLight: 'light',
-    });
-
-    const toggle = useToggle(isDark);
+    
+    const appStore = useAppStoreWithOut();
+    const toggle: (value?: boolean | undefined) => boolean = appStore.setDarkMode()
 
     return {
       ...data,
