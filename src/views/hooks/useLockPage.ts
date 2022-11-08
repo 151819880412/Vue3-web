@@ -3,6 +3,7 @@ import { useThrottleFn } from '@vueuse/core';
 
 import { useAppStore } from '@/piniaStore/modules/app';
 import { useLockStore } from '@/piniaStore/modules/lock';
+import { useUserStoreWithOut } from '@/piniaStore/modules/user';
 
 // import { useUserStore } from '@/piniaStore/modules/user';
 
@@ -42,9 +43,10 @@ export function useLockPage() {
   }
 
   function lockPage(): void {
+    const userStore = useUserStoreWithOut()
     lockStore.setLockInfo({
       isLock: true,
-      pwd: undefined,
+      pwd: userStore.getUserInfo.password,
     });
   }
 

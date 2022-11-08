@@ -3,8 +3,7 @@ import { FormInterface, Options, Rules } from "#/form-config";
 import { Ref, ref } from "vue";
 import loginServiceImpl from "@/api/login/index";
 import { useRouter } from "vue-router";
-import { Persistent } from "@/utils/cache/persistent";
-import { TOKEN_KEY, USER_INFO_KEY } from "@/enums/cacheEnum";
+import { useUserStoreWithOut } from "@/piniaStore/modules/user";
 export default function () {
   const router = useRouter();
   const refDataForm = ref();
@@ -96,16 +95,14 @@ export default function () {
   // methods
   const getToken = async (formData) => {
     const { data } = await loginServiceImpl.login(formData);
-    // localStorage.setItem("token", data.accessToken);
-    Persistent.setLocal(TOKEN_KEY, { token: data.accessToken, refreshToken: data.refreshToken });
-    Persistent.setLocal(USER_INFO_KEY, data);
+    const userStore = useUserStoreWithOut()
+    userStore.setToken({ token: data.accessToken, refreshToken: data.refreshToken })
+    userStore.setUserInfo(data)
     router.push({
       path: 'home'
     });
   };
   const toLogin = () => {
-    // Persistent.setLocal(TOKEN_KEY,111)
-
     refDataForm.value.validate((formData) => getToken(formData));
   };
 

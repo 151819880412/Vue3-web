@@ -4,7 +4,6 @@ import { defineStore } from 'pinia';
 
 import { LOCK_INFO_KEY } from '@/enums/cacheEnum';
 import { Persistent } from '@/utils/cache/persistent';
-// import { useUserStore } from './user';
 
 interface LockState {
   lockInfo: Nullable<LockInfo>;
@@ -23,39 +22,21 @@ export const useLockStore = defineStore({
   actions: {
     setLockInfo(info: LockInfo) {
       this.lockInfo = Object.assign({}, this.lockInfo, info);
-      console.log(this.lockInfo,info,1111)
+      console.log(this.lockInfo, info, 1111);
       Persistent.setLocal(LOCK_INFO_KEY, this.lockInfo);
     },
     resetLockInfo() {
       Persistent.removeLocal(LOCK_INFO_KEY);
       this.lockInfo = null;
     },
-    // Unlock
-    async unLock(password?: string) {
-      console.log(password)
-      // const userStore = useUserStore();
-      // if (this.lockInfo?.pwd === password) {
-      //   this.resetLockInfo();
-      //   return true;
-      // }
-      // const tryLogin = async () => {
-      //   try {
-      //     const username = userStore.getUserInfo?.username;
-      //     const res = await userStore.login({
-      //       username,
-      //       password: password!,
-      //       goHome: false,
-      //       mode: 'none',
-      //     });
-      //     if (res) {
-      //       this.resetLockInfo();
-      //     }
-      //     return res;
-      //   } catch (error) {
-      //     return false;
-      //   }
-      // };
-      // return await tryLogin();
+    // 进入系统
+    unLock(password?: string): boolean {
+      console.log(password,this.lockInfo?.pwd);
+      if (this.lockInfo?.pwd === password) {
+        this.resetLockInfo();
+        return true;
+      }
+      return false;
     },
   },
 });

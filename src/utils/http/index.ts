@@ -14,8 +14,7 @@ import 'nprogress/nprogress.css';
 import app from '@/main';
 import { LoadingType } from '@/@types/loading';
 import { router } from '@/router';
-import { TOKEN_KEY } from '@/enums/cacheEnum';
-import { Persistent, Token } from '../cache/persistent';
+import { useUserStoreWithOut } from '@/piniaStore/modules/user';
 
 export const globSetting = {
   title: 1,
@@ -141,8 +140,9 @@ const transform: AxiosTransform = {
     loadingInstance?.showLoading();
     NProgress.start();
     // 请求之前处理config
-    const token: string | undefined = Persistent.getLocal<Token>(TOKEN_KEY)?.token;
-    const refreshToken: string | undefined = Persistent.getLocal<Token>(TOKEN_KEY)?.refreshToken;
+    const userStore = useUserStoreWithOut();
+    const { token, refreshToken } = userStore.getToken;
+
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       config!.headers!.token = options.authenticationScheme
@@ -177,7 +177,7 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    console.log('响应拦截器处理',res)
+    console.log('响应拦截器处理', res);
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
     if (code == 30001) {
@@ -272,7 +272,7 @@ const transform: AxiosTransform = {
 };
 
 function createAxios(_opt?: Partial<CreateAxiosOptions>) {
-  console.log('axios options------',_opt)
+  console.log('axios options------', _opt);
   return new VAxios(
     {
       // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes

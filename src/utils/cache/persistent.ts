@@ -48,9 +48,10 @@ function initPersistentMemory() {
 export class Persistent {
 
   static getLocal<T>(key: LocalKeys) {
-    return localMemory.get(key)?.value as Nullable<T>;
+    return localMemory.get(key)?.value as T;
+    // return localMemory.get(key)?.value as Nullable<T>;
   }
-  static setLocal(key: LocalKeys, value: LocalStore[LocalKeys],): void {
+  static setLocal(key: LocalKeys, value: LocalStore[LocalKeys]|null,): void {
     localMemory.set(key, value);
     console.log(key, value, APP_LOCAL_CACHE_KEY, localMemory.getCache);
     // ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);  // 刷新的时候统一写入storage

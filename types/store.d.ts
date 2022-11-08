@@ -33,12 +33,13 @@ export interface ErrorLogInfo {
 
 export interface UserInfo {
   userId: string;
-  name: string;
+  username: string;
   avatar: string;
   desc?: string;
   homePath?: string;
   roles: RoleInfo[];
-  auth:MenuListModel[]
+  auth: MenuListModel[];
+  password: string;
 }
 
 export interface BeforeMiniState {
