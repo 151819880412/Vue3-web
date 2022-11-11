@@ -37,18 +37,21 @@ export interface MenuSetting {
 }
 
 export interface MultiTabsSetting {
-  cache: boolean;
+  // 标签页
   show: boolean;
+  // 标签页快捷按钮
   showQuick: boolean;
-  canDrag: boolean;
-  showRedo: boolean;
-  showFold: boolean;
+  // cache: boolean;
+  // canDrag: boolean;
+  // showRedo: boolean;
+  // showFold: boolean;
 }
 
 export interface HeaderSetting {
+  // 顶栏
+  show: boolean;
   bgColor: string;
   fixed: boolean;
-  show: boolean;
   theme: ThemeEnum;
   // 打开全屏
   showFullScreen: boolean;
@@ -90,6 +93,22 @@ export interface ProjectConfig {
   themeColor: string;
   // 菜单设置
   menuSetting: MenuSetting;
+  // 展示面包屑
+  showBreadCrumb: boolean;
+  // 展示面包屑图标
+  showBreadCrumbIcon: boolean;
+  // 标签页设置
+  multiTabsSetting: MultiTabsSetting;
+  // 顶栏
+  headerSetting: HeaderSetting;
+  // logo
+  showLogo: boolean;
+  // 页脚
+  showFooter: boolean;
+  // 水印
+  showWatermark:boolean;
+
+
 
   // 权限相关信息的存储位置
   permissionCacheType: CacheTypeEnum;
@@ -107,30 +126,14 @@ export interface ProjectConfig {
   grayMode: boolean;
   // Whether to turn on the color weak mode
   colorWeak: boolean;
-
-
   // The main interface is displayed in full screen, the menu is not displayed, and the top
   fullContent: boolean;
   // content width
   contentMode: ContentEnum;
-  // Whether to display the logo
-  showLogo: boolean;
-  // Whether to show the global footer
-  showFooter: boolean;
-  // menuType: MenuTypeEnum;
-  headerSetting: HeaderSetting;
-
-  // Multi-tab settings
-  multiTabsSetting: MultiTabsSetting;
   // Animation configuration
   transitionSetting: TransitionSetting;
   // pageLayout whether to enable keep-alive
   openKeepAlive: boolean;
-
-  // Show breadcrumbs
-  showBreadCrumb: boolean;
-  // Show breadcrumb icon
-  showBreadCrumbIcon: boolean;
   // Use error-handler-plugin
   useErrorHandle: boolean;
   // Whether to open back to top

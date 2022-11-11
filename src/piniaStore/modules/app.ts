@@ -37,7 +37,7 @@ export const useAppStore = defineStore({
   state: (): AppState => ({
     darkMode: ()=>false,
     pageLoading: false,
-    projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig,
+    projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig ,
     beforeMiniInfo: {},
   }),
   getters: {

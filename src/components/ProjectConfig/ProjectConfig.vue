@@ -3,15 +3,15 @@
     <el-drawer v-model="drawer" title="项目配置" direction="rtl" :size="330">
 
       <!-- 主题 -->
-      <Theme/>
+      <Theme />
 
       <!-- 系统主题 -->
-      <SystemTheme/>
+      <SystemTheme />
 
       <!-- 界面功能 -->
-      <InterfaceFunction/>
+      <InterfaceFunction />
 
-      
+
 
     </el-drawer>
   </div>
@@ -23,9 +23,9 @@ interface ProjectConfigType {
 }
 import { defineComponent, reactive, ToRefs, toRefs } from 'vue';
 
-import Theme from './components/theme.vue'
-import SystemTheme from './components/systemTheme.vue'
-import InterfaceFunction from './components/interfaceFunction.vue'
+import Theme from './components/theme.vue';
+import SystemTheme from './components/systemTheme.vue';
+import InterfaceFunction from './components/interfaceFunction.vue';
 
 export default defineComponent({
   name: 'ProjectConfig',
@@ -58,5 +58,7 @@ export default defineComponent({
 });
 </script>
 <style lang='stylus' scoped>
-
+.ProjectConfig{
+cursor: default
+}
 </style>

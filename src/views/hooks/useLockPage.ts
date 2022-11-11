@@ -39,7 +39,7 @@ export function useLockPage() {
     timeId = setTimeout(() => {
       console.log('锁屏了')
       lockPage();
-    }, lockTime * 6 *1000  );
+    }, lockTime * 60 *1000  );
   }
 
   function lockPage(): void {
@@ -65,9 +65,12 @@ export function useLockPage() {
     clear();
   });
 
+  // 函数节流
   const keyupFn = useThrottleFn(resetCalcLockTimeout, 2000);
 
   return computed(() => {
+    if(!appStore.getProjectConfig.lockTime)appStore.getProjectConfig.lockTime=0
+    // 如果参数是一个ref，则返回内部值，否则返回参数本身
     if (unref(getLockTime)) {
       return { onKeyup: keyupFn, onMousemove: keyupFn };
     } else {

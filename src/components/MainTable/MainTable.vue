@@ -251,7 +251,6 @@ export default defineComponent({
 </script>
 <style lang="stylus" scoped>
 .container{
-  border:1px solid #ebeef5
   padding:12px
   width:100%
 }

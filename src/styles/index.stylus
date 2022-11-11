@@ -1,3 +1,6 @@
 @import './reset.stylus';
 @import './base.stylus';
 @import './design/index.stylus';
+body{
+  color: var(--el-text-color-regular) !important
+}

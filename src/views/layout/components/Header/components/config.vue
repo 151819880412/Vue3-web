@@ -36,6 +36,6 @@ export default defineComponent({
   cursor pointer
 }
 .config:hover {
-  background: var(--el-color-primary-light-9)
+  background: var(--el-fill-color)
 }
 </style>

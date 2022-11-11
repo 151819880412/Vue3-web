@@ -12,7 +12,7 @@
         <el-header>
           <Header></Header>
         </el-header>
-        <el-main>
+        <el-main class="main">
           <router-view class="appLayout" />
         </el-main>
       </el-container>
@@ -43,6 +43,7 @@ import { useAppStoreWithOut } from "@/piniaStore/modules/app";
 import { useLockPage } from "../hooks/useLockPage";
 import { useLockStore } from "@/piniaStore/modules/lock";
 import LockPage from "@/components/LockPage/LockPage.vue";
+import { useWatermark } from "@/utils/watermark";
 
 
 export default defineComponent({
@@ -79,11 +80,12 @@ export default defineComponent({
 
     // 锁屏
     const lockEvents = useLockPage();
-
     const useLock = useLockStore()
     const useLockInfo = computed(() => useLock.getLockInfo)
 
-    console.log(useLockInfo,111)
+    // 水印
+    const watermark = useWatermark();
+    appStore.getProjectConfig.showWatermark && watermark.setWatermark('请勿外传')
 
     return {
       toggle,
@@ -116,6 +118,13 @@ export default defineComponent({
 .el-main{
   padding:0  
 }
+.main{
+  background: var(--el-bg-color-page)
+  padding 1rem
+}
+.main div{
+  background-color: var(--el-bg-color);
+}
 .el-aside {
   background-color: #304156;
   transition: width 0.28s;
@@ -123,7 +132,6 @@ export default defineComponent({
 .appLayout{
   width:100%
   height: 100%
-  padding 1rem
   box-sizing:border-box
 }
 

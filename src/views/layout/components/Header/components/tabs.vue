@@ -83,7 +83,7 @@ export default defineComponent({
   line-height 28px
 }
 .headerTabs{
-  border-top 1px solid #e4e7ed
-  border-right 1px solid #e4e7ed
+  border-top 1px solid var(--el-bg-color-page)
+  border-right 1px solid var(--el-bg-color-page)
 }
 </style>

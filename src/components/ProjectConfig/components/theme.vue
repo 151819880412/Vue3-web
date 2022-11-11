@@ -10,7 +10,7 @@
 
 <script lang='ts'>
 import SvgIcon from '@/components/Icon/SvgIcon.vue';
-import { createVNode,} from "vue";
+import { createVNode, } from "vue";
 
 interface theme {
   value: boolean,
@@ -45,9 +45,9 @@ export default defineComponent({
       className: "moon",
       size: '1.5rem'
     });
-    
+
     const appStore = useAppStoreWithOut();
-    const toggle: (value?: boolean | undefined) => boolean = appStore.setDarkMode()
+    const toggle: (value?: boolean | undefined) => boolean = appStore.setDarkMode();
 
     return {
       ...data,
@@ -65,7 +65,7 @@ export default defineComponent({
   border-radius: 18px;
 }
 /deep/.el-switch__inner{
-  width: 30px !important;
+  // width: 30px !important;
   height: 30px !important;
   i{
     width: 1.5rem
@@ -76,10 +76,19 @@ export default defineComponent({
   width: 30px !important;
   height: 30px !important;
 }
-/deep/.el-switch--large.is-checked .el-switch__core .el-switch__action{
-  margin-left: calc(-1px - 30px) !important;
+/deep/.el-switch--large .el-switch__core .el-switch__inner{
+  padding: 0 9px 0 calc(30px + 3px)!important;
 }
 /deep/.el-switch--large.is-checked .el-switch__core .el-switch__inner{
-  margin-left: calc(-1px - 30px) !important;
+  padding: 0 calc(30px + 3px) 0 3px !important;
 }
+/deep/.el-switch--large.is-checked .el-switch__core .el-switch__action{
+  left: calc(100% - 30px) !important;
+}
+// /deep/.el-switch--large.is-checked .el-switch__core .el-switch__action{
+//   margin-left: calc(-1px - 30px) !important;
+// }
+// /deep/.el-switch--large.is-checked .el-switch__core .el-switch__inner{
+//   margin-left: calc(-1px - 30px) !important;
+// }
 </style>

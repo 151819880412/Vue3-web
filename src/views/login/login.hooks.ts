@@ -19,7 +19,7 @@ export default function () {
       col: {
         span: 24
       },
-      isShow:true,
+      isShow: true,
     },
     {
       type: "input",
@@ -35,7 +35,7 @@ export default function () {
       props: {
         "show-password": true,
       },
-      isShow:true,
+      isShow: true,
     },
   ];
 
@@ -54,7 +54,7 @@ export default function () {
       col: {
         span: 24
       },
-      isShow:true,
+      isShow: true,
     },
     {
       type: "input",
@@ -70,7 +70,7 @@ export default function () {
       props: {
         "show-password": true,
       },
-      isShow:true,
+      isShow: true,
     },
     {
       type: "input",
@@ -86,7 +86,7 @@ export default function () {
       props: {
         "show-password": true,
       },
-      isShow:true,
+      isShow: true,
     },
   ];
 
@@ -95,9 +95,9 @@ export default function () {
   // methods
   const getToken = async (formData) => {
     const { data } = await loginServiceImpl.login(formData);
-    const userStore = useUserStoreWithOut()
-    userStore.setToken({ token: data.accessToken, refreshToken: data.refreshToken })
-    userStore.setUserInfo(data)
+    const userStore = useUserStoreWithOut();
+    userStore.setToken({ token: data.accessToken, refreshToken: data.refreshToken });
+    userStore.setUserInfo(data);
     router.push({
       path: 'home'
     });
@@ -117,6 +117,8 @@ export default function () {
   // const getMenu = async (userId) =>{
   //   const data = await loginServiceImpl.queryRoleMenuList(userId);
   // }
+
+
 
   return {
     toLogin,

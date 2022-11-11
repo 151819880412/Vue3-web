@@ -21,9 +21,8 @@ export default defineComponent({
 <style lang='stylus' scoped>
 .iconfont{
   font-size:22px;
-  cursor pointer
 }
 .translate:hover {
-  background: var(--el-color-primary-light-9)
+  background: var(--el-fill-color)
 }
 </style>

@@ -3,8 +3,9 @@
     <div class="headerLeft">
       <i class="iconfont" @click="closeSidebarNav"
         :class="collapsed?'icon-shousuocaidan-copy':'icon-shousuocaidan'" />
-      <Crumbs />
+      <Crumbs/>
     </div>
+    {{projectConfig}}
     <div class="headerRight">
       <BugInfo />
       <Badge />
@@ -20,7 +21,7 @@
 <script lang='ts'>
 // import { SidebarActionTypes } from '@/store/modules/sidebar/action-types';
 // import { useState } from '@/utils/useState';
-import {  defineComponent, ref } from 'vue';
+import {  computed, defineComponent, ref } from 'vue';
 // import { useStore } from 'vuex';
 import Crumbs from './components/crumbs.vue';
 import Tabs from './components/tabs.vue';
@@ -65,11 +66,12 @@ export default defineComponent({
       collapsed.value = appStore.getProjectConfig.menuSetting.collapsed
 
     };
-
     return {
       closeSidebarNav,
       // ...sidebar,
       collapsed,
+      projectConfig: computed(() => appStore.getProjectConfig),
+
     };
   },
   components: {
@@ -105,6 +107,7 @@ export default defineComponent({
   align-items: center;
   justify-content: center
   display: flex
+  cursor pointer
 }
 .iconfont{
   font-size:22px;

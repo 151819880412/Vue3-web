@@ -22,7 +22,7 @@ interface BasicStore {
   [TOKEN_KEY]: Token;
   [USER_INFO_KEY]: UserInfo;
   [LOCK_INFO_KEY]: LockInfo;
-  [PROJ_CFG_KEY]: ProjectConfig
+  [PROJ_CFG_KEY]: ProjectConfig;
 }
 
 type LocalStore = BasicStore;
@@ -51,14 +51,14 @@ export class Persistent {
     return localMemory.get(key)?.value as T;
     // return localMemory.get(key)?.value as Nullable<T>;
   }
-  static setLocal(key: LocalKeys, value: LocalStore[LocalKeys]|null,): void {
+  static setLocal(key: LocalKeys, value: LocalStore[LocalKeys] | null, immediate = false): void {
     localMemory.set(key, value);
-    console.log(key, value, APP_LOCAL_CACHE_KEY, localMemory.getCache);
-    // ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);  // 刷新的时候统一写入storage
+    console.log( APP_LOCAL_CACHE_KEY, localMemory.getCache);
+    immediate && ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
   }
-  static removeLocal(key: LocalKeys,): void {
+  static removeLocal(key: LocalKeys, immediate = false): void {
     localMemory.remove(key);
-    ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
+    immediate && ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
   }
   static clearLocal(): void {
     localMemory.clear();
@@ -68,13 +68,13 @@ export class Persistent {
   static getSession<T>(key: SessionKeys) {
     return sessionMemory.get(key) as Nullable<T>;
   }
-  static setSession(key: SessionKeys, value: SessionStore[SessionKeys],): void {
+  static setSession(key: SessionKeys, value: SessionStore[SessionKeys], immediate = false): void {
     sessionMemory.set(key, toRaw(value));
-    ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
+    immediate && ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
   }
-  static removeSession(key: SessionKeys,): void {
+  static removeSession(key: SessionKeys, immediate = false): void {
     sessionMemory.remove(key);
-    ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
+    immediate && ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
   }
   static clearSession(): void {
     sessionMemory.clear();
