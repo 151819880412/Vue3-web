@@ -68,8 +68,8 @@ interface interfaceFunction {
 }
 import { ProjectConfig } from '#/config';
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
-import { useWatermark } from '@/utils/watermark';
-import { reactive, toRefs, defineComponent, ToRefs } from 'vue';
+import { initWatermark } from '@/utils/watermark/index';
+import { reactive, toRefs, defineComponent, ToRefs, } from 'vue';
 
 export default defineComponent({
   name: 'interfaceFunction',
@@ -77,7 +77,8 @@ export default defineComponent({
   setup() {
 
     const appStore = useAppStoreWithOut();
-
+    const { globSetWatermark, globClear } = initWatermark();
+    
     const initState = (): interfaceFunction => {
       return {
         projectConfig: appStore.getProjectConfig,
@@ -85,7 +86,6 @@ export default defineComponent({
     };
     const model: interfaceFunction = reactive(initState());
     let data: ToRefs<interfaceFunction> = toRefs(model);
-      const watermark = useWatermark();
 
     const initFn = () => {
       return {
@@ -114,11 +114,12 @@ export default defineComponent({
           appStore.setProjectConfig({ showFooter: val });
         },
         changeWatermark: (val: boolean): void => {
+
           appStore.setProjectConfig({ showWatermark: val });
-          if(val){
-            watermark.setWatermark('请勿外传')
-          }else{
-            watermark.clear()
+          if (val) {
+            globSetWatermark('请勿外传');
+          } else {
+            globClear();
           }
         },
       };

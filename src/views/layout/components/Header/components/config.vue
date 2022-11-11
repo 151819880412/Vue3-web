@@ -1,7 +1,7 @@
 <template>
-  <div class='config'>
+  <div class='config' @click="toConfig">
     <el-tooltip class="box-item" effect="dark" content="项目配置" placement="bottom-end">
-      <i class="iconfont icon-shezhi" @click="toConfig"/>
+      <i class="iconfont icon-shezhi"/>
     </el-tooltip>
     <ProjectConfig ref="projectConfig"/>
   </div>

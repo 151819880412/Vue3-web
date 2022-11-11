@@ -43,7 +43,7 @@ import { useAppStoreWithOut } from "@/piniaStore/modules/app";
 import { useLockPage } from "../hooks/useLockPage";
 import { useLockStore } from "@/piniaStore/modules/lock";
 import LockPage from "@/components/LockPage/LockPage.vue";
-import { useWatermark } from "@/utils/watermark";
+import { initWatermark } from "@/utils/watermark/index";
 
 
 export default defineComponent({
@@ -84,8 +84,8 @@ export default defineComponent({
     const useLockInfo = computed(() => useLock.getLockInfo)
 
     // 水印
-    const watermark = useWatermark();
-    appStore.getProjectConfig.showWatermark && watermark.setWatermark('请勿外传')
+    const { globSetWatermark } = initWatermark();
+    appStore.getProjectConfig.showWatermark && globSetWatermark('请勿外传')
 
     return {
       toggle,
