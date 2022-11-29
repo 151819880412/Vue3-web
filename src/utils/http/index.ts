@@ -15,6 +15,7 @@ import app from '@/main';
 import { LoadingType } from '@/@types/loading';
 import { router } from '@/router';
 import { useUserStoreWithOut } from '@/piniaStore/modules/user';
+// import { errorHandler } from '../watchError';
 
 export const globSetting = {
   title: 1,
@@ -202,6 +203,7 @@ const transform: AxiosTransform = {
    */
   responseInterceptorsCatch: async (error: any) => {
     console.log(error);
+    // errorHandler('E1005', `请求地址：${error.config.method}：${error.config.url}`);
     loadingInstance?.hideLoading();
     NProgress.done();
 

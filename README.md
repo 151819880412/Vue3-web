@@ -1,5 +1,23 @@
 # vue3 + Typescript
 
+## docker + nginx 部署
+  ```
+    https://blog.csdn.net/u010784529/article/details/125007848
+    docker run --name nginx -d -p 80:80 -v D:\Docker\nginx\nginx.conf:/etc/nginx/nginx.conf -v D:\Docker\nginx\conf.d:/etc/nginx/conf.d -v D:\Docker\nginx\html:/usr/share/nginx/html -v D:\Docker\nginx\cert:/etc/nginx/cert -v D:\Docker\nginx\logs:/var/log/nginx -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 --privileged=true --restart=always nginx
+  ```
+
+## Xshell连接VMware虚拟机（CentOs7）
+    http://www.omica.com.cn/news/show-34468.html
+
+## Linux安装Docker完整教程
+    https://blog.csdn.net/m0_59196543/article/details/124749175
+
+## centos7下使用docker安装nginx
+    http://t.zoukankan.com/007sx-p-9964145.html
+
+## centos7部署sentry
+    https://juejin.cn/post/6844904144566910983#heading-3
+
 ## 项目结构
   + ### shims-vue.d.vue
     + TS不能识别vue文件。需要靠shims-vue.d.vue的支持

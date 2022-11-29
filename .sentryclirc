@@ -1,0 +1,7 @@
+[auth]
+token = bd6767bc10d14000b9fdbaa426afc83072acf8d3405040b3866a34c240ea442e
+
+[defaults]
+url = https://sentry.io
+org = Sentry
+project = vue-demo

@@ -5,6 +5,10 @@ import { setupRouterGuard } from '@/router/guard';
 import store from './store'
 // import piniaStore from '@/piniaStore/index.js'
 
+// 异常监控
+// import * as Sentry from "@sentry/vue";
+// import { BrowserTracing } from "@sentry/tracing";
+
 
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'
@@ -31,6 +35,7 @@ import Loading from "@/components/Loading/index"
 
 import { LoadingType } from './@types/loading';
 import { setupStore } from './piniaStore';
+// import { watchError } from './utils/watchError';
 
 // createApp(App).use(store).use(router).use(ElementPlus,{locale})
 // .component('forms',forms)
@@ -52,6 +57,19 @@ const app = createApp(App) as CustomApp;
  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
+// 异常监控
+// Sentry.init({
+//   app,
+//   dsn: "http://ae75d04bcdf8481eb3d6cbdd8ebb6805@192.168.226.3:9000/2",
+//   release: 'pro@1.0.1',
+//   integrations: [
+//     new BrowserTracing({
+//       routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+//       tracePropagationTargets: ["localhost", "my-site-url.com", /^\//],
+//     }),
+//   ],
+//   tracesSampleRate: 1.0,
+// });
 
 // 全局组件
 app.component("MainTable",MainTable);
@@ -66,6 +84,6 @@ app.use(store)
 app.use(Loading)
 app.use(ElementPlus,{locale})
 app.mount('#app');
-
+// watchError(app)
 
 export default app
