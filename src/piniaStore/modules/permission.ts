@@ -1,7 +1,7 @@
 
 import { defineStore } from 'pinia';
 import { store } from '@/piniaStore/index';
-import { AppRouteRecordRaw } from '@/router/types';
+import { AppRouteRecordRaw, Menu } from '@/router/types';
 // import { useAppStoreWithOut } from './app';
 import { USER_INFO_KEY } from '@/enums/cacheEnum';
 import { Persistent } from '@/utils/cache/persistent';
@@ -21,7 +21,7 @@ interface PermissionState {
   // 触发菜单更新
   lastBuildMenuTime: number;
   // 菜单列表
-  MenuList: AppRouteRecordRaw[];
+  MenuList: Menu[];
 }
 
 export const usePermissionStore = defineStore({
@@ -35,7 +35,7 @@ export const usePermissionStore = defineStore({
     MenuList: [],
   }),
   getters: {
-    getMenuList(): AppRouteRecordRaw[] {
+    getMenuList(): Menu[] {
       return this.MenuList;
     },
     getLastBuildMenuTime(): number {

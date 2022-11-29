@@ -88,3 +88,53 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   }
   return src;
 }
+
+
+/**
+ * 查询子节点的所有父节点
+ * @date 2022-11-29
+ * @param {any} cascader
+ * @param {any} id
+ * @returns {any}
+ */
+export function getCascaderFullValue<T>(cascader:Array<T>, path:string|number) {
+  const cascaderFullValue = [path];
+  console.log(cascaderFullValue)
+  _getParentId(cascaderFullValue, cascader, cascader, path);
+
+  return cascaderFullValue;
+
+
+  function _getParentId(cascaderFullValue, cascader, _cascader, _id) {
+    if (!Array.isArray(cascader)) return;
+
+    for (const cascaderItem of cascader) {
+      if (!Array.isArray(cascaderItem.children)) continue;
+
+      const index = cascaderItem.children.findIndex(
+        (item) => item.path === _id
+      ); //找到返回该元素的位置 有值为0 没有值返回-1
+      console.log(index)
+      if (index >= 0) {
+        cascaderFullValue.unshift(cascaderItem.path); // 在数组开头添加元素
+        if (
+          _cascader.findIndex((item) => item.path === cascaderItem.path) <
+          0
+        )
+          _getParentId(
+            cascaderFullValue,
+            _cascader,
+            _cascader,
+            cascaderItem.path
+          );
+      } else {
+        _getParentId(
+          cascaderFullValue,
+          cascaderItem.children,
+          _cascader,
+          _id
+        );
+      }
+    }
+  }
+}

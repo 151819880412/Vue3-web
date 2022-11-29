@@ -4,6 +4,7 @@ import { usePermissionStoreWithOut } from '@/piniaStore/modules/permission';
 
 import { PageEnum } from '@/enums/pageEnum';
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
+import { useUserStoreWithOut } from '@/piniaStore/modules/user';
 
 const PAGE_NOT_FOUND_ROUTE = {
   name: 'PageNotFound'
@@ -17,18 +18,20 @@ const ROOT_PATH = '/home';
 const whitePathList: PageEnum[] = [LOGIN_PATH];
 
 export function createPermissionGuard(router: Router) {
-  const userStore = {
-    getUserInfo: {
-      homePath: ''
-    },
-    getToken: '1',
-    getSessionTimeout: 1,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    afterLoginAction: () => { },
-    getLastUpdateTime: (): number => {
-      return 1;
-    }
-  };
+  // const userStore = {
+  //   getUserInfo: {
+  //     homePath: ''
+  //   },
+  //   getToken: '',
+  //   getSessionTimeout: 1,
+  //   // eslint-disable-next-line @typescript-eslint/no-empty-function
+  //   afterLoginAction: () => { },
+  //   getLastUpdateTime: (): number => {
+  //     return 1;
+  //   }
+  // };
+  const userStore = useUserStoreWithOut();
+
   const permissionStore = usePermissionStoreWithOut();
 
   router.beforeEach(async (to, from, next) => {
@@ -52,25 +55,13 @@ export function createPermissionGuard(router: Router) {
 
     // 白名单
     if (whitePathList.includes(to.path as PageEnum)) {
-      if (to.path === LOGIN_PATH && token) {
-        const isSessionTimeout = userStore.getSessionTimeout;
-        try {
-          await userStore.afterLoginAction();
-          if (!isSessionTimeout) {
-            next((to.query?.redirect as string) || '/');
-            return;
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
       next();
       return;
     }
 
-    // token does not exist
-    if (!token) {
-      // You can access without permission. You need to set the routing meta.ignoreAuth to true
+    // token
+    if (!token.token) {
+      // 您可以在未经许可的情况下访问。您需要设置路由元。ignoreAuth为true
       if (to.meta.ignoreAuth) {
         next();
         return;
