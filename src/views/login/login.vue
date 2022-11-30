@@ -13,6 +13,8 @@
 <script lang="ts">
 import ElForms from "@/components/ElForm/ElForms.vue";
 import { useAppStoreWithOut } from "@/piniaStore/modules/app";
+import { useUserStoreWithOut } from "@/piniaStore/modules/user";
+import { Persistent } from "@/utils/cache/persistent";
 import { defineComponent } from "vue";
 import loginHooks from "./login.hooks";
 
@@ -24,6 +26,12 @@ export default defineComponent({
     // let { proxy } = getCurrentInstance()!;
     // 调用插件方法
     // proxy!.$Loading.showLoading();
+
+    // 清空数据
+    Persistent.clearAll();
+    const userStore = useUserStoreWithOut();
+    userStore.resetState();
+
 
     const {
       toLogin,

@@ -59,7 +59,8 @@ export default defineComponent({
       };
     };
 
-    const state = reactive(initState());
+    let state = reactive(initState());
+    let states = toRefs(state);
 
     /**
      * 重置数据
@@ -67,7 +68,7 @@ export default defineComponent({
      * @returns {void}
      */
     const resetState = (): void => {
-      Object.assign({},state, initState());
+    Object.assign(state,initState())
     };
 
     /**
@@ -167,7 +168,6 @@ export default defineComponent({
 
     };
 
-    const states = toRefs(state);
 
     return {
       dialogFormVisible,

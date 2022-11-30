@@ -96,7 +96,7 @@ import { flatten } from "@/utils";
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "User",
+  name: "Role",
   props: [],
   setup() {
     const ctx = getCurrentInstance() as ComponentInternalInstance;

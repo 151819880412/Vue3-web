@@ -59,22 +59,22 @@ export default defineComponent({
       }).filter((item) => !item.meta?.hideBreadcrumb);
     }
 
-      watchEffect(async () => {
-    const parent = getAllParentPath(navs, menu.defaultActive);
-    const filterMenus = navs.filter((item) => item.path === parent[0]);
-    const matched = getMatched(filterMenus, parent) as any;
+    watchEffect(async () => {
+      const parent = getAllParentPath(navs, menu.defaultActive);
+      const filterMenus = navs.filter((item) => item.path === parent[0]);
+      const matched = getMatched(filterMenus, parent) as any;
 
-    if (!matched || matched.length === 0) return;
+      if (!matched || matched.length === 0) return;
 
-    const breadcrumbList = filterItem(matched);
-    if (currentRoute.value.meta?.currentActiveMenu) {
-      breadcrumbList.push({
-        ...currentRoute.value,
-        name: currentRoute.value.meta.title || currentRoute.value.name,
-      } as unknown as RouteLocationMatched);
-    }
-    routes.value = breadcrumbList;
-  })
+      const breadcrumbList = filterItem(matched);
+      if (currentRoute.value.meta?.currentActiveMenu) {
+        breadcrumbList.push({
+          ...currentRoute.value,
+          name: currentRoute.value.meta.title || currentRoute.value.name,
+        } as unknown as RouteLocationMatched);
+      }
+      routes.value = breadcrumbList;
+    });
     return {
       routes
     };
