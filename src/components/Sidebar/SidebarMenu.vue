@@ -79,12 +79,12 @@ export default defineComponent({
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-  height: 100%;
+  min-height: 100%;
 }
 .el-menu {
   border: 0;
 }
 :deep(.el-scrollbar__view) {
-  height: 100% !important;
+  min-height: 100% !important;
 }
 </style>

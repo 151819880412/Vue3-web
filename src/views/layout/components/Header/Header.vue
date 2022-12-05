@@ -96,14 +96,14 @@ export default defineComponent({
   box-sizing:border-box
 }
 .headerLeft,.headerRight{
-  height: 100%
+  min-height: 100%
   min-width: 300px
   display: flex
   align-items: center;
 }
 .headerRight div{
   flex:1
-  height: 100%
+  min-height: 100%
   align-items: center;
   justify-content: center
   display: flex

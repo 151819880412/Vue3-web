@@ -1,5 +1,5 @@
 <template>
-  <el-row :span="12" style="display: flex; justify-content: center; height: 100%">
+  <el-row :span="12" style="display: flex; justify-content: center; min-height: 100%">
     <el-col :span="12" style="align-self: center; text-align: center">
       <ElForms :formConfig="loginFormRule" ref="refDataForm" />
       <el-button type="primary" @click="toLogin" style="align-self: center">登录/注册</el-button>

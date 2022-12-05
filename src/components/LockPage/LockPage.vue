@@ -107,7 +107,7 @@ export default defineComponent({
 </script>
 <style lang='stylus' scoped>
 .bg-black {
-  height: 100%
+  min-height: 100%
   background-color: rgba(0, 0, 0, 1);
   color:white
   position relative
@@ -123,7 +123,7 @@ export default defineComponent({
   cursor pointer
 }
 .lockMid{
-  height: 100%
+  min-height: 100%
   display: flex
   align-items: center;
   justify-content: center
@@ -161,7 +161,7 @@ export default defineComponent({
 }
 .lockForm{
   width: 100%
-  height: 100%
+  min-height: 100%
   position: absolute
   top 0
   left 0
