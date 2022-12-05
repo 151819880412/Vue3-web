@@ -83,16 +83,15 @@ export class VAxios {
     // 请求侦听器配置处理
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
       // 如果启用了“取消重复请求”，则禁止取消重复请求
-      // const {
-      //   headers: { ignoreCancelToken },
-      // } = config;
-      const ignoreCancelToken = config?.headers?.ignoreCancelToken;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const { ignoreCancelToken } = config.requestOptions;
       const ignoreCancel =
         ignoreCancelToken !== undefined
           ? ignoreCancelToken
           : this.options.requestOptions?.ignoreCancelToken;
-
-      !ignoreCancel && axiosCanceler.addPending(config);
+      ignoreCancel && axiosCanceler.addPending(config);
+      console.log(!ignoreCancel,config)
       if (requestInterceptors && isFunction(requestInterceptors)) {
         config = requestInterceptors(config, this.options);
       }
@@ -110,16 +109,18 @@ export class VAxios {
       if (responseInterceptors && isFunction(responseInterceptors)) {
         res = responseInterceptors(res);
       }
-      // console.log(res)
+      console.log('响应结果拦截器处理',res)
+      // return Promise.resolve(res);
       return res;
     }, undefined);
 
     // 响应结果拦截器错误捕获
     this.axiosInstance.interceptors.response.use(undefined, (err) => {
-      // console.log(err)
       if (responseInterceptorsCatch && isFunction(responseInterceptorsCatch)) {
-        err = responseInterceptorsCatch(err);
+        err = responseInterceptorsCatch(this.axiosInstance,err);
       }
+      console.log('响应错误拦截器处理',err)
+      //  return Promise.reject(err);
       return err;
     });
   }

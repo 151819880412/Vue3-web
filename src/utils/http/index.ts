@@ -1,6 +1,6 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 
-import type { AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
 import type { RequestOptions, Result } from '@/../types/axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
 import { VAxios } from './Axios';
@@ -15,6 +15,10 @@ import app from '@/main';
 import { LoadingType } from '@/@types/loading';
 import { router } from '@/router';
 import { useUserStoreWithOut } from '@/piniaStore/modules/user';
+import { AxiosRetry } from './axiosRetry';
+import { useErrorLogStoreWithOut } from '@/piniaStore/modules/errorLog';
+import { ErrorTypeEnum } from '@/enums/exceptionEnum';
+import { ErrorLogInfo } from '#/store';
 // import { errorHandler } from '../watchError';
 
 export const globSetting = {
@@ -25,8 +29,10 @@ export const globSetting = {
   uploadUrl: 1,
 };
 const urlPrefix = globSetting.urlPrefix;
-console.log(app);
 const loadingInstance: LoadingType = app?.$Loading;
+let TokenInvalid = false;
+
+let globErrApiList: ErrorLogInfo[] = [];
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -178,21 +184,23 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    console.log('响应拦截器处理', res);
+    // console.log('响应拦截器处理', res);
     const { code, type } = res.data;
     const hasSuccess = (code === ResultEnum.SUCCESS || code === 20000) || (type === 'success');
     if (code == 30001) {
+      TokenInvalid = true;
       router.push({
         path: '/login'
       });
     }
     if (code !== 20000) {
       ElMessage.error(res.data.message);
-      throw new Error(res.data.message);
     }
     loadingInstance?.hideLoading();
     NProgress.done();
+    if (TokenInvalid) return res;
     if (hasSuccess) {
+      globErrApiList = [];
       return res;
     }
     throw new Error(res.data.message);
@@ -201,37 +209,42 @@ const transform: AxiosTransform = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: async (error: any) => {
-    console.log(error);
+  responseInterceptorsCatch: (axiosInstance: AxiosInstance, error: any) => {
+    // console.log('响应错误拦截器', error, error.response);
     // errorHandler('E1005', `请求地址：${error.config.method}：${error.config.url}`);
     loadingInstance?.hideLoading();
     NProgress.done();
 
 
-    const response = error.response;
-    const { code, message, config } = error || {};
-    // 超时重新请求
-    // 全局的请求次数,请求的间隙
-    const [RETRY_COUNT, RETRY_DELAY] = [config?.requestOptions?.retrtyCount, config?.requestOptions?.retrtyDelay];
-    if (config && RETRY_COUNT) {
-      // 设置用于跟踪重试计数的变量
-      config.__retryCount = config.__retryCount || 0;
-      // 检查是否已经把重试的总数用完
-      if (config.__retryCount >= RETRY_COUNT) {
-        return Promise.reject(response || { message: error.message });
-      }
-      // 增加重试计数
-      config.__retryCount++;
-      // 创造新的Promise来处理指数后退
-      const backoff = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(1);
-        }, RETRY_DELAY || 1);
-      });
-      // instance重试请求的Promise
-      await backoff;
-      return await defHttp.axiosInstance(config);
-    }
+    const response = error.response || {};
+    const { code, message } = error || {};
+    // // 超时重新请求
+    // // 全局的请求次数,请求的间隙
+    // const [RETRY_COUNT, RETRY_DELAY] = [config?.requestOptions?.retrtyCount, config?.requestOptions?.retrtyDelay];
+    // if (config && RETRY_COUNT) {
+    //   // 设置用于跟踪重试计数的变量
+    //   config.__retryCount = config.__retryCount || 0;
+    //   // 检查是否已经把重试的总数用完
+    //   if (config.__retryCount >= RETRY_COUNT) {
+    //     return Promise.reject(response || { message: error.message });
+    //   }
+    //   // 增加重试计数
+    //   config.__retryCount++;
+    //   // 创造新的Promise来处理指数后退
+    //   const backoff = new Promise((resolve) => {
+    //     setTimeout(() => {
+    //       resolve(1);
+    //     }, RETRY_DELAY || 1);
+    //   });
+    //   // instance重试请求的Promise
+    //   await backoff;
+    //   return await defHttp.axiosInstance(config);
+    // }
+
+    const retryRequest = new AxiosRetry();
+    retryRequest.retry(axiosInstance, error).catch(() => {
+      // 重复请求的失败，防止多次调用新增错误日志的接口
+    });
 
     // const { response, code, message, config } = error || {};
     // const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
@@ -241,47 +254,74 @@ const transform: AxiosTransform = {
 
 
 
-    try {
-      if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
-        errMessage = '请求超时';
-      }
-      if (err?.includes('Network Error')) {
-        errMessage = '网络异常';
-      }
-      if (message.indexOf('404') !== -1) {
-        errMessage = '找不到接口';
-      }
-      if (message.indexOf('400') !== -1) {
-        errMessage = '接口参数异常';
-      }
-      if (response.data.indexOf('Proxy error: Could not proxy request') !== -1) {
-        errMessage = '服务器连接异常';
-      }
-
-      if (errMessage) {
-        // if (errorMessageMode === 'modal') {
-        // } else if (errorMessageMode === 'message') {
-        // }
-        ElMessage.error(errMessage);
-        return Promise.reject(error);
-      }
-    } catch (error) {
-      throw new Error('error');
+    // try {
+    if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
+      errMessage = '请求超时';
+    }
+    if (err?.includes('Network Error')) {
+      errMessage = '网络异常';
+    }
+    if (message.indexOf('404') !== -1) {
+      errMessage = '找不到接口';
+    }
+    if (message.indexOf('400') !== -1) {
+      errMessage = '接口参数异常';
+    }
+    if (response.data && typeof response.data === "string" && response.data.indexOf('Proxy error: Could not proxy request') !== -1) {
+      errMessage = '服务器连接异常';
     }
 
-    return Promise.reject(error);
+    if (errMessage) {
+      // if (errorMessageMode === 'modal') {
+      // } else if (errorMessageMode === 'message') {
+      // }
+      ElMessage.error(errMessage);
+    }
+    // } catch (error) {
+    //   throw new Error('error');
+    // }
+
+    // setTimeout(()=>{
+    //   throw error
+    // })
+    const errorLogStore = useErrorLogStoreWithOut();
+    console.log(error, response, code, message, globErrApiList);
+    const errorObj = {
+      type: ErrorTypeEnum.PROMISE,
+      name: error.name,
+      file: 'none',
+      detail: error.config.data,
+      url: error.config.url,
+      stack: 'promise error!',
+      message: message,
+    };
+    if (globErrApiList.length == 0) {
+      globErrApiList.push(errorObj);
+      errorLogStore.addErrorLogInfo(errorObj);
+    } else {
+      if (globErrApiList[globErrApiList.length - 1].url !== error.config.url) {
+        globErrApiList.push(errorObj);
+        errorLogStore.addErrorLogInfo(errorObj);
+      }
+    }
+
+
+    // return Promise.reject(error);
+    throw new Error(error);
+
+
   },
 };
 
 function createAxios(_opt?: Partial<CreateAxiosOptions>) {
-  console.log('axios options------', _opt);
+  // console.log('axios options------', _opt);
   return new VAxios(
     {
       // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
       // authentication schemes，e.g: Bearer
       // authenticationScheme: 'Bearer',
       authenticationScheme: '',
-      timeout: 10 * 1000,
+      timeout: 3 * 1000,
       // 基础接口地址
       baseURL: globSetting.apiUrl,
 

@@ -1,7 +1,7 @@
 /**
  * 数据处理类，可根据项目配置
  */
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { RequestOptions, Result } from '@/../types/axios';
 
 
@@ -49,5 +49,6 @@ export abstract class AxiosTransform {
   /**
    * @description: 请求之后的拦截器错误处理
    */
-  responseInterceptorsCatch?: (error: Error) => void;
+  responseInterceptorsCatch?: (axiosInstance: AxiosInstance, error: Error) => void;
+
 }

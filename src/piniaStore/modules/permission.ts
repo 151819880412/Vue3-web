@@ -114,7 +114,8 @@ export const usePermissionStore = defineStore({
         switch (str) {
           case 'LAYOUT':
             return () => import('@/views/layout/AppLayout.vue');
-          default:
+            default:
+            // console.log(files.keys().filter(item => item == '.' + str + '.vue'),1111)
             return () => import(`@/views${files.keys().filter(item => item == '.' + str + '.vue')[0].slice(1)}`);
         }
       };

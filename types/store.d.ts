@@ -1,6 +1,6 @@
-import { ErrorTypeEnum } from '/@/enums/exceptionEnum';
-import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum';
-import { RoleInfo } from '/@/api/sys/model/userModel';
+import { ErrorTypeEnum } from '@/enums/exceptionEnum';
+import { MenuModeEnum, MenuTypeEnum } from '@/enums/menuEnum';
+import { RoleInfo } from '@/api/sys/model/userModel';
 import { MenuListModel } from "@/api/menu/model/menuModel";
 
 // 锁屏信息
