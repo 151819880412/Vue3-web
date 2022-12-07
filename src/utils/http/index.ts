@@ -287,12 +287,12 @@ const transform: AxiosTransform = {
     const errorLogStore = useErrorLogStoreWithOut();
     console.log(error, response, code, message, globErrApiList);
     const errorObj = {
-      type: ErrorTypeEnum.PROMISE,
+      type: ErrorTypeEnum.AJAX,
       name: error.name,
-      file: 'none',
+      file: '',
       detail: error.config.data,
       url: error.config.url,
-      stack: 'promise error!',
+      stack: 'ajax error!',
       message: message,
     };
     if (globErrApiList.length == 0) {

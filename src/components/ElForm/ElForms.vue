@@ -147,9 +147,9 @@ export default {
               events[`on${newName}`] = item.on?.[eventName];
             });
           }
-          const placeholder = ["input"].includes(item.type)
+          const placeholder = item?.props?.disabled?"":(["input"].includes(item.type)
             ? `请输入${item.title ?? ""}`
-            : `请选择${item.title ?? ""}`;
+            : `请选择${item.title ?? ""}`);
 
           switch (item.type) {
             case "select":

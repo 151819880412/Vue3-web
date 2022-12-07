@@ -31,5 +31,8 @@ export default class ErrorLogServiceImpl implements ErrorLogService {
     return defHttp.post<PageResult<ErrorlogPageModel>>({ url: `/errorLog/test/${currentPage}/${pageSize}`, data });
   }
 
+  public queryById(id:string): Promise<PageResult<ErrorlogPageModel>> {
+    return defHttp.post<PageResult<ErrorlogPageModel>>({ url: `/errorLog/queryById`, data:{errorLogId:id} });
+  }
 
 }

@@ -19,6 +19,7 @@ export default interface ErrorLogService {
   // 错误日志新增
   add(data: ErrorLogInfo): Promise<Result>;
 
+  queryById(id: string): Promise<PageResult<ErrorlogPageModel>>;
 
 
 }

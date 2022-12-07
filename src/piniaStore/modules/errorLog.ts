@@ -6,6 +6,7 @@ import { store } from '@/piniaStore';
 import { ErrorTypeEnum } from '@/enums/exceptionEnum';
 import { Formt } from '@/utils/DateFormt';
 import errorLogServiceImpl from '@/api/errorLog';
+import EventBus from '@/utils/mitt/mitt';
 // import { ErrorlogPageModel } from '@/api/errorLog/service/model/errorLogModel';
 
 export interface ErrorLogState {
@@ -28,19 +29,16 @@ export const useErrorLogStore = defineStore({
     },
   },
   actions: {
-     addErrorLogInfo(info: ErrorLogInfo) {
+     async addErrorLogInfo(info: ErrorLogInfo) {
       const item = {
         ...info,
         time: Formt('yyyy-MM-dd HH:mm:ss'),
       };
       this.errorLogInfoList = [item, ...(this.errorLogInfoList || [])];
-      // this.errorLogListCount += 1;
-      errorLogServiceImpl.add(item).then((err)=>{
-        console.log(err,111)
-      }).catch((err=>{
-        console.log(err,2222)
-      }))
-      // errorLogServiceImpl.add(item)
+      this.errorLogListCount += 1;
+      await errorLogServiceImpl.add(item)
+      EventBus.emit('refresh')
+
     },
 
     setErrorLogListCount(count: number): void {

@@ -91,7 +91,6 @@ export class VAxios {
           ? ignoreCancelToken
           : this.options.requestOptions?.ignoreCancelToken;
       ignoreCancel && axiosCanceler.addPending(config);
-      console.log(!ignoreCancel,config)
       if (requestInterceptors && isFunction(requestInterceptors)) {
         config = requestInterceptors(config, this.options);
       }
@@ -109,7 +108,7 @@ export class VAxios {
       if (responseInterceptors && isFunction(responseInterceptors)) {
         res = responseInterceptors(res);
       }
-      console.log('响应结果拦截器处理',res)
+      // console.log('响应结果拦截器处理',res)
       // return Promise.resolve(res);
       return res;
     }, undefined);
@@ -119,7 +118,7 @@ export class VAxios {
       if (responseInterceptorsCatch && isFunction(responseInterceptorsCatch)) {
         err = responseInterceptorsCatch(this.axiosInstance,err);
       }
-      console.log('响应错误拦截器处理',err)
+      // console.log('响应错误拦截器处理',err)
       //  return Promise.reject(err);
       return err;
     });

@@ -3,7 +3,7 @@
 
     <el-row>
       <el-col :span="14">
-        <span>错误日志列表{{tableData.tableProps.data.length}}</span>
+        <span>错误日志列表</span>
       </el-col>
       <el-col :span="10">
         <div v-for="item in images" :key="item" style="width:0;height:0;overflow:hidden">
@@ -20,25 +20,18 @@
           <template v-slot:MainTableBtn>
             <el-button type="primary">插槽</el-button>
           </template>
-          <!-- <template v-slot:handleSlot="{ scopeData }">
-            <el-dropdown>
-              <el-button type="primary">
-                操作<el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="editorMenu(scopeData.row)">编辑</el-dropdown-item>
-                  <el-dropdown-item @click="delMenu(scopeData.row)">删除</el-dropdown-item>
-                  <el-dropdown-item @click="addSubmenu(scopeData.row)">添加子菜单</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template> -->
+          <template v-slot:handleSlot="{ scopeData }">
+            <el-button key="primary" type="primary" link @click="detail(scopeData.row)">详情</el-button>
+          </template>
         </MainTable>
       </el-col>
     </el-row>
+
+    <DialogMask ref="dialogMask">
+      <template v-slot:dialogMaskFooterSlot>
+        <div></div>
+      </template>
+    </DialogMask>
 
   </div>
 </template>
@@ -48,17 +41,23 @@
 interface errorLog {
   images: Array<string>;
   tableData: tableConfigType<ComputedRef<any>>;
+  dialogFormConfig: Array<FormInterface<Rules, Options>>;
 
 }
 import errorLogServiceImpl from '@/api/errorLog';
+import { ErrorlogPageModel } from '@/api/errorLog/service/model/errorLogModel';
 import { tableConfigType } from '@/components/MainTable/MainTable';
-import { useErrorLogStoreWithOut } from '@/piniaStore/modules/errorLog';
-import { reactive, toRefs, defineComponent, ToRefs, ComputedRef } from 'vue';
-// import { ErrorlogPageModel } from '@/api/errorLog/service/model/errorLogModel';
+import { reactive, toRefs, defineComponent, ToRefs, ComputedRef, ref } from 'vue';
+import DialogMask from "@/components/DialogMask/DialogMask.vue";
+import { FormInterface, Options, Rules } from "#/form-config";
+
 export default defineComponent({
   name: 'errorLog',
   props: [],
   setup() {
+
+    const dialogMask = ref<InstanceType<typeof DialogMask>>();
+
 
     const initState = (): errorLog => {
       return {
@@ -109,12 +108,130 @@ export default defineComponent({
               showOverflowTooltip: true,
             },
             {
-              label: "Action",
-              prop: "detail",
-              showOverflowTooltip: true,
+              label: "详情",
+              width: 80,
+              slot: "handleSlot",
+              align: "center",
             },
           ],
         },
+        dialogFormConfig: [
+          {
+            type: "input",
+            title: "类型",
+            field: "type",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "URL",
+            field: "url",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "时间",
+            field: "time",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "文件",
+            field: "file",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "Name",
+            field: "name",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "错误信息",
+            field: "message",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 12,
+            },
+            isShow: true,
+            props: {
+              disabled: true
+            }
+          },
+          {
+            type: "input",
+            title: "stack信息",
+            field: "stack",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [],
+            col: {
+              span: 24,
+            },
+            isShow: true,
+            props: {
+              disabled: true,
+              type: 'textarea',
+              autosize: { minRows: 6, maxRows: 8 },
+
+            }
+          },
+        ]
       };
     };
     const model: errorLog = reactive(initState());
@@ -135,15 +252,21 @@ export default defineComponent({
       errorLogServiceImpl.rerrorLogTest(1, 10, {});
     };
 
-    const errorLogStore = useErrorLogStoreWithOut();
-    console.log(errorLogStore)
-    // model.tableData.tableProps.data =  computed(() => errorLogStore.getErrorLogInfoList) as unknown as ComputedRef<any>[];
+    const detail = async (row: ErrorlogPageModel): Promise<void> => {
+      let { data } = await errorLogServiceImpl.queryById(row.errorLogId);
+      console.log(data);
+      await dialogMask?.value?.initConfig(model.dialogFormConfig, data);
+      dialogMask.value?.openDialog("Add");
+    };
+
     return {
       ...data,
       errorLogServiceImpl,
       toAxiosErr,
       toVueErr,
       toResourceErr,
+      detail,
+      dialogMask
     };
   }
 });
