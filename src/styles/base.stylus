@@ -46,3 +46,10 @@
     transform: translateY(0);
   }
 }
+
+.rotate{
+  transition: all 0.3s ease 0.1s;
+}
+.rotate180{
+  transform: rotate(180deg);
+}

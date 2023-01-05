@@ -6,12 +6,20 @@
       </el-icon>
       <span> 筛选数据</span>
     </el-col>
-    <el-col>
+    <el-col :style="{ height: isOpen ? '' : '50px' }" style="overflow:hidden">
       <ElForms :formConfig="formConfig" ref="queryForm" />
+    </el-col>
+    <el-col>
       <div style="float: right">
         <el-button type="primary" @click="search">查询</el-button>
         <el-button type="primary" @click="clear">刷新</el-button>
         <slot name="searchBtn"></slot>
+        <el-button type="primary" link @click="toggleAdvanced">
+          <span style="margin-right:6px">{{ isOpen ? '收起' : '展开' }}</span>
+          <el-icon :class="{ 'rotate180': isOpen }" class="rotate">
+            <ArrowDown />
+          </el-icon>
+        </el-button>
       </div>
     </el-col>
   </el-row>
@@ -35,8 +43,9 @@ export default defineComponent({
     let Pctx = inject('Pctx') as ComponentInternalInstance;
 
     const queryForm = ref();
+    let isOpen = ref(false);
 
-    const search = () => {
+    const search = (): void => {
       try {
         queryForm.value.validate((formData) => Pctx?.proxy?.submitSearch(formData));
       } catch (error) {
@@ -44,15 +53,21 @@ export default defineComponent({
       }
     };
 
-    const clear = () => {
+    const clear = (): void => {
       queryForm.value.neoResetFields();
       Pctx?.proxy?.submitSearch({});
+    };
+
+    const toggleAdvanced = (): void => {
+      isOpen.value = !isOpen.value;
     };
 
     return {
       queryForm,
       search,
       clear,
+      toggleAdvanced,
+      isOpen,
     };
   },
   components: {

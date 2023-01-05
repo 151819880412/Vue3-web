@@ -36,6 +36,7 @@ export default {
     }
   },
   // setup(props: Readonly<{ formConfig: FormInterface<Rules, Options>[]|undefined; }>, { expose }: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup(props, { expose }: any) {
     const compA = {
       input: ElInput,
@@ -324,7 +325,7 @@ export default {
           components.form,
           {
             ref: refDataForm,
-            size: "large",
+            size: "default",
             labelWidth: 110,
             labelSuffix: "：",
             inline: false,

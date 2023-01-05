@@ -19,7 +19,7 @@
           {{ formatters(scopeData.row) }}
         </div>
       </template>
-      <template v-slot:handleSlot="{ scopeData }">
+      <!-- <template v-slot:handleSlot="{ scopeData }">
         <el-dropdown>
           <el-button type="primary">
             操作<el-icon class="el-icon--right">
@@ -43,7 +43,7 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-      </template>
+      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask">
@@ -142,27 +142,69 @@ export default defineComponent({
           columns: [
             {
               type: "selection",
+              label: "勾选列",
+              visible :false
             },
             {
               type: "index",
               label: "序号",
+              visible:true
             },
             {
               label: "角色名",
               prop: "roleName",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "状态",
               prop: "state",
               slot: "statusTxtSlot",
               align: "center",
+              visible:true
             },
             {
               label: "操作",
               width: 200,
-              slot: "handleSlot",
+              // slot: "handleSlot",
               align: "center",
+              visible:true,
+              btn:[
+                {
+                  // label:'["禁用", "启用"][scopeData.row.state]',
+                  // label:(a,b)=>{console.log(a,b,333);return 1},
+                  label:"禁用",
+                  visible:'row.state==0',
+                  fn: 'editState(row, "changeState")'
+                },
+                {
+                  // label:'["禁用", "启用"][scopeData.row.state]',
+                  // label:(a,b)=>{console.log(a,b,333);return 1},
+                  label:"启用",
+                  visible:'row.state==1',
+                  fn:'editState(row, "changeState")'
+                },
+                {
+                  label:'假删除',
+                  fn:'editState(row, "changeDelFlag")'
+                },
+                {
+                  label:'真删除',
+                  fn:'editState(row, "delUser")'
+                },
+                {
+                  label:'角色授权',
+                  fn:'roleAuthorization(row)'
+                },
+                
+
+
+
+
+
+
+
+              ]
             },
           ],
         },
@@ -196,6 +238,162 @@ export default defineComponent({
             col: {
               span: 12,
             },
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
+            props: {
+              clearable: true,
+            },
+            isShow:true,
+          },
+          {
+            type: "select",
+            title: "状态",
+            field: "state",
+            value: "",
+            maxlength: 40,
+            required: false,
+            rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            options: [
+              {
+                label: "启用",
+                value: 0,
+              },
+              {
+                label: "禁用",
+                value: 1,
+              },
+            ],
             props: {
               clearable: true,
             },

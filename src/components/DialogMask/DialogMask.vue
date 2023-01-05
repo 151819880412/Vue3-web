@@ -1,13 +1,28 @@
 <template>
   <el-dialog v-model="dialogFormVisible" :title="title" destroy-on-close draggable :close-on-click-modal="false"
-    :before-close="closeDialog">
+    :show-close="false" :before-close="closeDialog" :fullscreen="dialogFull">
+    <template #header="{ close, titleId, titleClass }">
+        <span :id="titleId" :class="titleClass">{{ title }}</span>
+        <button class="el-dialog__headerbtn" style="margin-right:54px" @click="(dialogFull=!dialogFull)">
+          <el-icon>
+            <FullScreen />
+          </el-icon>
+        </button>
+        <button class="el-dialog__headerbtn" @click="close">
+          <el-icon>
+            <Close />
+          </el-icon>
+        </button>
+    </template>
     <ElForms :formConfig="state.formConfig" :formData="formData" ref="dialogMask" />
     <slot name="dialogMaskSlot"></slot>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="submitDialog">提交</el-button>
-        <el-button @click="closeDialog">取消</el-button>
-      </span>
+      <slot name="dialogMaskFooterSlot">
+        <span class="dialog-footer">
+          <el-button type="primary" @click="submitDialog">提交</el-button>
+          <el-button @click="closeDialog">取消</el-button>
+        </span>
+      </slot>
     </template>
   </el-dialog>
 </template>
@@ -47,15 +62,17 @@ export default defineComponent({
     interface DialogMaskType {
       formConfig: Array<FormInterface<Rules, Options>>;
       formData: object;
-      title:string,
-      titleType:string
+      title: string,
+      titleType: string;
+      dialogFull: boolean,
     }
-    const initState = ():DialogMaskType => {
+    const initState = (): DialogMaskType => {
       return {
         formConfig: [],
-        formData:{},
+        formData: {},
         title: "",
         titleType: "",
+        dialogFull: false,
       };
     };
 
@@ -68,7 +85,7 @@ export default defineComponent({
      * @returns {void}
      */
     const resetState = (): void => {
-    Object.assign(state,initState())
+      Object.assign(state, initState());
     };
 
     /**
@@ -112,17 +129,18 @@ export default defineComponent({
      * @returns {any}
      */
     const initConfig = async (config: Array<FormInterface<Rules, Options>>, data?: object): Promise<void> => {
-      const configCopy =  _.cloneDeep(config)
+      const configCopy = _.cloneDeep(config);
       if (data) {
-        state.formData = data
+        state.formData = data;
         const row = JSON.parse(JSON.stringify(data));
-        configCopy.forEach((item:FormInterface<Rules, Options>) => {
+        configCopy.forEach((item: FormInterface<Rules, Options>) => {
           // 判断不为null和undefind
-          if ((row[item.field]??'')!=='') {
+          if ((row[item.field] ?? '') !== '') {
             item.value = row[item.field];
           }
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let queryFn: Array<any> = [];
       configCopy.filter(item => item.queryOptionsFn).forEach(item => {
         if (item.queryOptionsFn) {
@@ -135,7 +153,7 @@ export default defineComponent({
           item.options = JSON.parse(JSON.stringify(p[index].data.results));
         }
       });
-      state.formConfig = _.cloneDeep(configCopy)
+      state.formConfig = _.cloneDeep(configCopy);
     };
 
     const submitDialog = (): void => {
@@ -146,21 +164,21 @@ export default defineComponent({
           let data = await Pctx?.proxy?.[submitDialog](formData);
           if (data) {
             closeDialog();
-            if (Pctx && Pctx.proxy ) {
-              if(Pctx.proxy.searchFormData){
+            if (Pctx && Pctx.proxy) {
+              if (Pctx.proxy.searchFormData) {
                 Pctx.proxy.searchFormData = JSON.parse(
                   JSON.stringify(Pctx?.proxy?.searchFormData)
                 );
-              }else{
-                EventBus.emit('refresh')
+              } else {
+                EventBus.emit('refresh');
               }
             }
           }
         } catch (error) {
-          if((error as Error).message=='Pctx?.proxy?.[submitDialog] is not a function'){
-            console.log(error)
+          if ((error as Error).message == 'Pctx?.proxy?.[submitDialog] is not a function') {
+            console.log(error);
             console.error("父组件缺少 " + submitDialog + " 提交方法");
-            ElMessage.error("父组件缺少 " + submitDialog + " 提交方法")
+            ElMessage.error("父组件缺少 " + submitDialog + " 提交方法");
           }
         }
       };
@@ -186,4 +204,10 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.el-dialog__headerbtn{
+  width:30px;
+  margin-right:24px
+}
+
+</style>

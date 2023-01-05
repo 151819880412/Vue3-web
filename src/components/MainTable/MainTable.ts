@@ -23,15 +23,24 @@ export type tablePropsType<T> = {
   defaultExpandAll?:boolean;
 };
 
+export type columnsBtnType = {
+  label:string;
+  visible:string;
+  fn:string;
+}
+
 export type columnsType = {
   label?: string | undefined;
   width?: string | number | undefined;
   prop?: string | undefined;
   showOverflowTooltip?: boolean | undefined;
-  fixed?: true | 'left' | 'right' | undefined;
+  fixed?: boolean | 'left' | 'right' | undefined;
   slot?: string | undefined;
   align?: 'left' | 'center' | 'right' | undefined;
-  type?: 'selection' | undefined | 'index' | 'expand' | undefined;
+  type?: 'selection' | 'operation' | 'index' | 'expand' | undefined;
+  visible?:boolean,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  btn?:any[]
 };
 
 export type tableConfigType<T> = {
