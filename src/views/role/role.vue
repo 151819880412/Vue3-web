@@ -196,14 +196,6 @@ export default defineComponent({
                   label:'角色授权',
                   fn:'roleAuthorization(row)'
                 },
-                
-
-
-
-
-
-
-
               ]
             },
           ],

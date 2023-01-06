@@ -28,7 +28,7 @@
           {{ formatters(scopeData.row) }}
         </div>
       </template>
-      <template v-slot:handleSlot="{ scopeData }">
+      <!-- <template v-slot:handleSlot="{ scopeData }">
         <el-dropdown>
           <el-button type="primary">
             操作<el-icon class="el-icon--right">
@@ -46,7 +46,7 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-      </template>
+      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask">
@@ -138,16 +138,20 @@ export default defineComponent({
           columns: [
             {
               type: "selection",
+              label: "勾选列",
+              visible:true
             },
             {
               type: "index",
               label: "序号",
+              visible:true
             },
             {
               label: "用户名",
               // width: 500,
               prop: "username",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "状态",
@@ -155,12 +159,42 @@ export default defineComponent({
               prop: "state",
               slot: "statusTxtSlot",
               align: "center",
+              visible:true
             },
             {
               label: "操作",
               width: 200,
-              slot: "handleSlot",
+              // slot: "handleSlot",
               align: "center",
+              visible:true,
+              btn:[
+                {
+                  label:"编辑",
+                  fn: 'editor(row)'
+                },
+                {
+                  label:"禁用",
+                  visible:'row.state==0',
+                  fn: 'editState(row, "changeState")'
+                },
+                {
+                  label:"启用",
+                  visible:'row.state==1',
+                  fn:'editState(row, "changeState")'
+                },
+                {
+                  label:'假删除',
+                  fn:'editState(row, "changeDelFlag")'
+                },
+                {
+                  label:'真删除',
+                  fn:'editState(row, "delUser")'
+                },
+                {
+                  label:'关联角色',
+                  fn:'relationRole(row)'
+                },
+              ]
             },
           ],
         },

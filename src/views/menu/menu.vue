@@ -10,7 +10,7 @@
           {{ formatters(scopeData.row) }}
         </div>
       </template>
-      <template v-slot:handleSlot="{ scopeData }">
+      <!-- <template v-slot:handleSlot="{ scopeData }">
         <el-dropdown>
           <el-button type="primary">
             操作<el-icon class="el-icon--right">
@@ -25,7 +25,7 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-      </template>
+      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask"></DialogMask>
@@ -72,40 +72,62 @@ export default defineComponent({
           columns: [
             {
               type: "selection",
+              label: "勾选列",
+              visible:true
             },
             {
               type: "index",
               label: "序号",
+              visible:true
             },
             {
               label: "名称",
               prop: "menuName",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "路由地址",
               prop: "path",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "组件路径",
               prop: "componentPath",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "排序",
               prop: "sort",
+              visible:true
             },
             {
               label: "是否显示",
               prop: "delFlag",
               slot: "statusTxtSlot",
+              visible:true
             },
             {
               label: "操作",
               width: 200,
-              slot: "handleSlot",
-              fixed: 'right'
+              fixed: 'right',
+              visible:true,
+              btn:[
+                {
+                  label:"编辑",
+                  fn: 'editorMenu(row)'
+                },
+                {
+                  label:"删除",
+                  fn: 'delMenu(row)'
+                },
+                {
+                  label:"添加子菜单",
+                  fn:'addSubmenu(row)'
+                },
+              ]
             },
           ],
         },
