@@ -61,7 +61,7 @@ export default defineComponent({
 .userName{
   margin-left: 12px
 }
-.userInfo:hover {
+.userInfoDrop:hover {
   background: var(--el-fill-color)
 }
 </style>

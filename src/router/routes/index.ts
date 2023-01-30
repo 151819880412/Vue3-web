@@ -49,6 +49,19 @@ export const LoginRoute: AppRouteRecordRaw = {
   },
 };
 
+export const RegisterRoute: AppRouteRecordRaw = {
+  path: '/register',
+  name: 'Register',
+  component: Login,
+  meta: {
+    // hideChildrenInMenu: true,
+    // icon: 'simple-icons:about-dot-me',
+    title: '登录',
+    ignoreAuth:true,
+    // orderNo: 100000,
+  },
+};
+
 // Basic routing without permission
 // 未经许可的基本路由
-export const basicRoutes = [LoginRoute,HomeRoute, REDIRECT_ROUTE,PAGE_NOT_FOUND_ROUTE,ERROR_LOG_ROUTE];
+export const basicRoutes = [LoginRoute,RegisterRoute,HomeRoute, REDIRECT_ROUTE,PAGE_NOT_FOUND_ROUTE,ERROR_LOG_ROUTE];

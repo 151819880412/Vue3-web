@@ -20,9 +20,9 @@
           <template v-slot:MainTableBtn>
             <el-button type="primary">插槽</el-button>
           </template>
-          <template v-slot:handleSlot="{ scopeData }">
+          <!-- <template v-slot:handleSlot="{ scopeData }">
             <el-button key="primary" type="primary" link @click="detail(scopeData.row)">详情</el-button>
-          </template>
+          </template> -->
         </MainTable>
       </el-col>
     </el-row>
@@ -71,47 +71,62 @@ export default defineComponent({
             {
               type: "index",
               label: "序号",
+              visible:true
             },
             {
               label: "类型",
               prop: "type",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "URL",
               prop: "url",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "时间",
               prop: "time",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "文件",
               prop: "file",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "Name",
               prop: "name",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "错误信息",
               prop: "message",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "stack信息",
               prop: "stack",
               showOverflowTooltip: true,
+              visible:true
             },
             {
               label: "详情",
               width: 80,
-              slot: "handleSlot",
+              // slot: "handleSlot",
               align: "center",
+              visible:true,
+              btn:[
+                {
+                  label:"详情",
+                  fn: 'detail(row)'
+                },
+              ]
             },
           ],
         },

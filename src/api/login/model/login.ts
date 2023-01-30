@@ -3,6 +3,14 @@ export interface LoginParams {
   password: string;
 }
 
+export interface RegisterParams {
+  username: string;
+  password: string;
+  phone: string;
+  type: string;
+}
+
+
 export interface ChangePwdParams {
   username: string;
   oldPwd: string;

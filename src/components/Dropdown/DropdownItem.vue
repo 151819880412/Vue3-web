@@ -22,7 +22,7 @@ export default {
 
   methods: {
     handler() {
-      this.$emit('click', this.action)
+      // this.$emit('click', this.action)
     },
   },
 }

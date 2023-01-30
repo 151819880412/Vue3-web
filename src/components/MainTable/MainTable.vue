@@ -95,7 +95,7 @@
           <template v-for="item in Columns?.filter(item => item.visible)" :key="item.key">
 
             <el-table-column v-if="item.type" :type="item.type" :label="item.label" :width="item.width || '60px'"
-              :align="item.align || 'center'" :key="item.type"></el-table-column>
+              :align="item.align || 'center'" :key="item.type" :fixed="item.fixed || false"></el-table-column>
             <el-table-column v-else :prop="item.prop" :label="item.label" :fixed="item.fixed || false"
               :align="item.align || 'center'" :width="item.width || ''"
               :show-overflow-tooltip="item.showOverflowTooltip" :key="item.prop">

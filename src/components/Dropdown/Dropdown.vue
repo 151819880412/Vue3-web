@@ -11,7 +11,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted, watch, getCurrentInstance, ComponentInternalInstance } from "vue";
+import { defineComponent, ref, onMounted, onUnmounted,  getCurrentInstance, ComponentInternalInstance } from "vue";
 export default defineComponent({
   name: "DropDown",
   props: {
@@ -67,7 +67,7 @@ export default defineComponent({
   },
   mounted() {
     // 将组件的根元素添加到 body 元素上
-    document.body.appendChild(this.dropDownRef.value);
+    // document.body.appendChild(this.dropDownRef.value);
   },
   // beforeDestroy() {
   //   // 从 body 元素中移除组件的根元素

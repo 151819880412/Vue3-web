@@ -276,6 +276,26 @@ const transform: AxiosTransform = {
       // } else if (errorMessageMode === 'message') {
       // }
       ElMessage.error(errMessage);
+      const errorLogStore = useErrorLogStoreWithOut();
+      console.log(error, response, code, message, globErrApiList);
+      const errorObj = {
+        type: ErrorTypeEnum.AJAX,
+        name: error.name,
+        file: '',
+        detail: error?.config?.data || error.message,
+        url: error?.config?.url || '',
+        stack: 'ajax error!',
+        message: message,
+      };
+      if (globErrApiList.length == 0) {
+        globErrApiList.push(errorObj);
+        errorLogStore.addErrorLogInfo(errorObj);
+      } else {
+        if (globErrApiList[globErrApiList.length - 1].url !== error.config.url) {
+          globErrApiList.push(errorObj);
+          errorLogStore.addErrorLogInfo(errorObj);
+        }
+      }
     }
     // } catch (error) {
     //   throw new Error('error');
@@ -284,26 +304,7 @@ const transform: AxiosTransform = {
     // setTimeout(()=>{
     //   throw error
     // })
-    const errorLogStore = useErrorLogStoreWithOut();
-    console.log(error, response, code, message, globErrApiList);
-    const errorObj = {
-      type: ErrorTypeEnum.AJAX,
-      name: error.name,
-      file: '',
-      detail: error.config.data,
-      url: error.config.url,
-      stack: 'ajax error!',
-      message: message,
-    };
-    if (globErrApiList.length == 0) {
-      globErrApiList.push(errorObj);
-      errorLogStore.addErrorLogInfo(errorObj);
-    } else {
-      if (globErrApiList[globErrApiList.length - 1].url !== error.config.url) {
-        globErrApiList.push(errorObj);
-        errorLogStore.addErrorLogInfo(errorObj);
-      }
-    }
+
 
 
     // return Promise.reject(error);
