@@ -121,7 +121,7 @@ export default defineComponent({
               // slot: "handleSlot",
               align: "center",
               visible:true,
-              btn:[
+              operationBtn: [
                 {
                   label:"详情",
                   fn: 'detail(row)'

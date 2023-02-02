@@ -2,17 +2,17 @@
   <el-dialog v-model="dialogFormVisible" :title="title" destroy-on-close draggable :close-on-click-modal="false"
     :show-close="false" :before-close="closeDialog" :fullscreen="dialogFull">
     <template #header="{ close, titleId, titleClass }">
-        <span :id="titleId" :class="titleClass">{{ title }}</span>
-        <button class="el-dialog__headerbtn" style="margin-right:54px" @click="(dialogFull=!dialogFull)">
-          <el-icon>
-            <FullScreen />
-          </el-icon>
-        </button>
-        <button class="el-dialog__headerbtn" @click="close">
-          <el-icon>
-            <Close />
-          </el-icon>
-        </button>
+      <span :id="titleId" :class="titleClass">{{ title }}</span>
+      <button class="el-dialog__headerbtn" style="margin-right:54px" @click="(dialogFull = !dialogFull)">
+        <el-icon>
+          <FullScreen />
+        </el-icon>
+      </button>
+      <button class="el-dialog__headerbtn" @click="close">
+        <el-icon>
+          <Close />
+        </el-icon>
+      </button>
     </template>
     <ElForms :formConfig="state.formConfig" :formData="formData" ref="dialogMask" />
     <slot name="dialogMaskSlot"></slot>
@@ -61,7 +61,7 @@ export default defineComponent({
      */
     interface DialogMaskType {
       formConfig: Array<FormInterface<Rules, Options>>;
-      formData: object;
+      formData: any;
       title: string,
       titleType: string;
       dialogFull: boolean,
@@ -136,10 +136,15 @@ export default defineComponent({
         configCopy.forEach((item: FormInterface<Rules, Options>) => {
           // 判断不为null和undefind
           if ((row[item.field] ?? '') !== '') {
-            item.value = row[item.field];
+            // item.value = row[item.field];
+            item.defaultValue = row[item.field];
           }
         });
       }
+      configCopy.forEach((item: FormInterface<Rules, Options>) => {
+        // 判断不为null和undefind
+        state.formData[item.field] = item.defaultValue;
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let queryFn: Array<any> = [];
       configCopy.filter(item => item.queryOptionsFn).forEach(item => {
@@ -156,6 +161,11 @@ export default defineComponent({
       state.formConfig = _.cloneDeep(configCopy);
     };
 
+    /**
+     * 提交表单
+     * @date 2023-02-01
+     * @returns {any}
+     */
     const submitDialog = (): void => {
       let submitDialog = 'submitDialog' + state.titleType;
       console.log(submitDialog, Pctx?.proxy);
@@ -186,6 +196,10 @@ export default defineComponent({
 
     };
 
+    const editorFieldValue = (data: any): void => {
+      state.formData = Object.assign({},state.formData,data)
+    };
+
 
     return {
       dialogFormVisible,
@@ -197,6 +211,7 @@ export default defineComponent({
       submitDialog,
       userServiceImpl,
       openDialog,
+      editorFieldValue,
     };
   },
   components: {

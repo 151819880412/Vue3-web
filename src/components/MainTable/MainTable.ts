@@ -40,7 +40,7 @@ export type columnsType = {
   type?: 'selection' | 'operation' | 'index' | 'expand' | undefined;
   visible?:boolean,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  btn?:any[]
+  operationBtn?:any[]
 };
 
 export type tableConfigType<T> = {

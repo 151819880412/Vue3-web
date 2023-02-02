@@ -108,7 +108,7 @@ export const usePermissionStore = defineStore({
         return;
       };
 
-      const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth ? [Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth] : [];
+      const arr = Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth ? Persistent.getLocal<UserInfo>(USER_INFO_KEY)?.auth : [];
       // 待优化
       const renderComponent = (str: string) => {
         switch (str) {
@@ -130,7 +130,9 @@ export const usePermissionStore = defineStore({
           arr[i].component = renderComponent(arr[i].componentPath);
         }
       };
+      // arr[1].component = ()=>import('@/views/home/home.vue');
       treeFor(arr);
+      console.log(arr,111)
       routes = arr as unknown as Array<AppRouteRecordRaw>;
 
       this.setMenuList(routes);

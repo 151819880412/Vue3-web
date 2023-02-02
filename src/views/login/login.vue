@@ -4,7 +4,7 @@
       <div class="login-img">
         <img src="@/assets/images/login-img.jpg">
       </div>
-      <div class="login-info" v-if="fullPath === '/login'">
+      <div class="login-info">
         <div class="title">蓝海商家端管理系统</div>
         <div class="input-box">
           <div class="number inp-item"
@@ -30,7 +30,7 @@
         <div class="login-btn" @click="handleLogin">登录</div>
       </div>
 
-      <div class="login-info" v-if="fullPath === '/register'">
+      <!-- <div class="login-info" v-if="fullPath === '/register'">
         <div class="title-box">
           <span>商家注册</span>
           <span style="font-size:14px">
@@ -63,7 +63,7 @@
           </el-form>
         </div>
         <div class="login-btn" @click="handleRegister">注册</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -129,6 +129,10 @@ export default defineComponent({
       showLogo: true,
       showFooter: true,
       showWatermark: false,
+      tabs: [{
+        title: '首页',
+        path: '/home',
+      }]
     };
     appStore.setProjectConfig(initProjectData);
 
@@ -260,7 +264,7 @@ export default defineComponent({
         userStore.setToken({ token: data.accessToken, refreshToken: data.refreshToken });
         userStore.setUserInfo(data);
         router.push({
-          path: 'home'
+          path: '/home'
         });
         ElMessage({
           message,

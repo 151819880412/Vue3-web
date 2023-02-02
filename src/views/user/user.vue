@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <SearchForm :formConfig="queryFormConfig" ref="searchForm">
+    <SearchForm :formConfig="queryFormConfig" :formData="formData" ref="searchForm">
       <template v-slot:searchBtn>
         <el-button type="primary">插槽</el-button>
       </template>
@@ -123,6 +123,7 @@ export default defineComponent({
       tableData: tableConfigType<UserPageModel>;
       dialogFormConfig: Array<FormInterface<Rules, Options>>;
       queryFormConfig: Array<FormInterface<Rules, Options>>;
+      formData: any;
     }
 
     const initState = (): UserType => {
@@ -167,7 +168,7 @@ export default defineComponent({
               // slot: "handleSlot",
               align: "center",
               visible:true,
-              btn:[
+              operationBtn: [
                 {
                   label:"编辑",
                   fn: 'editor(row)'
@@ -256,7 +257,7 @@ export default defineComponent({
             type: "input",
             title: "用户名",
             field: "username",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [{ message: "请输入用户名", required: false, trigger: "blur" }],
@@ -272,7 +273,7 @@ export default defineComponent({
             type: "select",
             title: "状态",
             field: "state",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [{ message: "请选择状态", required: false, trigger: "blur" }],
@@ -304,6 +305,7 @@ export default defineComponent({
           }
         ],
         defaultCheckedKeys: [],
+        formData:{},
       };
     };
 

@@ -7,6 +7,7 @@ declare module "@vue/runtime-core" {
     submitSearch: (...params)=>void;
     submitDialog: (...params)=>void;
     initTableData: (...params)=>void;
+    editorFieldValue: (...params)=>void;
     searchFormData:object
   }
 }

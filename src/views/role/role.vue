@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <SearchForm :formConfig="queryFormConfig" ref="searchForm">
+    <SearchForm :formConfig="queryFormConfig" :formData="formData" ref="searchForm">
       <template v-slot:searchBtn>
         <el-button type="primary">插槽</el-button>
       </template>
@@ -130,6 +130,7 @@ export default defineComponent({
       dialogFormConfig: Array<FormInterface<Rules, Options>>;
       queryFormConfig: Array<FormInterface<Rules, Options>>;
       selectTreeList: Array<string>;
+      formData:any
     };
 
     const initState = (): RoleType => {
@@ -169,7 +170,7 @@ export default defineComponent({
               // slot: "handleSlot",
               align: "center",
               visible:true,
-              btn:[
+              operationBtn: [
                 {
                   // label:'["禁用", "启用"][scopeData.row.state]',
                   // label:(a,b)=>{console.log(a,b,333);return 1},
@@ -418,7 +419,8 @@ export default defineComponent({
             isShow:true,
           },
         ],
-        selectTreeList:[]
+        selectTreeList:[],
+        formData:{},
       };
     };
 

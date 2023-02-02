@@ -10,25 +10,42 @@
           {{ formatters(scopeData.row) }}
         </div>
       </template>
-      <!-- <template v-slot:handleSlot="{ scopeData }">
-        <el-dropdown>
-          <el-button type="primary">
-            操作<el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="editorMenu(scopeData.row)">编辑</el-dropdown-item>
-              <el-dropdown-item @click="delMenu(scopeData.row)">删除</el-dropdown-item>
-              <el-dropdown-item @click="addSubmenu(scopeData.row)">添加子菜单</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask"></DialogMask>
+
+    <el-dialog v-model="selectIconDialog" destroy-on-close draggable :close-on-click-modal="false" :show-close="false"
+      :before-close="openIconDialog" title="图标" :fullscreen="dialogFull" lock-scroll>
+      <template #header="{ close, titleId, titleClass }">
+        <div>
+          <span :id="titleId" :class="titleClass">选择图标</span>
+          <el-input style="width:30%;margin-left:5px" placeholder="请输入图标名称" :prefix-icon="ElementPlusIconsVue.Search"
+            v-model="searchIcon"></el-input>
+        </div>
+        <button class="el-dialog__headerbtn" style="margin-right:54px" @click="(dialogFull = !dialogFull)">
+          <el-icon>
+            <FullScreen />
+          </el-icon>
+        </button>
+        <button class="el-dialog__headerbtn" @click="close">
+          <el-icon>
+            <Close />
+          </el-icon>
+        </button>
+      </template>
+      <div class="iconBody">
+        <div class="iconBoxs"
+          v-for="item in Object.keys(ElementPlusIconsVue).filter(item => item.toLowerCase().indexOf(searchIcon.toLowerCase()) > -1)"
+          :key="item">
+          <div class="icons" @click="selectIcons(item)">
+            <el-icon class="elIcon">
+              <component :is="item"></component>
+            </el-icon>
+            <span style="margin-top:8px">{{ item.toLowerCase() }}</span>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -41,6 +58,8 @@ import { ComponentInternalInstance, defineComponent, getCurrentInstance, provide
 import DialogMask from "@/components/DialogMask/DialogMask.vue";
 import { FormInterface, Options, Rules } from "#/form-config";
 import { ElMessage } from 'element-plus';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
+import _ from 'lodash';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -54,8 +73,13 @@ export default defineComponent({
     interface MenuType {
       tableData: tableConfigType<MenuListModel>;
       dialogFormConfig: Array<FormInterface<Rules, Options>>;
-
+      selectIconDialog: boolean;
+      dialogFull: boolean;
+      searchIcon: string;
     }
+    const openIconDialog = (): void => {
+      menuModel.selectIconDialog = !menuModel.selectIconDialog;
+    };
 
     const initState = (): MenuType => {
       return {
@@ -73,59 +97,59 @@ export default defineComponent({
             {
               type: "selection",
               label: "勾选列",
-              visible:true
+              visible: true
             },
             {
               type: "index",
               label: "序号",
-              visible:true
+              visible: true
             },
             {
               label: "名称",
               prop: "menuName",
               showOverflowTooltip: true,
-              visible:true
+              visible: true
             },
             {
               label: "路由地址",
               prop: "path",
               showOverflowTooltip: true,
-              visible:true
+              visible: true
             },
             {
               label: "组件路径",
               prop: "componentPath",
               showOverflowTooltip: true,
-              visible:true
+              visible: true
             },
             {
               label: "排序",
               prop: "sort",
-              visible:true
+              visible: true
             },
             {
               label: "是否显示",
               prop: "delFlag",
               slot: "statusTxtSlot",
-              visible:true
+              visible: true
             },
             {
               label: "操作",
               width: 200,
               fixed: 'right',
-              visible:true,
-              btn:[
+              visible: true,
+              operationBtn: [
                 {
-                  label:"编辑",
+                  label: "编辑",
                   fn: 'editorMenu(row)'
                 },
                 {
-                  label:"删除",
+                  label: "删除",
                   fn: 'delMenu(row)'
                 },
                 {
-                  label:"添加子菜单",
-                  fn:'addSubmenu(row)'
+                  label: "添加子菜单",
+                  fn: 'addSubmenu(row)'
                 },
               ]
             },
@@ -137,7 +161,7 @@ export default defineComponent({
             title: "名称",
             field: "menuName",
             isShow: true,
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入名称", required: true, trigger: "blur" }],
@@ -152,7 +176,7 @@ export default defineComponent({
             type: "input",
             title: "路由地址",
             field: "path",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入路由地址", required: true, trigger: "blur" }],
@@ -173,7 +197,7 @@ export default defineComponent({
             type: "input",
             title: "组件路径",
             field: "componentPath",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入组件路径", required: true, trigger: "blur" }],
@@ -189,7 +213,7 @@ export default defineComponent({
             type: "inputNumber",
             title: "排序",
             field: "sort",
-            value: "",
+            defaultValue: 1,
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入排序", required: true, trigger: "blur" }],
@@ -205,7 +229,7 @@ export default defineComponent({
             type: "select",
             title: "类型",
             field: "type",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请选择类型", required: true, trigger: "blur" }],
@@ -224,12 +248,12 @@ export default defineComponent({
               {
                 label: "按钮",
                 value: 2,
-                hide:['path','componentPath']
+                hide: ['path', 'componentPath']
               },
               {
                 label: "页面(待扩展)",
                 value: 3,
-                hide:['path','componentPath']
+                hide: ['delFlag']
               },
             ],
             props: {
@@ -241,7 +265,7 @@ export default defineComponent({
             type: "switch",
             title: "是否显示",
             field: "delFlag",
-            value: 0,
+            defaultValue: 0,
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入是否显示", required: true, trigger: "blur" }],
@@ -255,7 +279,29 @@ export default defineComponent({
             },
             isShow: true,
           },
-        ]
+          {
+            type: "input",
+            title: "图标",
+            field: "icon",
+            isShow: true,
+            defaultValue: "",
+            maxlength: 40,
+            required: true,
+            rules: [{ message: "请选择图标", required: true, trigger: "change" }],
+            col: {
+              span: 12,
+            },
+            props: {
+              clearable: true,
+            },
+            on: {
+              focus: openIconDialog
+            }
+          },
+        ],
+        selectIconDialog: false,
+        dialogFull: false,
+        searchIcon: '',
       };
     };
     const menuModel: MenuType = reactive(initState());
@@ -272,13 +318,13 @@ export default defineComponent({
       }
     };
 
+    // 添加子菜单
     const addSubmenu = async (row: MenuListModel): Promise<void> => {
-      console.log(row);
       const pItem: Array<FormInterface<Rules, Options>> = [{
         type: "input",
         title: "父节点",
         field: "pMenuName",
-        value: "",
+        defaultValue: "",
         maxlength: 40,
         required: false,
         rules: [{ message: "请输入名称", required: false, trigger: "blur" }],
@@ -289,22 +335,22 @@ export default defineComponent({
           clearable: true,
           disabled: true
         },
-        isShow:true,
+        isShow: true,
       }];
-      const arr = JSON.parse(JSON.stringify(menuModel.dialogFormConfig));
+      const arr = _.cloneDeep(menuModel.dialogFormConfig)
       let { data } = await menuServiceImpl.queryMenuById(row.menuId);
-      console.log(data);
       await dialogMask?.value?.initConfig(pItem.concat(arr), { menuId: row.menuId, pMenuName: data?.menuName || '' });
       dialogMask.value?.openDialog("Add");
     };
 
+    // 新增菜单
     const addMenu = async (): Promise<void> => {
       await dialogMask?.value?.initConfig(menuModel.dialogFormConfig);
       dialogMask.value?.openDialog("Add");
     };
 
+    // 新增菜单-提交
     const submitDialogAdd = async (formData: MenuAddModel): Promise<boolean> => {
-      console.log(formData);
       let { message } = await menuServiceImpl.addMenuItems(formData);
       ElMessage({
         message,
@@ -313,12 +359,14 @@ export default defineComponent({
       return true;
     };
 
+    // 编辑菜单
     const editorMenu = async (formData: MenuListModel) => {
       let { data } = await menuServiceImpl.queryMenuById(formData.menuId);
       await dialogMask?.value?.initConfig(menuModel.dialogFormConfig, data);
       dialogMask.value?.openDialog("Editor");
     };
 
+    // 编辑菜单-提交
     const submitDialogEditor = async (formData: MenuListModel): Promise<boolean> => {
       let { message } = await menuServiceImpl.editorMenuItems(formData);
       ElMessage({
@@ -328,9 +376,9 @@ export default defineComponent({
       return true;
     };
 
+    // 删除菜单
     const delMenu = async (formData: MenuListModel) => {
       let { data } = await menuServiceImpl.queryMenuById(formData.menuId);
-      console.log(menuModel.dialogFormConfig);
       const config = JSON.parse(JSON.stringify(menuModel.dialogFormConfig));
       config.forEach(item => {
         item.props.disabled = true;
@@ -339,6 +387,7 @@ export default defineComponent({
       dialogMask.value?.openDialog("Del");
     };
 
+    // 删除菜单-提交
     const submitDialogDel = async (formData: MenuListModel): Promise<boolean> => {
       let { message } = await menuServiceImpl.delMenuItems(formData.menuId);
       ElMessage({
@@ -347,6 +396,14 @@ export default defineComponent({
       });
       return true;
     };
+
+    const selectIcons = (val: string): void => {
+      dialogMask?.value?.editorFieldValue({icon:val});
+      menuModel.searchIcon = ''
+      openIconDialog()
+    };
+
+
 
     return {
       menuServiceImpl,
@@ -361,9 +418,45 @@ export default defineComponent({
       submitDialogEditor,
       delMenu,
       submitDialogDel,
+      openIconDialog,
+      ElementPlusIconsVue,
+      selectIcons,
     };
-  }
+  },
 });
 </script>
 <style lang='stylus' scoped>
+
+.el-dialog__headerbtn{
+  width:30px;
+  margin-right:24px
+}
+.iconBody{
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  height: 600px;
+   overflow-y: scroll;
+}
+.iconBoxs{
+  border:1px solid var(--el-border-color);
+  height:90px
+}
+.iconBoxs :hover{
+  background-color: var(--el-border-color-extra-light);
+  color: var(--brand-color-light);
+}
+.icons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  font-size:13px
+}
+.elIcon{
+  height:20px;
+  width:20px;
+  font-size:20px
+}
 </style>

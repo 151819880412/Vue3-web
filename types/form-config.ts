@@ -3,13 +3,14 @@ export declare interface FormInterface<R, O> {
   type: string,
   title: string,
   field: string,
-  value: any,
+  value?: any,
+  defaultValue?: any,
   maxlength?: number,
   isShow?: boolean,
   required: boolean,
   // eslint-disable-next-line @typescript-eslint/ban-types
   callback?: Function,
-  rules: Array<R>,
+  rules?: Array<R>,
   options?: Array<O>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: any,

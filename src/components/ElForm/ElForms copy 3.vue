@@ -38,6 +38,7 @@ export default {
   // setup(props: Readonly<{ formConfig: FormInterface<Rules, Options>[]|undefined; }>, { expose }: any) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup(props, { expose }: any) {
+    console.log(JSON.parse(JSON.stringify(props.formData)))
     let Pctx = inject("Pctx") as ComponentInternalInstance;
     console.log('传给ElForms组件的实例', Pctx);
     const compA = {
@@ -144,7 +145,8 @@ export default {
     const queryFormData = () => {
       const objType = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
       const obj: Generate<typeof objType> = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
-      return preProcessData(Object.assign({}, props.formData, obj));
+      // return preProcessData(Object.assign({}, props.formData, obj));
+      console.log(props.formData,obj)
     };
 
     const rType = () => {
@@ -320,12 +322,13 @@ export default {
             default:
               return [
                 h(components[item.type], {
-                  placeholder,
-                  ...item,
-                  ...item.props,
-                  autocomplete: "new-password",
-                  modelValue: props.formData![item.field],
+                  // placeholder,
+                  // ...item,
+                  // ...item.props,
+                  // autocomplete: "new-password",
+                  modelValue: item.value,
                   "onUpdate:modelValue": (value) => {
+                    console.log(value,111,props.formData![item.field],props.formData,[item.field])
                     // 控制显示隐藏
                     if (lastHideList.length > 0) {
                       rules.value.forEach(items => {
@@ -345,7 +348,7 @@ export default {
                         }
                       });
                     }
-                    return (props.formData![item.field] = value), item?.callback?.(value, item, this);
+                    return (item.value = value), item?.callback?.(value, item, this);
                   },
                   ...events,
                   class: "icm-w-search",
@@ -363,8 +366,8 @@ export default {
             labelWidth: 110,
             labelSuffix: "：",
             inline: false,
-            // model: { dataForm: rules.value },
-            model: props.formData,
+            model: { dataForm: rules.value },
+            // model: props.formData,
           },
           h(
             "div",
@@ -396,8 +399,8 @@ export default {
                               formItem,
                               {
                                 label: item.title,
-                                // prop: `dataForm.${item._index}.value`,
-                                prop: item.field,
+                                prop: `dataForm.${item._index}.value`,
+                                // prop: item.field,
                                 rules: item.rules,
                                 key: item.field,
                                 labelWidth: item.labelWidth,

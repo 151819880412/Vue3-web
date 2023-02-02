@@ -101,7 +101,7 @@
               :show-overflow-tooltip="item.showOverflowTooltip" :key="item.prop">
               <template #default="scope">
                 <slot :name="item.slot" :scopeData="scope" v-if="item.slot"></slot>
-                <template v-else-if="item.btn">
+                <template v-else-if="item.operationBtn">
 
                   <el-dropdown>
                     <el-button type="primary">
@@ -111,14 +111,14 @@
                     </el-button>
                     <!-- <template #dropdown>
                       <el-dropdown-menu>
-                        <template v-for="item2 in item.btn" :key="item2.id">
+                        <template v-for="item2 in item.operationBtn" :key="item2.id">
                           <el-dropdown-item @click="btnClick(item2,scope.row)" :disabled="true">{{item2.label }}</el-dropdown-item>
                         </template>
                       </el-dropdown-menu>
                     </template> -->
 
                     <template v-slot:dropdown>
-                      <el-dropdown-item @click="btnClick(item2, scope.row)" v-for="item2 in item.btn" :key="item2.id">
+                      <el-dropdown-item @click="btnClick(item2, scope.row)" v-for="item2 in item.operationBtn" :key="item2.id">
                         <span>{{ item2.label }}</span>
                       </el-dropdown-item>
                     </template>
@@ -135,7 +135,7 @@
                     </template>
                     <template #default>
                       <div style="width:100%">
-                        <el-button v-for="item2 in item.btn" :key="item2.id" @click="btnClick(item2, scope.row)" style="width:100%">
+                        <el-button v-for="item2 in item.operationBtn" :key="item2.id" @click="btnClick(item2, scope.row)" style="width:100%">
                         {{ item2.label }}
                       </el-button>
                       </div>

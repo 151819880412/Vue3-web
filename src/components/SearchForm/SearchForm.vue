@@ -7,7 +7,7 @@
       <span> 筛选数据</span>
     </el-col>
     <el-col :style="{ height: isOpen ? '' : '50px' }" style="overflow:hidden">
-      <ElForms :formConfig="formConfig" ref="queryForm" />
+      <ElForms :formConfig="formConfig" :formData="formData" ref="queryForm" />
     </el-col>
     <el-col>
       <div style="float: right">
@@ -37,6 +37,9 @@ export default defineComponent({
       type: Array as PropType<FormInterface<Rules, Options>[]>,
       default: () => []
     },
+    formData: {
+      type: Object
+    }
   },
   setup() {
 

@@ -12,6 +12,11 @@ import { CacheTypeEnum } from '/@/enums/cacheEnum';
 
 export type LocaleType = 'zh_CN' | 'en' | 'ru' | 'ja' | 'ko';
 
+export interface tabsType {
+  path: string;
+  title: string;
+}
+
 export interface MenuSetting {
   // 是否折叠
   collapsed: boolean;
@@ -106,7 +111,9 @@ export interface ProjectConfig {
   // 页脚
   showFooter: boolean;
   // 水印
-  showWatermark:boolean;
+  showWatermark: boolean;
+  // tabs
+  tabs: tabsType<>;
 
 
 
