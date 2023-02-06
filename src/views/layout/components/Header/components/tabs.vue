@@ -1,11 +1,11 @@
 <template>
   <div class="headerTabs">
-    <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+    <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab" @tab-click="tabClick">
       <el-tab-pane v-for="item in editableTabs" :key="item.path" :label="item.name" :name="item.path">
       </el-tab-pane>
     </el-tabs>
     <div>
-      {{editableTabsValue}}
+      {{ editableTabsValue }}
     </div>
   </div>
 
@@ -14,50 +14,40 @@
 <script lang='ts'>
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
 import { computed, defineComponent, } from 'vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'tabs',
   props: [],
   setup() {
     const appStore = useAppStoreWithOut();
+    const router = useRouter();
 
-    // let tabIndex = 2;
-    const editableTabsValue = computed(() => appStore.getProjectConfig.menuSetting.defaultActive)
-    console.log(111,appStore.getProjectConfig)
-    const editableTabs = computed(() => appStore.getTabsSetting)
 
-    const addTab = (targetName: string) => {
-      console.log(targetName);
-      // const newTabName = `${++tabIndex}`;
-      // editableTabs.value.push({
-      //   title: 'New Tab',
-      //   path: newTabName,
-      // });
-      // editableTabsValue.value = newTabName;
-    };
+    const editableTabsValue = computed(() => appStore.getProjectConfig.menuSetting.defaultActive);
+    const editableTabs = computed(() => appStore.getTabsSetting);
+
     const removeTab = (targetName: string) => {
-      const tabs = editableTabs.value;
-      let activeName = editableTabsValue.value;
-      if (activeName === targetName) {
-        tabs.forEach((tab, index) => {
-          if (tab.path === targetName) {
-            const nextTab = tabs[index + 1] || tabs[index - 1];
-            if (nextTab) {
-              activeName = nextTab.path;
-            }
-          }
+      const arr = editableTabs.value.filter(item => item.path !== targetName);
+      appStore.setTabs(arr);
+      if (targetName === editableTabsValue.value) {
+        router.push({
+          path: editableTabs.value[editableTabs.value.length - 1].path
         });
       }
+    };
 
-      // editableTabsValue.value = activeName;
-      // editableTabs.value = tabs.filter((tab) => tab.path !== targetName);
+    const tabClick = ({ props }) => {
+      router.push({
+        path: props.name
+      });
     };
 
     return {
-      addTab,
       removeTab,
       editableTabsValue,
       editableTabs,
+      tabClick,
     };
   }
 });

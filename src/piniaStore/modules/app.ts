@@ -124,9 +124,13 @@ export const useAppStore = defineStore({
       }
     },
 
-    setTabs(menuTabs: SideBarItemType) {
-      if (this.menuTabs.filter(item => item.path == menuTabs.path).length === 0) {
-        this.menuTabs.push(menuTabs);
+    setTabs(menuTabs: SideBarItemType | SideBarItemType[]) {
+      if (Array.isArray(menuTabs)) {
+        this.menuTabs = menuTabs;
+      } else {
+        if (this.menuTabs.filter(item => item.path == menuTabs.path).length === 0) {
+          this.menuTabs.push(menuTabs);
+        }
       }
     }
 
