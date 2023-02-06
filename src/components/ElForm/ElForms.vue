@@ -39,7 +39,8 @@ export default {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup(props, { expose }: any) {
     let Pctx = inject("Pctx") as ComponentInternalInstance;
-    console.log('传给ElForms组件的实例', Pctx);
+    // console.log('传给ElForms组件的实例', Pctx);
+    Pctx;
     const compA = {
       input: ElInput,
       inputNumber: ElInputNumber,

@@ -17,6 +17,8 @@ import { resetRouter } from '@/router';
 import { deepMerge } from '@/utils';
 import { useDark, useToggle } from '@vueuse/core';
 import { WritableComputedRef } from 'vue';
+// import { AppRouteRecordRaw } from '@/router/types';
+import { SideBarItemType } from '@/api/login/model/menuModel';
 
 export interface AppState {
   darkMode: (value?: boolean | undefined) => boolean;
@@ -26,6 +28,7 @@ export interface AppState {
   projectConfig: ProjectConfig;
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState;
+  menuTabs: SideBarItemType[];
 }
 // interface a {
 //   setDarkMode(): (value?: boolean | undefined) => (value?: boolean | undefined) => boolean
@@ -35,10 +38,14 @@ let timeId: TimeoutHandle;
 export const useAppStore = defineStore({
   id: 'app',
   state: (): AppState => ({
-    darkMode: ()=>false,
+    darkMode: () => false,
     pageLoading: false,
-    projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig ,
+    projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig,
     beforeMiniInfo: {},
+    menuTabs: [{
+      name: '首页',
+      path: '/home',
+    } as SideBarItemType]
   }),
   getters: {
     getPageLoading(): boolean {
@@ -68,6 +75,9 @@ export const useAppStore = defineStore({
     getMultiTabsSetting(): MultiTabsSetting {
       return this.getProjectConfig.multiTabsSetting;
     },
+    getTabsSetting(): SideBarItemType[] {
+      return this.menuTabs;
+    },
   },
   actions: {
     setPageLoading(loading: boolean): void {
@@ -84,8 +94,8 @@ export const useAppStore = defineStore({
         valueLight: 'light',
       });
       const darkMode = useToggle(isDark);
-      this.darkMode = darkMode
-      return darkMode
+      this.darkMode = darkMode;
+      return darkMode;
     },
 
     setBeforeMiniInfo(state: BeforeMiniState): void {
@@ -113,6 +123,14 @@ export const useAppStore = defineStore({
         clearTimeout(timeId);
       }
     },
+
+    setTabs(menuTabs: SideBarItemType) {
+      if (this.menuTabs.filter(item => item.path == menuTabs.path).length === 0) {
+        this.menuTabs.push(menuTabs);
+      }
+    }
+
+
   },
 });
 

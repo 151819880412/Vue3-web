@@ -5,19 +5,26 @@ import { usePermissionStoreWithOut } from '@/piniaStore/modules/permission';
 import { PageEnum } from '@/enums/pageEnum';
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
 import { useUserStoreWithOut } from '@/piniaStore/modules/user';
+import { SideBarItemType } from '@/api/login/model/menuModel';
+import { PAGE_NOT_FOUND_NAME } from '../routes/basic';
 
 const PAGE_NOT_FOUND_ROUTE = {
-  name: 'PageNotFound'
+  name: PAGE_NOT_FOUND_NAME
 };
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
 // 根路由
-const ROOT_PATH = '/home';
+// const ROOT_PATH = '/home';
 
 const whitePathList: PageEnum[] = [LOGIN_PATH];
 
-export function createPermissionGuard(router: Router) {
+export async function createPermissionGuard(router: Router) {
+  const permissionStore = usePermissionStoreWithOut();
+  const routes = await permissionStore.buildRoutesAction();
+  routes.forEach((route) => {
+    router.addRoute(route as unknown as RouteRecordRaw);
+  });
   // const userStore = {
   //   getUserInfo: {
   //     homePath: ''
@@ -32,11 +39,9 @@ export function createPermissionGuard(router: Router) {
   // };
   const userStore = useUserStoreWithOut();
 
-  const permissionStore = usePermissionStoreWithOut();
 
   router.beforeEach(async (to, from, next) => {
     if (
-      from.path === ROOT_PATH &&
       to.path === PageEnum.BASE_HOME &&
       userStore.getUserInfo.homePath &&
       userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
@@ -50,6 +55,10 @@ export function createPermissionGuard(router: Router) {
     // store.setDefaultActive(to.path)
     appStore.setProjectConfig({ menuSetting: { defaultActive: to.path } });
     // store.dispatch(SidebarActionTypes.DEFAULT_ACTIVE,to.path)
+    // 设置 MenuTabs
+    if (to.name !== PAGE_NOT_FOUND_NAME) {
+      appStore.setTabs((to as unknown as SideBarItemType));
+    }
 
     const token = userStore.getToken;
 
@@ -97,11 +106,6 @@ export function createPermissionGuard(router: Router) {
       next();
       return;
     }
-    const routes = await permissionStore.buildRoutesAction();
-
-    routes.forEach((route) => {
-      router.addRoute(route as unknown as RouteRecordRaw);
-    });
 
     permissionStore.setDynamicAddedRoute(true);
 

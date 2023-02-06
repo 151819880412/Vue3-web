@@ -129,7 +129,7 @@ export default defineComponent({
       showLogo: true,
       showFooter: true,
       showWatermark: false,
-      tabs: [{
+      menuTabs: [{
         title: '首页',
         path: '/home',
       }]

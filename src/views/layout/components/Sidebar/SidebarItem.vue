@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts">
-import { tabsType } from "#/config";
 import { SideBarItemType } from "@/api/login/model/menuModel";
 import { useAppStoreWithOut } from "@/piniaStore/modules/app";
 import { reactive, toRefs, defineComponent, PropType, computed, ComputedRef } from "vue";
@@ -41,17 +40,12 @@ export default defineComponent({
     const menu = reactive(props);
     const menuRefs = toRefs(menu);
     const appStore = useAppStoreWithOut();
-    const tabs: ComputedRef<tabsType[]> = computed(() => appStore.getProjectConfig.tabs);
+    const menuTabs: ComputedRef<SideBarItemType[]> = computed(() => appStore.getTabsSetting);
 
     // MenuPageModel
     let skip = (menu: SideBarItemType) => {
-      if (tabs.value.filter(item => item.path === menu.path).length === 0) {
-        appStore.setProjectConfig({
-          tabs: [...tabs.value, {
-            title: menu.menuName,
-            path: menu.path,
-          }]
-        });
+      if (menuTabs.value.filter(item => item.path === menu.path).length === 0) {
+        appStore.setTabs(menu)
       }
       router.push({
         path: menu.path,

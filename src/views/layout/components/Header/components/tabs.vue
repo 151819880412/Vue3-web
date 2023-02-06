@@ -1,11 +1,11 @@
 <template>
   <div class="headerTabs">
     <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-      <el-tab-pane v-for="item in editableTabs" :key="item.path" :label="item.title" :name="item.path">
+      <el-tab-pane v-for="item in editableTabs" :key="item.path" :label="item.name" :name="item.path">
       </el-tab-pane>
     </el-tabs>
     <div>
-      111
+      {{editableTabsValue}}
     </div>
   </div>
 
@@ -13,7 +13,7 @@
 
 <script lang='ts'>
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, } from 'vue';
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'tabs',
@@ -21,20 +21,19 @@ export default defineComponent({
   setup() {
     const appStore = useAppStoreWithOut();
 
-    let tabIndex = 2;
-    const editableTabsValue = ref('/home');
+    // let tabIndex = 2;
+    const editableTabsValue = computed(() => appStore.getProjectConfig.menuSetting.defaultActive)
     console.log(111,appStore.getProjectConfig)
-    const editableTabs = computed(() => appStore.getProjectConfig.tabs)
-    // const width = computed(() => appStore.getProjectConfig.tabs)
+    const editableTabs = computed(() => appStore.getTabsSetting)
 
     const addTab = (targetName: string) => {
       console.log(targetName);
-      const newTabName = `${++tabIndex}`;
-      editableTabs.value.push({
-        title: 'New Tab',
-        path: newTabName,
-      });
-      editableTabsValue.value = newTabName;
+      // const newTabName = `${++tabIndex}`;
+      // editableTabs.value.push({
+      //   title: 'New Tab',
+      //   path: newTabName,
+      // });
+      // editableTabsValue.value = newTabName;
     };
     const removeTab = (targetName: string) => {
       const tabs = editableTabs.value;
@@ -50,7 +49,7 @@ export default defineComponent({
         });
       }
 
-      editableTabsValue.value = activeName;
+      // editableTabsValue.value = activeName;
       // editableTabs.value = tabs.filter((tab) => tab.path !== targetName);
     };
 

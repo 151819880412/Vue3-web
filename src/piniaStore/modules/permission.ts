@@ -128,11 +128,12 @@ export const usePermissionStore = defineStore({
             title: arr[i].menuName
           };
           arr[i].component = renderComponent(arr[i].componentPath);
+          arr[i].name = arr[i].menuName
         }
       };
       // arr[1].component = ()=>import('@/views/home/home.vue');
       treeFor(arr);
-      console.log(arr,111)
+      console.log(arr,333)
       routes = arr as unknown as Array<AppRouteRecordRaw>;
 
       this.setMenuList(routes);
