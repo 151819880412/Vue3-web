@@ -23,11 +23,11 @@
       <template v-slot:tableBtn>
         <el-button type="primary">插槽</el-button>
       </template>
-      <template v-slot:statusTxtSlot="{ scopeData }">
+      <!-- <template v-slot:statusTxtSlot="{ scopeData }">
         <div>
           {{ formatters(scopeData.row) }}
         </div>
-      </template>
+      </template> -->
       <!-- <template v-slot:handleSlot="{ scopeData }">
         <el-dropdown>
           <el-button type="primary">
@@ -158,7 +158,7 @@ export default defineComponent({
               label: "状态",
               // width: 120,
               prop: "state",
-              slot: "statusTxtSlot",
+              slot: "formatterSlot",
               align: "center",
               visible:true
             },

@@ -13,7 +13,7 @@
 
 <script lang='ts'>
 import { useAppStoreWithOut } from '@/piniaStore/modules/app';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'tabs',
@@ -22,9 +22,10 @@ export default defineComponent({
     const appStore = useAppStoreWithOut();
 
     let tabIndex = 2;
-    const editableTabsValue = ref('2');
+    const editableTabsValue = ref('/home');
     console.log(111,appStore.getProjectConfig)
-    const editableTabs = appStore.getProjectConfig.tabs
+    const editableTabs = computed(() => appStore.getProjectConfig.tabs)
+    // const width = computed(() => appStore.getProjectConfig.tabs)
 
     const addTab = (targetName: string) => {
       console.log(targetName);
@@ -50,7 +51,7 @@ export default defineComponent({
       }
 
       editableTabsValue.value = activeName;
-      editableTabs.value = tabs.filter((tab) => tab.path !== targetName);
+      // editableTabs.value = tabs.filter((tab) => tab.path !== targetName);
     };
 
     return {

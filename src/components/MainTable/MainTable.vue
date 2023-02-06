@@ -100,7 +100,10 @@
               :align="item.align || 'center'" :width="item.width || ''"
               :show-overflow-tooltip="item.showOverflowTooltip" :key="item.prop">
               <template #default="scope">
-                <slot :name="item.slot" :scopeData="scope" v-if="item.slot"></slot>
+                <span v-if="item.prop&&item.slot&&item.slot=='formatterSlot'">
+                  {{ formatterDataList[item.prop]?.filter(item3=>item3.dictValue==scope.row[(item.prop)])[0].cnName }}
+                </span>
+                <slot :name="item.slot" :scopeData="scope" v-else-if="item.slot"></slot>
                 <template v-else-if="item.operationBtn">
 
                   <el-dropdown>
@@ -176,6 +179,8 @@ interface MainTable {
   tableData: tableConfigType<unknown>,
   loading: boolean,
   sortable: Sortable;
+  formatterFieldList: string[],
+  formatterDataList: any,
 }
 import { PaginationInterface } from "#/ele";
 import { columnsBtnType, columnsType, tableConfigType, tableConfigTypes } from "./MainTable";
@@ -202,6 +207,7 @@ import { ElMessage } from "element-plus";
 import { isNullAndUnDef } from "@/utils/is";
 import { cloneDeep } from 'lodash-es';
 import Dropdown from '@/components/Dropdown/Dropdown.vue';
+import dictServiceImpl from '@/api/dict/index';
 // type aa = {
 //   a:string,
 //   b:bb
@@ -267,6 +273,8 @@ export default defineComponent({
         tableData: props.tableConfig,
         loading: true,
         sortable: null,
+        formatterFieldList:[],
+        formatterDataList:{}
       };
     };
     const model = reactive(initState());
@@ -274,13 +282,23 @@ export default defineComponent({
 
     const Columns = computed(() => model.tableData.columns) as ComputedRef<Array<columnsType>>;
 
+    for (const item of Columns.value) {
+      if(item.slot){
+        model.formatterFieldList.push((item.prop as string));
+      }
+    }
+
     const refreshTable = () => {
       initTableData(1, 10, props.searchData);
     };
 
-    onMounted(() => {
+     onMounted(async() => {
       EventBus.on('refresh', refreshTable);
       initTableData(1, 10, props.searchData);
+      if(model.formatterFieldList.length>0){
+        const {data} = await dictServiceImpl.queryDictByDictType(model.formatterFieldList)
+        model.formatterDataList = data
+      }
     });
 
     onBeforeUnmount(() => {
@@ -453,6 +471,10 @@ export default defineComponent({
       console.log(row, type);
     };
 
+    const formatterSlot = (row:columnsType)=>{
+      console.log(row,model.formatterDataList,111)
+    }
+
     return {
       add,
       handleSizeChange,
@@ -465,7 +487,8 @@ export default defineComponent({
       handleSelectCheckChange,
       Columns,
       btnClick,
-      fixeds
+      fixeds,
+      formatterSlot,
     };
   },
   components: {

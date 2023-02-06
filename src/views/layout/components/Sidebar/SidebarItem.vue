@@ -20,15 +20,17 @@
 </template>
 
 <script lang="ts">
-import { AppRouteRecordRaw } from "@/router/types";
-import { reactive, toRefs, defineComponent, PropType } from "vue";
+import { tabsType } from "#/config";
+import { SideBarItemType } from "@/api/login/model/menuModel";
+import { useAppStoreWithOut } from "@/piniaStore/modules/app";
+import { reactive, toRefs, defineComponent, PropType, computed, ComputedRef } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "SidebarItem",
   props: {
     menu: {
-      type: Object as PropType<AppRouteRecordRaw>,
+      type: Object as PropType<SideBarItemType>,
       required: true
     },
   },
@@ -38,9 +40,19 @@ export default defineComponent({
     // console.log(props);
     const menu = reactive(props);
     const menuRefs = toRefs(menu);
+    const appStore = useAppStoreWithOut();
+    const tabs: ComputedRef<tabsType[]> = computed(() => appStore.getProjectConfig.tabs);
 
-    let skip = (menu: AppRouteRecordRaw) => {
-      // console.log(menu);
+    // MenuPageModel
+    let skip = (menu: SideBarItemType) => {
+      if (tabs.value.filter(item => item.path === menu.path).length === 0) {
+        appStore.setProjectConfig({
+          tabs: [...tabs.value, {
+            title: menu.menuName,
+            path: menu.path,
+          }]
+        });
+      }
       router.push({
         path: menu.path,
       });

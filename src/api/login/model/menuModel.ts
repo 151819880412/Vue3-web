@@ -1,3 +1,4 @@
+import { AppRouteRecordRaw } from "@/router/types";
 
 export interface MenuPageModel {
   menuId: string;
@@ -5,9 +6,13 @@ export interface MenuPageModel {
   path: string;
   btnName: string;
   type: number;
-  icon: string;
+  icon?: string;
   sort: number;
   delFlag: number;
   createdTime: Date;
   updatedTime: Date;
+}
+
+export interface SideBarItemType extends MenuPageModel, AppRouteRecordRaw {
+
 }
