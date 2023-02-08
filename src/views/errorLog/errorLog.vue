@@ -47,7 +47,7 @@ interface errorLog {
 import errorLogServiceImpl from '@/api/errorLog';
 import { ErrorlogPageModel } from '@/api/errorLog/service/model/errorLogModel';
 import { tableConfigType } from '@/components/MainTable/MainTable';
-import { reactive, toRefs, defineComponent, ToRefs, ComputedRef, ref } from 'vue';
+import { reactive, toRefs, defineComponent, ToRefs, ComputedRef, ref, getCurrentInstance, ComponentInternalInstance, provide } from 'vue';
 import DialogMask from "@/components/DialogMask/DialogMask.vue";
 import { FormInterface, Options, Rules } from "#/form-config";
 
@@ -55,9 +55,9 @@ export default defineComponent({
   name: 'errorLog',
   props: [],
   setup() {
-
+    const ctx = getCurrentInstance() as ComponentInternalInstance;
+    provide("Pctx", ctx);
     const dialogMask = ref<InstanceType<typeof DialogMask>>();
-
 
     const initState = (): errorLog => {
       return {
@@ -135,7 +135,7 @@ export default defineComponent({
             type: "input",
             title: "类型",
             field: "type",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -151,7 +151,7 @@ export default defineComponent({
             type: "input",
             title: "URL",
             field: "url",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -167,7 +167,7 @@ export default defineComponent({
             type: "input",
             title: "时间",
             field: "time",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -183,7 +183,7 @@ export default defineComponent({
             type: "input",
             title: "文件",
             field: "file",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -199,7 +199,7 @@ export default defineComponent({
             type: "input",
             title: "Name",
             field: "name",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -215,7 +215,7 @@ export default defineComponent({
             type: "input",
             title: "错误信息",
             field: "message",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],
@@ -231,7 +231,7 @@ export default defineComponent({
             type: "input",
             title: "stack信息",
             field: "stack",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: false,
             rules: [],

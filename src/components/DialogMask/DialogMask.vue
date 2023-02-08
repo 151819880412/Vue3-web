@@ -145,6 +145,8 @@ export default defineComponent({
         // 判断不为null和undefind
         state.formData[item.field] = item.defaultValue;
       });
+
+      // 查询下拉框
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let queryFn: Array<any> = [];
       configCopy.filter(item => item.queryOptionsFn).forEach(item => {
@@ -158,6 +160,7 @@ export default defineComponent({
           item.options = JSON.parse(JSON.stringify(p[index].data.results));
         }
       });
+      
       state.formConfig = _.cloneDeep(configCopy);
     };
 

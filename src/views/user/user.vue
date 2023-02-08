@@ -23,30 +23,6 @@
       <template v-slot:tableBtn>
         <el-button type="primary">插槽</el-button>
       </template>
-      <!-- <template v-slot:statusTxtSlot="{ scopeData }">
-        <div>
-          {{ formatters(scopeData.row) }}
-        </div>
-      </template> -->
-      <!-- <template v-slot:handleSlot="{ scopeData }">
-        <el-dropdown>
-          <el-button type="primary">
-            操作<el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="editor(scopeData.row)">编辑</el-dropdown-item>
-              <el-dropdown-item @click="editState(scopeData.row, 'changeState')">{{ ['禁用', '启用'][scopeData.row.state] }}
-              </el-dropdown-item>
-              <el-dropdown-item @click="editState(scopeData.row, 'changeDelFlag')">假删除</el-dropdown-item>
-              <el-dropdown-item @click="editState(scopeData.row, 'delUser')">真删除</el-dropdown-item>
-              <el-dropdown-item @click="relationRole(scopeData.row)">关联角色</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask">
@@ -204,7 +180,7 @@ export default defineComponent({
             type: "input",
             title: "用户名",
             field: "username",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入用户名", required: true, trigger: "blur" }],
@@ -217,7 +193,7 @@ export default defineComponent({
             type: "input",
             title: "密码",
             field: "password",
-            value: "",
+            defaultValue: "",
             maxlength: 40,
             required: true,
             rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
@@ -226,31 +202,6 @@ export default defineComponent({
             },
             isShow: true,
           },
-          // {
-          //   type: "select",
-          //   title: "关联用户",
-          //   field: "roles",
-          //   value: [],
-          //   maxlength: 40,
-          //   required: true,
-          //   rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
-          //   col: {
-          //     span: 12,
-          //   },
-          //   props: {
-          //     multiple: true,
-          //   },
-          //   options: [
-          //     { label: '1', value: 1 },
-          //     { label: '3', value: 3 },
-          //   ],
-          //   queryOptionsFn: {
-          //     url: '/role/page/1/10',
-          //     data: '{"state":0}',
-          //     label: "roleName",
-          //     value: "roleId"
-          //   }
-          // },
         ],
         queryFormConfig: [
           {
@@ -313,23 +264,6 @@ export default defineComponent({
     // const userModel = reactive<UserType>(initState());
 
     let userData: ToRefs<UserType> = toRefs(userModel);
-
-    /**
-     * 状态转文字
-     * @date 2022-08-18
-     * @param {any} data:{state:number;}
-     * @returns {any}
-     */
-    let formatters = (data: { state: number; }): string => {
-      switch (data.state) {
-        case 0:
-          return "启用";
-        case 1:
-          return "禁用";
-        default:
-          return "";
-      }
-    };
 
     /**
      * 搜索提交
@@ -484,7 +418,6 @@ export default defineComponent({
       changeDataFormRule,
       relationRoleForm,
       ...userData,
-      formatters,
       submitSearch,
       openDialog,
       dialogMask,

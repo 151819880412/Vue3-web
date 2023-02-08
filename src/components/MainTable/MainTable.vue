@@ -438,6 +438,12 @@ export default defineComponent({
 
 
     const btnClick = (item: columnsBtnType, row): void => {
+      if(!Pctx){
+        ElMessage({
+          message: "父级没有注入ctx",
+          type: "warning",
+        });
+      }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       console.log(item, row, eval(item.visible), Pctx!.proxy);
       if (item.visible) {
