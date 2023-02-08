@@ -3,6 +3,9 @@ import { AppRouteRecordRaw } from "@/router/types";
 export interface MenuPageModel {
   menuId: string;
   menuName: string;
+  componentName: string;
+  label: string;
+  title: string;
   path: string;
   btnName: string;
   type: number;

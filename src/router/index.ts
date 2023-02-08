@@ -30,11 +30,6 @@ export function resetRouter() {
   });
 }
 
-setTimeout(() => {
-  console.log(router, router.getRoutes());
-}, 3333);
-
-
 // config router
 export function setupRouter(app: App<Element>) {
   app.use(router);

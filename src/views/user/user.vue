@@ -454,7 +454,6 @@ export default defineComponent({
      * @returns {any}
      */
     const editor = async (row: UserPageModel): Promise<void> => {
-      console.log(userModel.dialogFormConfig);
       const { data } = await userServiceImpl.queryUserById({ userId: row.userId });
       await dialogMask?.value?.initConfig(userModel.dialogFormConfig, data);
       dialogMask.value?.openDialog("Editor");

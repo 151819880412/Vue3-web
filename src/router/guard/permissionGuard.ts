@@ -39,7 +39,8 @@ export async function createPermissionGuard(router: Router) {
     // store.dispatch(SidebarActionTypes.DEFAULT_ACTIVE,to.path)
     // 设置 MenuTabs
     if (to.name !== PAGE_NOT_FOUND_NAME && to.name !== 'Redirect' && to.name !== 'Login') {
-      appStore.setTabs((to as unknown as SideBarItemType));
+      const tabsRow = {...to,title:to?.meta?.title} as unknown as SideBarItemType
+      appStore.setTabs(tabsRow);
     }
 
     const token = userStore.getToken;
@@ -92,7 +93,9 @@ export async function createPermissionGuard(router: Router) {
     // 构建路由
     const routes = await permissionStore.buildRoutesAction();
     routes.forEach((route) => {
-      router.addRoute(route as unknown as RouteRecordRaw);
+      if(router.getRoutes().filter(item2=>item2.name==route.name).length==0){
+        router.addRoute(route as unknown as RouteRecordRaw);
+      }
     });
     permissionStore.setDynamicAddedRoute(true);
 

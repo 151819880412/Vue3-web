@@ -114,7 +114,6 @@ export const usePermissionStore = defineStore({
           case 'LAYOUT':
             return () => import('@/views/layout/AppLayout.vue');
             default:
-            // console.log(files.keys().filter(item => item == '.' + str + '.vue'),1111)
             return () => import(`@/views${files.keys().filter(item => item == '.' + str + '.vue')[0].slice(1)}`);
         }
       };
@@ -127,7 +126,8 @@ export const usePermissionStore = defineStore({
             title: arr[i].menuName
           };
           arr[i].component = renderComponent(arr[i].componentPath);
-          arr[i].name = arr[i].menuName
+          arr[i].name = arr[i].componentName
+          arr[i].title = arr[i].menuName
         }
       };
       // arr[1].component = ()=>import('@/views/home/home.vue');

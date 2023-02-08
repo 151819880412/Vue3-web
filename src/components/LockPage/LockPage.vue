@@ -53,7 +53,6 @@ export default defineComponent({
 
 
     const initState = (): LockPage => {
-      console.log(222);
       return {
         showForm: false,
         lockPwd: '',
@@ -85,8 +84,7 @@ export default defineComponent({
       }
       try {
         // loading.value = true;
-        const res = await lockStore.unLock(model.lockPwd);
-        console.log(res)
+        await lockStore.unLock(model.lockPwd);
         // errMsg.value = !res;
       } finally {
         // loading.value = false;

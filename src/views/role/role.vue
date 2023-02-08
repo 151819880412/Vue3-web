@@ -536,7 +536,6 @@ export default defineComponent({
      */
     const submitDialogEditor = async (formData: RoleAddModel): Promise<boolean> => {
       const obj: RoleEditorModel = { ...formData, menus: roleModel.selectTreeList };
-      console.log(obj);
       let { message } = await roleServiceImpl.editorRole(obj);
       ElMessage({
         message,

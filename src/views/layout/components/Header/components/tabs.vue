@@ -1,13 +1,13 @@
 <template>
   <div class="headerTabs">
     <el-tabs v-model="tabValue" type="card" closable @tab-remove="removeTab" @tab-click="tabClick">
-      <el-tab-pane v-for="item in tabList" :key="item.path" :label="item.name" :name="item.path">
+      <el-tab-pane v-for="item in tabList" :key="item.path" :label="item.title" :name="item.path">
 
         <!-- 右键菜单开始：自定义标签页显示名称，保证每个标签页都能实现右键菜单 -->
         <template #label>
           <el-dropdown trigger="contextmenu" :id="item.path" @visible-change="handleChange($event, item.path)"
             ref="dropdownRef">
-            <span :class="tabValue === item.path ? 'label' : ''">{{ item.name }}</span>
+            <span :class="tabValue === item.path ? 'label' : ''">{{ item.title }}</span>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="removeTab(item)" :disabled="show(item.path, 'left')">
@@ -160,10 +160,9 @@ export default defineComponent({
 
     const tabValue: ComputedRef<string> = computed(() => appStore.getProjectConfig.menuSetting.defaultActive);
     const tabList: ComputedRef<SideBarItemType[]> = computed(() => appStore.getTabsSetting);
-
     const tabClick = ({ props }) => {
       router.push({
-        path: props.name
+        path: props.path
       });
     };
 
@@ -186,7 +185,6 @@ export default defineComponent({
       } else if (type !== 'all' && show(row.path, type)) {
         return;
       }
-      console.log(type === 'other' && tabList.value.length < 1, 111, show(row.path, type));
       const index = tabList.value.findIndex((item) => item.path === row.path); //查找触发右键菜单所在标签页index
       const currentIndex = tabList.value.findIndex((item) => item.path === tabValue.value); //查找当前激活标签页index，存在当前激活标签页与触发右键菜单标签页不是同一个的情况
       const other = _.cloneDeep(tabList.value[index]);
@@ -247,7 +245,6 @@ export default defineComponent({
       setTimeout(() => {
         isRefresh.value = false;
       }, 1200);
-      console.log(111);
 
       const redo = useRedo(router);
       await redo();

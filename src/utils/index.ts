@@ -99,7 +99,6 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
  */
 export function getCascaderFullValue<T>(cascader:Array<T>, path:string|number) {
   const cascaderFullValue = [path];
-  console.log(cascaderFullValue)
   _getParentId(cascaderFullValue, cascader, cascader, path);
 
   return cascaderFullValue;
@@ -114,7 +113,6 @@ export function getCascaderFullValue<T>(cascader:Array<T>, path:string|number) {
       const index = cascaderItem.children.findIndex(
         (item) => item.path === _id
       ); //找到返回该元素的位置 有值为0 没有值返回-1
-      console.log(index)
       if (index >= 0) {
         cascaderFullValue.unshift(cascaderItem.path); // 在数组开头添加元素
         if (

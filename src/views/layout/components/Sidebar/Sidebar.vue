@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-menu class="menus" :collapse="collapsed" @open="handleOpen" @close="handleClose" background-color="#304156"
+    <el-menu class="menus" :collapse="collapsed"  background-color="#304156"
       text-color="#bfcbd9" :unique-opened="true" active-text-color="#409EFF" :collapse-transition="false"
       :default-active="defaultActive" mode="vertical">
       <SidebarItem v-for="item in navs" :key="item.path" :menu="item" :index="item.path" />
@@ -28,20 +28,10 @@ export default defineComponent({
     // 默认展示页面
     // const store = useDefaultActiveStore();
     // const sidebar: any = useState(["sidebar"]);
-    // console.log(sidebar);
-
-    const handleOpen = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath);
-    };
-    const handleClose = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath);
-    };
 
     const appStore = useAppStoreWithOut();
 
     return {
-      handleOpen,
-      handleClose,
       navs,
       // ...sidebar,
       // defaultActive: computed(() => store.defaultActive),

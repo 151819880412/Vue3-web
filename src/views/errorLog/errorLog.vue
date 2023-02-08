@@ -269,7 +269,6 @@ export default defineComponent({
 
     const detail = async (row: ErrorlogPageModel): Promise<void> => {
       let { data } = await errorLogServiceImpl.queryById(row.errorLogId);
-      console.log(data);
       await dialogMask?.value?.initConfig(model.dialogFormConfig, data);
       dialogMask.value?.openDialog("Add");
     };

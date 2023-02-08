@@ -16,7 +16,6 @@ export const createStorage = ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set(key: string, value: any) {
       const stringData = JSON.stringify(value);
-      // console.log(key,stringData,value)
       this.storage.setItem(key, stringData);
     }
 
@@ -38,7 +37,6 @@ export const createStorage = ({
     }
 
     clear(): void {
-      // console.log(555)
     this.storage.clear();
     }
   };

@@ -174,6 +174,22 @@ export default defineComponent({
           },
           {
             type: "input",
+            title: "组件名称",
+            field: "componentName",
+            isShow: true,
+            defaultValue: "",
+            maxlength: 40,
+            required: true,
+            rules: [{ message: "请输入组件名称", required: true, trigger: "blur" }],
+            col: {
+              span: 12,
+            },
+            props: {
+              clearable: true,
+            },
+          },
+          {
+            type: "input",
             title: "路由地址",
             field: "path",
             defaultValue: "",

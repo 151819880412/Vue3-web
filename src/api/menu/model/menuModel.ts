@@ -3,6 +3,7 @@ export interface MenuListModel {
   menuId: string;
   parentId: number;
   menuName: string;
+  componentName: string;
   path: string;
   btnName: string;
   type: number;
@@ -23,6 +24,7 @@ export interface MenuAddModel {
   menuId: string;
   parentId: number;
   menuName: string;
+  componentName: string;
   path: string;
   btnName: string;
   type: number;

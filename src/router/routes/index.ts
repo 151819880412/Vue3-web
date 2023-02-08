@@ -32,11 +32,11 @@ export const asyncRoutes = [PAGE_NOT_FOUND_ROUTE, ...routeModuleList];
 // 根路由
 export const HomeRoute: AppRouteRecordRaw = {
   path: '/',
-  name: '/',
+  name: 'Home',
   redirect: 'home',
   component: AppLayout,
   meta: {
-    title: '/',
+    title: '首页',
   },
   children:[
     {

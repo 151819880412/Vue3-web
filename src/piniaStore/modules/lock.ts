@@ -22,7 +22,6 @@ export const useLockStore = defineStore({
   actions: {
     setLockInfo(info: LockInfo) {
       this.lockInfo = Object.assign({}, this.lockInfo, info);
-      console.log(this.lockInfo, info, 1111);
       Persistent.setLocal(LOCK_INFO_KEY, this.lockInfo);
     },
     resetLockInfo() {
@@ -31,7 +30,6 @@ export const useLockStore = defineStore({
     },
     // 进入系统
     unLock(password?: string): boolean {
-      console.log(password,this.lockInfo?.pwd);
       if (this.lockInfo?.pwd === password) {
         this.resetLockInfo();
         return true;

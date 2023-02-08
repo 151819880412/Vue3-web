@@ -36,7 +36,6 @@ export default defineComponent({
 
   setup(props) {
     const router = useRouter();
-    // console.log(props);
     const menu = reactive(props);
     const menuRefs = toRefs(menu);
     const appStore = useAppStoreWithOut();

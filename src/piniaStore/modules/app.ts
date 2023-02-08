@@ -41,8 +41,10 @@ const initState = ():AppState => {
     projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig,
     beforeMiniInfo: {},
     menuTabs: [{
-      name: '首页',
+      title: '首页',
+      name: 'Home',
       path: '/home',
+      componentName:"Home"
     } as SideBarItemType]
   };
 };

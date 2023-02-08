@@ -30,6 +30,7 @@ const setting: ProjectConfig = {
   menuTabs: [{
     title: '首页',
     path: '/home',
+    componentName:"Home"
   }],
   //pageLayout是否启用keep-alive
   openKeepAlive: true,

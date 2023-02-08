@@ -315,7 +315,6 @@ const transform: AxiosTransform = {
 };
 
 function createAxios(_opt?: Partial<CreateAxiosOptions>) {
-  // console.log('axios options------', _opt);
   return new VAxios(
     {
       // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
