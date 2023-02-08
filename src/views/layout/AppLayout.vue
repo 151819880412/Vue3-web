@@ -13,7 +13,8 @@
           <Header></Header>
         </el-header>
         <el-main class="main">
-          <router-view class="appLayout" />
+          <Page/>
+          <!-- <router-view class="appLayout" /> -->
         </el-main>
       </el-container>
 
@@ -44,6 +45,7 @@ import { useLockPage } from "../hooks/useLockPage";
 import { useLockStore } from "@/piniaStore/modules/lock";
 import LockPage from "@/components/LockPage/LockPage.vue";
 import { initWatermark } from "@/utils/watermark/index";
+import Page from  './components/Page/page.vue'
 
 
 export default defineComponent({
@@ -99,6 +101,7 @@ export default defineComponent({
     SidebarNav,
     Header,
     LockPage,
+    Page,
   },
 });
 </script>

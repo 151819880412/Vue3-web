@@ -14,7 +14,7 @@ export type LocaleType = 'zh_CN' | 'en' | 'ru' | 'ja' | 'ko';
 
 export interface tabsType {
   path: string;
-  title: string;
+  name: string;
 }
 
 export interface MenuSetting {
@@ -22,23 +22,23 @@ export interface MenuSetting {
   collapsed: boolean;
   // 默认展示页面
   defaultActive: string;
-  bgColor: string;
-  fixed: boolean;
-  canDrag: boolean;
-  show: boolean;
-  hidden: boolean;
-  split: boolean;
-  menuWidth: number;
-  mode: MenuModeEnum;
-  type: MenuTypeEnum;
-  theme: ThemeEnum;
-  topMenuAlign: 'start' | 'center' | 'end';
-  trigger: TriggerEnum;
-  accordion: boolean;
-  closeMixSidebarOnChange: boolean;
-  collapsedShowTitle: boolean;
-  mixSideTrigger: MixSidebarTriggerEnum;
-  mixSideFixed: boolean;
+  // bgColor: string;
+  // fixed: boolean;
+  // canDrag: boolean;
+  // show: boolean;
+  // hidden: boolean;
+  // split: boolean;
+  // menuWidth: number;
+  // mode: MenuModeEnum;
+  // type: MenuTypeEnum;
+  // theme: ThemeEnum;
+  // topMenuAlign: 'start' | 'center' | 'end';
+  // trigger: TriggerEnum;
+  // accordion: boolean;
+  // closeMixSidebarOnChange: boolean;
+  // collapsedShowTitle: boolean;
+  // mixSideTrigger: MixSidebarTriggerEnum;
+  // mixSideFixed: boolean;
 }
 
 export interface MultiTabsSetting {
@@ -55,7 +55,7 @@ export interface MultiTabsSetting {
 export interface HeaderSetting {
   // 顶栏
   show: boolean;
-  bgColor: string;
+  // bgColor: string;
   fixed: boolean;
   theme: ThemeEnum;
   // 打开全屏
@@ -112,9 +112,10 @@ export interface ProjectConfig {
   showFooter: boolean;
   // 水印
   showWatermark: boolean;
-  // tabs
-  tabs: tabsType<>;
-
+  // menuTabs
+  menuTabs: tabsType<>;
+  //pageLayout是否启用keep-alive
+  openKeepAlive: boolean;
 
 
   // 权限相关信息的存储位置
@@ -139,8 +140,6 @@ export interface ProjectConfig {
   contentMode: ContentEnum;
   // Animation configuration
   transitionSetting: TransitionSetting;
-  // pageLayout whether to enable keep-alive
-  openKeepAlive: boolean;
   // Use error-handler-plugin
   useErrorHandle: boolean;
   // Whether to open back to top

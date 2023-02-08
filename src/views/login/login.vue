@@ -71,7 +71,6 @@
 
 <script lang="ts">
 import loginServiceImpl from "@/api/login";
-import { useAppStoreWithOut } from "@/piniaStore/modules/app";
 import { useUserStoreWithOut } from "@/piniaStore/modules/user";
 import { Persistent } from "@/utils/cache/persistent";
 import { ElMessage } from "element-plus";
@@ -112,29 +111,6 @@ export default defineComponent({
     Persistent.clearAll();
     const userStore = useUserStoreWithOut();
     userStore.resetState();
-
-
-    // 设置默认值，避免报错
-    const appStore = useAppStoreWithOut();
-    const initProjectData = {
-      showBreadCrumb: true,
-      showBreadCrumbIcon: true,
-      multiTabsSetting: {
-        show: true,
-        showQuick: true
-      },
-      headerSetting: {
-        show: true
-      },
-      showLogo: true,
-      showFooter: true,
-      showWatermark: false,
-      menuTabs: [{
-        title: '首页',
-        path: '/home',
-      }]
-    };
-    appStore.setProjectConfig(initProjectData);
 
     const initState = (): LoginType => {
       return {

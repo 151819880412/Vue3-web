@@ -4,6 +4,8 @@ import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import store from './store';
 // import piniaStore from '@/piniaStore/index.js'
+// 初始化
+import { initAppConfigStore } from '@/logics/initAppConfig';
 
 // 异常监控
 // import * as Sentry from "@sentry/vue";
@@ -51,6 +53,9 @@ const app = createApp(App) as CustomApp;
 setupStore(app);
 // Configure routing
 setupRouter(app);
+
+// 初始化内部系统配置
+initAppConfigStore();
 
 // router-guard
 setupRouterGuard(router);

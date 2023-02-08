@@ -21,25 +21,7 @@ const whitePathList: PageEnum[] = [LOGIN_PATH];
 
 export async function createPermissionGuard(router: Router) {
   const permissionStore = usePermissionStoreWithOut();
-  const routes = await permissionStore.buildRoutesAction();
-  routes.forEach((route) => {
-    router.addRoute(route as unknown as RouteRecordRaw);
-  });
-  // const userStore = {
-  //   getUserInfo: {
-  //     homePath: ''
-  //   },
-  //   getToken: '',
-  //   getSessionTimeout: 1,
-  //   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  //   afterLoginAction: () => { },
-  //   getLastUpdateTime: (): number => {
-  //     return 1;
-  //   }
-  // };
   const userStore = useUserStoreWithOut();
-
-
   router.beforeEach(async (to, from, next) => {
     if (
       to.path === PageEnum.BASE_HOME &&
@@ -56,7 +38,7 @@ export async function createPermissionGuard(router: Router) {
     appStore.setProjectConfig({ menuSetting: { defaultActive: to.path } });
     // store.dispatch(SidebarActionTypes.DEFAULT_ACTIVE,to.path)
     // 设置 MenuTabs
-    if (to.name !== PAGE_NOT_FOUND_NAME) {
+    if (to.name !== PAGE_NOT_FOUND_NAME && to.name !== 'Redirect' && to.name !== 'Login') {
       appStore.setTabs((to as unknown as SideBarItemType));
     }
 
@@ -107,6 +89,11 @@ export async function createPermissionGuard(router: Router) {
       return;
     }
 
+    // 构建路由
+    const routes = await permissionStore.buildRoutesAction();
+    routes.forEach((route) => {
+      router.addRoute(route as unknown as RouteRecordRaw);
+    });
     permissionStore.setDynamicAddedRoute(true);
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {

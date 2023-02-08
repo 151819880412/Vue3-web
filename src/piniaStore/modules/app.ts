@@ -34,10 +34,8 @@ export interface AppState {
 //   setDarkMode(): (value?: boolean | undefined) => (value?: boolean | undefined) => boolean
 // }
 let timeId: TimeoutHandle;
-// export const useAppStore :StoreDefinition<"app", AppState,a >= defineStore({
-export const useAppStore = defineStore({
-  id: 'app',
-  state: (): AppState => ({
+const initState = ():AppState => {
+  return {
     darkMode: () => false,
     pageLoading: false,
     projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig,
@@ -46,7 +44,23 @@ export const useAppStore = defineStore({
       name: '首页',
       path: '/home',
     } as SideBarItemType]
-  }),
+  };
+};
+
+// export const useAppStore :StoreDefinition<"app", AppState,a >= defineStore({
+export const useAppStore = defineStore({
+  id: 'app',
+  // state: (): AppState => ({
+  //   darkMode: () => false,
+  //   pageLoading: false,
+  //   projectConfig: Persistent.getLocal(PROJ_CFG_KEY) as ProjectConfig,
+  //   beforeMiniInfo: {},
+  //   menuTabs: [{
+  //     name: '首页',
+  //     path: '/home',
+  //   } as SideBarItemType]
+  // }),
+  state:(): AppState=>initState(),
   getters: {
     getPageLoading(): boolean {
       return this.pageLoading;
@@ -107,10 +121,15 @@ export const useAppStore = defineStore({
       Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig);
     },
 
+    resetProp(props:string){
+      this[props] = initState()[props]
+    },
+
     async resetAllState() {
       resetRouter();
       Persistent.clearAll();
     },
+
     async setPageLoadingAction(loading: boolean): Promise<void> {
       if (loading) {
         clearTimeout(timeId);

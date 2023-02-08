@@ -40,7 +40,7 @@ export const REDIRECT_ROUTE: AppRouteRecordRaw = {
     {
       path: '/redirect/:path(.*)',
       name: 'Redirect',
-      // component: () => import('/@/views/sys/redirect/index.vue'),
+      component: () => import('@/components/Redirect/redirect.vue'),
       meta: {
         title: 'Redirect',
         hideBreadcrumb: true,

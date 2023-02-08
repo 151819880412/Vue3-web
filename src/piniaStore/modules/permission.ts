@@ -66,7 +66,6 @@ export const usePermissionStore = defineStore({
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       // const userStore = useUserStore();
       // const appStore = useAppStoreWithOut();
-      // console.log(appStore)
 
       let routes: AppRouteRecordRaw[] = [];
       // const roleList = [];
@@ -133,7 +132,6 @@ export const usePermissionStore = defineStore({
       };
       // arr[1].component = ()=>import('@/views/home/home.vue');
       treeFor(arr);
-      console.log(arr,333)
       routes = arr as unknown as Array<AppRouteRecordRaw>;
 
       this.setMenuList(routes);
