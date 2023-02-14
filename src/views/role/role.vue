@@ -14,36 +14,6 @@
       <template v-slot:tableBtn>
         <el-button type="primary">插槽</el-button>
       </template>
-      <!-- <template v-slot:statusTxtSlot="{ scopeData }">
-        <div>
-          {{ formatters(scopeData.row) }}
-        </div>
-      </template> -->
-      <!-- <template v-slot:handleSlot="{ scopeData }">
-        <el-dropdown>
-          <el-button type="primary">
-            操作<el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="editState(scopeData.row, 'changeState')">{{
-                ["禁用", "启用"][scopeData.row.state]
-              }}</el-dropdown-item>
-              <el-dropdown-item @click="editState(scopeData.row, 'changeDelFlag')"
-                >假删除</el-dropdown-item
-              >
-              <el-dropdown-item @click="editState(scopeData.row, 'delUser')"
-                >真删除</el-dropdown-item
-              >
-              <el-dropdown-item @click="roleAuthorization(scopeData.row)"
-                >角色授权</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </template> -->
     </MainTable>
 
     <DialogMask ref="dialogMask">
@@ -176,26 +146,26 @@ export default defineComponent({
                   // label:(a,b)=>{console.log(a,b,333);return 1},
                   label:"禁用",
                   visible:'row.state==0',
-                  fn: 'editState(row, "changeState")'
+                  operationFn: 'editState(row, "changeState")'
                 },
                 {
                   // label:'["禁用", "启用"][scopeData.row.state]',
                   // label:(a,b)=>{console.log(a,b,333);return 1},
                   label:"启用",
                   visible:'row.state==1',
-                  fn:'editState(row, "changeState")'
+                  operationFn:'editState(row, "changeState")'
                 },
                 {
                   label:'假删除',
-                  fn:'editState(row, "changeDelFlag")'
+                  operationFn:'editState(row, "changeDelFlag")'
                 },
                 {
                   label:'真删除',
-                  fn:'editState(row, "delUser")'
+                  operationFn:'editState(row, "delUser")'
                 },
                 {
                   label:'角色授权',
-                  fn:'roleAuthorization(row)'
+                  operationFn:'roleAuthorization(row)'
                 },
               ]
             },

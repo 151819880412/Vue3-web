@@ -26,7 +26,7 @@ export type tablePropsType<T> = {
 export type columnsBtnType = {
   label:string;
   visible:string;
-  fn:string;
+  operationFn:string;
 }
 
 export type columnsType = {

@@ -101,29 +101,29 @@ export default defineComponent({
               operationBtn: [
                 {
                   label: "编辑",
-                  fn: 'editor(row)'
+                  operationFn: 'editor(row)'
                 },
                 {
                   label: "禁用",
                   visible: 'row.state==0',
-                  fn: 'editState(row, "changeState")'
+                  operationFn: 'editState(row, "changeState")'
                 },
                 {
                   label: "启用",
                   visible: 'row.state==1',
-                  fn: 'editState(row, "changeState")'
+                  operationFn: 'editState(row, "changeState")'
                 },
                 {
                   label: '假删除',
-                  fn: 'editState(row, "changeDelFlag")'
+                  operationFn: 'editState(row, "changeDelFlag")'
                 },
                 {
                   label: '真删除',
-                  fn: 'editState(row, "delUser")'
+                  operationFn: 'editState(row, "delUser")'
                 },
                 {
                   label: '关联角色',
-                  fn: 'relationRole(row)'
+                  operationFn: 'relationRole(row)'
                 },
               ]
             },

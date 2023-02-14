@@ -3,6 +3,7 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from './basic';
 const Login = () => import('@/views/login/login.vue')
 const AppLayout = () => import('@/views/layout/AppLayout.vue')
 const Home = () => import('@/views/home/home.vue')
+const TemplateConfig = () => import('@/views/templateMaintain/templateConfig.vue')
 
 
 
@@ -78,6 +79,31 @@ export const RegisterRoute: AppRouteRecordRaw = {
   },
 };
 
+
+
+export const TEMPLATE_CONFIG: AppRouteRecordRaw = {
+  path: '/templateConfig',
+  name: 'templateConfig',
+  component: TemplateConfig,
+  meta: {
+    title: 'templateConfig',
+    hideBreadcrumb: true,
+    hideChildrenInMenu: true,
+  },
+  // children: [
+  //   {
+  //     path: '/',
+  //     name: 'templateConfig',
+  //     component: TemplateConfig,
+  //     meta: {
+  //       title: 'templateConfig',
+  //       hideBreadcrumb: true,
+  //       currentActiveMenu: '/system/templateMaintain',
+  //     },
+  //   },
+  // ],
+};
+
 // Basic routing without permission
 // 未经许可的基本路由
-export const basicRoutes = [LoginRoute,RegisterRoute,HomeRoute, REDIRECT_ROUTE,PAGE_NOT_FOUND_ROUTE,ERROR_LOG_ROUTE];
+export const basicRoutes = [LoginRoute,RegisterRoute,HomeRoute, REDIRECT_ROUTE,PAGE_NOT_FOUND_ROUTE,ERROR_LOG_ROUTE,TEMPLATE_CONFIG];

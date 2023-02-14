@@ -124,7 +124,7 @@ export default defineComponent({
               operationBtn: [
                 {
                   label:"详情",
-                  fn: 'detail(row)'
+                  operationFn: 'detail(row)'
                 },
               ]
             },

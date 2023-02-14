@@ -141,15 +141,15 @@ export default defineComponent({
               operationBtn: [
                 {
                   label: "编辑",
-                  fn: 'editorMenu(row)'
+                  operationFn: 'editorMenu(row)'
                 },
                 {
                   label: "删除",
-                  fn: 'delMenu(row)'
+                  operationFn: 'delMenu(row)'
                 },
                 {
                   label: "添加子菜单",
-                  fn: 'addSubmenu(row)'
+                  operationFn: 'addSubmenu(row)'
                 },
               ]
             },

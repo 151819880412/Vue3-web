@@ -456,7 +456,7 @@ export default defineComponent({
         }
       }
       try {
-        eval('Pctx.proxy.' + item.fn);
+        eval('Pctx.proxy.' + item.operationFn);
       } catch (error) {
         console.error(error);
       }
