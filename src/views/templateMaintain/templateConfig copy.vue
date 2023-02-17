@@ -11,7 +11,7 @@
         <draggable :list="item.children" :group="{ name: 'people', pull: 'clone', put: true }" item-key="name"
           :clone="cloneElement" :move="onMove">
           <template #item="{ element }">
-            <div class="components-item" @click="addComponents(element)">
+            <div class="components-item">
               <div class="components-body">
                 <el-icon>
                   <component :is="item.icon"></component>
@@ -25,24 +25,22 @@
     </div>
     <div class="center-board">
       <el-form ref="formRef" :model="formData" :rules="formRules">
-        <draggable class="list-group el-row" :list="dragComponentList" group="people" item-key="field">
-          <template #item="{ element, index }">
-            <div :class="[aciveIndex == index ? 'active-item' : '', getClass(element)]" @click="aciveIndex = index">
+        <nested-draggable :nestedDraggableList="dragComponentList" :formData="formData">
+      </nested-draggable>
+      <!-- <draggable class="list-group el-row" :list="dragComponentList" group="people" item-key="field">
+          <template #item="{ element }">
+            <div :class="getClass(element)">
+            {{ element }}
               <DraggableForm :formConfig="element" :formData="formData" ref="dialogMask" />
             </div>
           </template>
-        </draggable>
+        </draggable> -->
       </el-form>
+
+
     </div>
     <div class="right-board">
-      <el-tabs v-model="activeName" @tab-click="handleClick" class="rightTabConfig">
-        <el-tab-pane label="组件属性" name="componentProps">
-          <div style="padding:8px 30px 0 8px" v-if="dragComponentList[aciveIndex]">
-            <ElForms :formConfig="aaa" :formData="formData" ref="dialogMask" />
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="表单属性" name="formProps">Config</el-tab-pane>
-      </el-tabs>
+      right-board
       <el-button @click="submitForm">提交</el-button>
     </div>
   </div>
@@ -63,7 +61,6 @@ interface TemplateConfig {
   templateList: templateType[];
   centerList: templateType[];
   onMove: (e) => boolean;
-  addComponents: (ele: FormInterface<Rules, Options>) => void;
   getClass: (e) => string;
   dragComponentList: Array<FormInterface<Rules, Options>>;
   formData: any;
@@ -72,18 +69,15 @@ interface TemplateConfig {
   };
   submitForm: () => void;
   cloneElement: (item: FormInterface<Rules, Options>) => FormInterface<Rules, Options>;
-  aciveIndex: number;
-  activeName: string;
-  handleClick: (tab: TabsPaneContext, event: Event) => void;
 }
 import { reactive, toRefs, defineComponent, ToRefs, ref } from 'vue';
 import draggable from "vuedraggable";
 import DraggableForm from "@/components/ElForm/DraggableForm.vue";
-import ElForms from "@/components/ElForm/ElForms.vue";
 import { FormInterface, Rules, Options } from '#/form-config';
 import _ from 'lodash';
-import { TabsPaneContext } from 'element-plus';
 
+import nestedDraggable from "./aaa.vue";
+    
 // import templateMaintainImpl from '@/api/templateMaintain/index';
 export default defineComponent({
   name: 'TemplateConfig',
@@ -527,35 +521,31 @@ export default defineComponent({
               // },
             ]
           },
-          // {
-          //   title: "布局型组件",
-          //   icon: "Fold",
-          //   children: [
-          //     {
-          //       title: "行容器",
-          //       icon: "ArrowLeft",
-          //       type: "row",
-          //       field: "field",
-          //       required: false,
-          //       col: {
-          //         span: 24,
-          //       },
-          //     },
-          //     // {
-          //     //   title: "按钮",
-          //     //   icon: "ArrowLeft"
-          //     // },
-          //   ]
-          // }
+          {
+            title: "布局型组件",
+            icon: "Fold",
+            children: [
+              {
+                title: "行容器",
+                icon: "ArrowLeft",
+                type: "row",
+                field: "field",
+                required: false,
+                col: {
+                  span: 24,
+                },
+              },
+              // {
+              //   title: "按钮",
+              //   icon: "ArrowLeft"
+              // },
+            ]
+          }
         ],
         centerList: [],
         onMove: (e) => {
           if (e.to.className.indexOf('list-group') > -1) return true;
           return false;
-        },
-        addComponents: (ele: FormInterface<Rules, Options>) => {
-          model.dragComponentList.push(ele);
-          model.cloneElement(ele);
         },
         getClass: (e) => {
           let classArr = ["el-col"];
@@ -568,11 +558,103 @@ export default defineComponent({
           }
           return classArr.join(' ');
         },
-        dragComponentList: [],
-        formData: {},
+        dragComponentList: [
+              {
+                title: "单行文本",
+                type: "input",
+                field: "input",
+                isShow: true,
+                defaultValue: "",
+                placeholder: "请输入单行文本",
+                maxlength: 40,
+                required: true,
+                rules: [{ message: "请输入单行文本", required: true, trigger: "blur" }],
+                col: {
+                  span: 12,
+                },
+                props: {
+                  clearable: true,
+                },
+                labelWidth: "120px",
+                children:[],
+              },
+              {
+                title: "多行文本",
+                type: "input",
+                field: "textarea",
+                isShow: true,
+                defaultValue: "",
+                placeholder: "请输入多行文本",
+                maxlength: 40,
+                required: true,
+                rules: [{ message: "请输入多行文本", required: true, trigger: "blur" }],
+                col: {
+                  span: 12,
+                },
+                props: {
+                  clearable: true,
+                  type: 'textarea'
+                },
+                labelWidth: "120px",
+                children:[],
+              },
+              {
+                title: "密码",
+                type: "input",
+                field: "password",
+                isShow: true,
+                defaultValue: "",
+                placeholder: "请输入密码",
+                maxlength: 40,
+                required: true,
+                rules: [{ message: "请输入密码", required: true, trigger: "blur" }],
+                col: {
+                  span: 12,
+                },
+                props: {
+                  clearable: true,
+                  'show-password': true,
+                  type: "password"
+                },
+                labelWidth: "120px",
+                children:[],
+              },
+              {
+                title: "计数器",
+                type: "inputNumber",
+                field: "inputNumber",
+                isShow: true,
+                defaultValue: 3,
+                placeholder: "请输入计数器",
+                maxlength: 40,
+                required: true,
+                rules: [{ message: "请输入计数器", required: true, trigger: "blur" }],
+                col: {
+                  span: 12,
+                },
+                props: {
+                  clearable: true,
+                  max: 10,
+                  min: 1
+                },
+                labelWidth: "120px",
+                children:[],
+              },
+              {
+                title: "行容器",
+                type: "row",
+                field: "field",
+                required: false,
+                col: {
+                  span: 24,
+                },
+                children:[],
+              },
+            ],
+        formData: {a:1},
         formRules: {},
         submitForm: () => {
-          console.log(model.formData, model.dragComponentList);
+          console.log(model.formData);
           // formRef.value?.resetFields?.();
           // formRef.value?.clearValidate?.();
         },
@@ -587,230 +669,21 @@ export default defineComponent({
           //   model.formRules[row.field] = row.rules
           // }
           return row;
-        },
-        aciveIndex: 0,
-        handleClick: (tab: TabsPaneContext, event: Event) => {
-          console.log(tab, event);
-        },
-        activeName: "componentProps"
+        }
       };
     };
     const model: TemplateConfig = reactive(initState());
     let data: ToRefs<TemplateConfig> = toRefs(model);
 
-    const aaa = [
-      {
-        title: "组件类型",
-        type: "select",
-        field: "type",
-        isShow: true,
-        placeholder: "请选择组件类型",
-        required: true,
-        rules: [{ message: "请选择组件类型", required: true, trigger: "change" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "标题",
-        type: "input",
-        field: "title",
-        isShow: true,
-        placeholder: "请输入标题",
-        required: true,
-        rules: [{ message: "请输入标题", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "字段名",
-        type: "input",
-        field: "field",
-        isShow: true,
-        placeholder: "请输入字段名",
-        required: true,
-        rules: [{ message: "请输入字段名", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "占位提示",
-        type: "input",
-        field: "placeholder",
-        isShow: true,
-        placeholder: "请输入占位提示",
-        required: true,
-        rules: [{ message: "请输入占位提示", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "表单栅格",
-        type: "slider",
-        field: "span",
-        isShow: true,
-        placeholder: "请选择表单栅格",
-        required: true,
-        rules: [{ message: "请选择表单栅格", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "标签宽度",
-        type: "input",
-        field: "labelWidth",
-        isShow: true,
-        placeholder: "请输入标签宽度",
-        required: true,
-        rules: [{ message: "请输入标签宽度", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "默认值",
-        type: "input",
-        field: "defaultValue",
-        isShow: true,
-        placeholder: "请输入默认值",
-        required: true,
-        rules: [{ message: "请输入默认值", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      // inputNumber
-      // props: {
-      // clearable: true,
-      // max: 10,
-      // min: 1
-      // },
-      {
-        title: "最小值",
-        type: "inputNumber",
-        field: "props.min",
-        isShow: true,
-        placeholder: "请输入最小值",
-        required: true,
-        rules: [{ message: "请输入最小值", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "最大值",
-        type: "inputNumber",
-        field: "props.min",
-        isShow: true,
-        placeholder: "请输入最大值",
-        required: true,
-        rules: [{ message: "请输入最大值", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        // :step="2" step-strictly
-        title: "步长",
-        type: "inputNumber",
-        field: "props.step",
-        isShow: true,
-        placeholder: "请输入步长",
-        required: true,
-        rules: [{ message: "请输入步长", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "精度",
-        type: "inputNumber",
-        field: "props.min",
-        isShow: true,
-        placeholder: "请输入精度",
-        required: true,
-        rules: [{ message: "请输入精度", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-          mian: 0,
-          max: 9
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "显示标签",
-        type: "switch",
-        field: "isShow",
-        isShow: true,
-        placeholder: "请选择显示标签",
-        required: true,
-        rules: [{ message: "请选择显示标签", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "是否禁用",
-        type: "switch",
-        field: "disabled",
-        isShow: true,
-        placeholder: "请选择显示标签",
-        required: true,
-        rules: [{ message: "请选择显示标签", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-      {
-        title: "是否必填",
-        type: "switch",
-        field: "required",
-        isShow: true,
-        placeholder: "请选择是否必填",
-        required: true,
-        rules: [{ message: "请选择是否必填", required: true, trigger: "blur" }],
-        col: {
-          span: 24,
-        },
-        labelWidth: "120px"
-      },
-
-
-
-
-
-
-
-
-
-    ];
-
     return {
       ...data,
       formRef,
-      aaa
     };
   },
   components: {
     draggable,
     DraggableForm,
-    ElForms,
+    nestedDraggable
   }
 });
 </script>
@@ -867,16 +740,5 @@ export default defineComponent({
 .components-body:hover {
   border: 1px dashed #787be8;
   color: #787be8;
-}
-.active-item{
-  background: #f6f7ff;
-  border-radius: 6px;  
-}
-/deep/ .el-tabs__nav{
-  width:100%
-}
-/deep/ .el-tabs__item{
-  width:50%;
-  text-align:center
 }
 </style>

@@ -1,4 +1,5 @@
 export declare interface FormInterface<R, O> {
+  placeholder?:string,
   labelWidth?: string | number,
   type: string,
   title: string,
@@ -26,6 +27,13 @@ export declare interface FormInterface<R, O> {
     value: string;
   };
   _index?:number,
+  disabled?:boolean,
+  children?:[],
+}
+
+export enum FormEnum {
+  DARK = 'dark',
+  LIGHT = 'light',
 }
 
 export declare interface Rules {
@@ -43,6 +51,7 @@ export declare interface Options {
   hide?: Array<string>;
   // 动态控制是否禁用
   disabled?: Array<string>;
+  children?:Options[]
 }
 
 export declare interface ColType {

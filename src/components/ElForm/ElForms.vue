@@ -366,6 +366,7 @@ export default {
             inline: false,
             // model: { dataForm: rules.value },
             model: props.formData,
+            // "label-position":'left',
           },
           h(
             "div",

@@ -57,3 +57,10 @@
   transform: rotate(360deg);
   transition: 1s;
 }
+
+.el-cascader{
+  width 100%
+}
+// .el-form-item__content div{
+//   width 100% !important
+// }
