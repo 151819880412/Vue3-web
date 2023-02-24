@@ -25,6 +25,7 @@ import {
   ElRow,
 } from "element-plus";
 import { FormInterface, Options, Rules } from "#/form-config";
+import { RawSlots } from "element-plus/es/utils";
 
 export default defineComponent({
   name: "ElForms",
@@ -40,6 +41,7 @@ export default defineComponent({
   setup(props) {
     const compA = {
       input: ElInput,
+      textarea: ElInput,
       inputNumber: ElInputNumber,
       select: ElSelect,
       datePicker: ElDatePicker,
@@ -58,7 +60,7 @@ export default defineComponent({
       formItem: ElFormItem,
       radio: ElRadio,
       checkbox: ElCheckbox,
-      row:ElRow,
+      row: ElRow,
     };
     const components = { ...compA, ...comB };
     // 将 props 参数转换为响应式
@@ -91,7 +93,20 @@ export default defineComponent({
     // });
 
 
-
+    // 渲染前后缀
+    const renderTemplate = (item) => {
+      const obj:any = {}
+      if(item.prepend){
+        obj.prepend = () =>h('div',  item.prepend)
+      }
+      if(item.append){
+        obj.append = () =>h('div',  item.append)
+      }
+      if(Object.keys(obj).length===0){
+        return null as unknown as RawSlots
+      }
+      return obj as RawSlots
+    };
 
     const renderConponents = () => {
       if (compA[componentConig.type]) {
@@ -192,7 +207,7 @@ export default defineComponent({
                 ),
               ];
             default:
-              console.log(111,props.formData,[item.field],)
+              console.log(111, item?.prepend);
               return [
                 h(components[item.type], {
                   placeholder,
@@ -205,7 +220,9 @@ export default defineComponent({
                   },
                   ...events,
                   class: "icm-w-search",
-                }),
+                },
+                  renderTemplate(item)
+                ),
               ];
           }
         };
@@ -227,7 +244,7 @@ export default defineComponent({
           },
           {
             default: () => {
-              return [
+              return componentConig.isShow?  [
                 h(
                   formItem,
                   {
@@ -243,15 +260,15 @@ export default defineComponent({
                     default: () => SelectFun(componentConig),
                   }
                 ),
-              ];
+              ]:null;
             },
           }
         );
-      }else{
+      } else {
         return h(
-            "div",
-            { class: "el-row aaaaa" },
-          )
+          "div",
+          { class: "el-row aaaaa" },
+        );
       }
       // return null;
     };

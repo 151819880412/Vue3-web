@@ -29,6 +29,15 @@ export declare interface FormInterface<R, O> {
   _index?:number,
   disabled?:boolean,
   children?:[],
+  // 能否清空
+  clearable?:boolean
+  // 显示字数
+  showWordLimit?:boolean
+  // 前缀
+  prepend?:string
+  // 后缀
+  append?:string
+
 }
 
 export enum FormEnum {

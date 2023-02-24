@@ -27,7 +27,7 @@
       <el-form ref="formRef" :model="formData" :rules="formRules">
         <draggable class="list-group el-row" :list="dragComponentList" group="people" item-key="field">
           <template #item="{ element, index }">
-            <div :class="[aciveIndex == index ? 'active-item' : '', getClass(element)]" @click="aciveIndex = index">
+            <div :class="[aciveIndex == index ? 'active-item' : '', getClass(element)]" @click="activeItem(element)">
               <DraggableForm :formConfig="element" :formData="formData" ref="dialogMask" />
             </div>
           </template>
@@ -46,6 +46,7 @@
       <el-button @click="submitForm">提交</el-button>
     </div>
   </div>
+  <DialogIcon ref="dialogIcon" />
 </template>
 
 <script lang='ts'>
@@ -64,7 +65,8 @@ interface TemplateConfig {
   centerList: templateType[];
   onMove: (e) => boolean;
   addComponents: (ele: FormInterface<Rules, Options>) => void;
-  getClass: (e) => string;
+  getClass: (e: FormInterface<Rules, Options>) => string;
+  activeItem: (e: FormInterface<Rules, Options>) => void;
   dragComponentList: Array<FormInterface<Rules, Options>>;
   formData: any;
   formRules: {
@@ -76,13 +78,14 @@ interface TemplateConfig {
   activeName: string;
   handleClick: (tab: TabsPaneContext, event: Event) => void;
 }
-import { reactive, toRefs, defineComponent, ToRefs, ref } from 'vue';
+import { reactive, toRefs, defineComponent, ToRefs, ref, Ref } from 'vue';
 import draggable from "vuedraggable";
 import DraggableForm from "@/components/ElForm/DraggableForm.vue";
 import ElForms from "@/components/ElForm/ElForms.vue";
 import { FormInterface, Rules, Options } from '#/form-config';
 import _ from 'lodash';
 import { TabsPaneContext } from 'element-plus';
+import DialogIcon from '@/components/DialogIcon/DialogIcon.vue';
 
 // import templateMaintainImpl from '@/api/templateMaintain/index';
 export default defineComponent({
@@ -91,6 +94,8 @@ export default defineComponent({
   setup() {
 
     const formRef = ref();
+    const dialogIcon = ref() as Ref<InstanceType<typeof DialogIcon>>;
+
 
     const initState = (): TemplateConfig => {
       return {
@@ -105,7 +110,7 @@ export default defineComponent({
                 type: "input",
                 field: "input",
                 isShow: true,
-                defaultValue: "",
+                defaultValue: "1",
                 placeholder: "请输入单行文本",
                 maxlength: 40,
                 required: true,
@@ -114,14 +119,16 @@ export default defineComponent({
                   span: 12,
                 },
                 props: {
-                  clearable: true,
+                  type: 'text'
                 },
+                showWordLimit: true,
+                clearable: true,
                 labelWidth: "120px"
               },
               {
                 title: "多行文本",
                 icon: "ArrowLeft",
-                type: "input",
+                type: "textarea",
                 field: "textarea",
                 isShow: true,
                 defaultValue: "",
@@ -486,7 +493,7 @@ export default defineComponent({
                 title: "评分",
                 icon: "ArrowLeft",
                 type: "rate",
-                field: "field",
+                field: "rate",
                 isShow: true,
                 defaultValue: "",
                 placeholder: "请选择评分",
@@ -506,7 +513,7 @@ export default defineComponent({
                 title: "颜色",
                 icon: "ArrowLeft",
                 type: "colorPicker",
-                field: "field",
+                field: "colorPicker",
                 isShow: true,
                 defaultValue: "",
                 placeholder: "请选择颜色",
@@ -554,8 +561,9 @@ export default defineComponent({
           return false;
         },
         addComponents: (ele: FormInterface<Rules, Options>) => {
-          model.dragComponentList.push(ele);
+          model.formData = ele;
           model.cloneElement(ele);
+          model.dragComponentList.push(ele);
         },
         getClass: (e) => {
           let classArr = ["el-col"];
@@ -568,16 +576,43 @@ export default defineComponent({
           }
           return classArr.join(' ');
         },
+        activeItem: (e) => {
+          //           type
+          // title
+          // field
+          // placeholder
+          // slider
+          // labelWidth
+          // defaultValue
+          // prepend
+          // append
+          // prefix-icon
+          // suffix-icon
+          // maxlength
+          // props.min
+          // props.min
+          // props.step
+          // props.min
+          // isShow
+          // showWordLimit
+          // clearable
+          // disabled
+          // required
+          model.formData = e;
+        },
         dragComponentList: [],
         formData: {},
         formRules: {},
-        submitForm: () => {
-          console.log(model.formData, model.dragComponentList);
+        submitForm: async () => {
+            let data = await dialogIcon.value.openIconDialog();
+            dialogIcon.value.resetState();
+            console.log(data, 111);
+            // console.log(model.formData, model.dragComponentList);
           // formRef.value?.resetFields?.();
           // formRef.value?.clearValidate?.();
         },
         cloneElement: (item: FormInterface<Rules, Options>) => {
-          const row = _.cloneDeep(item);
+          const row = item;
           row.field += model.dragComponentList.length;
           // 默认值
           if (row.defaultValue) {
@@ -610,6 +645,69 @@ export default defineComponent({
         col: {
           span: 24,
         },
+        options: [
+          {
+            label: "单行文本",
+            value: 'input',
+          },
+          {
+            label: "多行文本",
+            isShow: true,
+            value: 'textarea',
+          },
+          {
+            label: "密码",
+            value: 'password',
+          },
+          {
+            label: "计数器",
+            value: 'inputNumber',
+          },
+          {
+            label: "下拉选择",
+            value: 'select',
+          },
+          {
+            label: "级联选择",
+            value: 'cascader',
+          },
+          {
+            label: "单选框组",
+            value: 'radioGroup',
+          },
+          {
+            label: "多选框组",
+            value: 'checkboxGroup',
+          },
+          {
+            label: "滑块",
+            value: 'slider',
+          },
+          {
+            label: "时间",
+            value: 'timePicker',
+          },
+          {
+            label: "时间范围",
+            value: 'timePicker',
+          },
+          {
+            label: "日期",
+            value: 'datePicker',
+          },
+          {
+            label: "日期范围",
+            value: 'datePicker',
+          },
+          {
+            label: "评分",
+            value: 'rate',
+          },
+          {
+            label: "颜色",
+            value: 'colorPicker',
+          },
+        ],
         labelWidth: "120px"
       },
       {
@@ -654,13 +752,17 @@ export default defineComponent({
       {
         title: "表单栅格",
         type: "slider",
-        field: "span",
+        field: "slider",
         isShow: true,
         placeholder: "请选择表单栅格",
         required: true,
         rules: [{ message: "请选择表单栅格", required: true, trigger: "blur" }],
         col: {
           span: 24,
+        },
+        props: {
+          min: 1,
+          max: 24,
         },
         labelWidth: "120px"
       },
@@ -690,6 +792,73 @@ export default defineComponent({
         },
         labelWidth: "120px"
       },
+      {
+        title: "前缀",
+        type: "input",
+        field: "prepend",
+        isShow: true,
+        placeholder: "请输入前缀",
+        required: false,
+        col: {
+          span: 24,
+        },
+        labelWidth: "120px"
+      },
+      {
+        title: "后缀",
+        type: "input",
+        field: "append",
+        isShow: true,
+        placeholder: "请输入后缀",
+        required: true,
+        rules: [{ message: "请输入后缀", required: true, trigger: "blur" }],
+        col: {
+          span: 24,
+        },
+        labelWidth: "120px"
+      },
+      {
+        title: "前图标",
+        type: "input",
+        field: "prefixIcon",
+        isShow: true,
+        placeholder: "请输入前图标",
+        required: true,
+        col: {
+          span: 24,
+        },
+        labelWidth: "120px",
+        append: '1',
+        readonly: true
+      },
+      {
+        title: "后图标",
+        type: "input",
+        field: "suffixIcon",
+        isShow: true,
+        placeholder: "请输入后图标",
+        required: false,
+        col: {
+          span: 24,
+        },
+        readonly: true,
+        labelWidth: "120px"
+      },
+      {
+        title: "最多输入",
+        type: "input",
+        field: "maxlength",
+        isShow: true,
+        placeholder: "请输入最多输入",
+        required: false,
+        col: {
+          span: 24,
+        },
+        props: {
+          append: "个字符"
+        },
+        labelWidth: "120px"
+      },
       // inputNumber
       // props: {
       // clearable: true,
@@ -700,7 +869,7 @@ export default defineComponent({
         title: "最小值",
         type: "inputNumber",
         field: "props.min",
-        isShow: true,
+        isShow: false,
         placeholder: "请输入最小值",
         required: true,
         rules: [{ message: "请输入最小值", required: true, trigger: "blur" }],
@@ -713,7 +882,7 @@ export default defineComponent({
         title: "最大值",
         type: "inputNumber",
         field: "props.min",
-        isShow: true,
+        isShow: false,
         placeholder: "请输入最大值",
         required: true,
         rules: [{ message: "请输入最大值", required: true, trigger: "blur" }],
@@ -727,7 +896,7 @@ export default defineComponent({
         title: "步长",
         type: "inputNumber",
         field: "props.step",
-        isShow: true,
+        isShow: false,
         placeholder: "请输入步长",
         required: true,
         rules: [{ message: "请输入步长", required: true, trigger: "blur" }],
@@ -740,7 +909,7 @@ export default defineComponent({
         title: "精度",
         type: "inputNumber",
         field: "props.min",
-        isShow: true,
+        isShow: false,
         placeholder: "请输入精度",
         required: true,
         rules: [{ message: "请输入精度", required: true, trigger: "blur" }],
@@ -757,8 +926,32 @@ export default defineComponent({
         field: "isShow",
         isShow: true,
         placeholder: "请选择显示标签",
-        required: true,
-        rules: [{ message: "请选择显示标签", required: true, trigger: "blur" }],
+        required: false,
+        col: {
+          span: 24,
+        },
+        labelWidth: "120px"
+      },
+      {
+        title: "输入统计",
+        type: "switch",
+        field: "showWordLimit",
+        isShow: true,
+        placeholder: "请选择输入统计",
+        required: false,
+        col: {
+          span: 24,
+        },
+        labelWidth: "120px"
+      },
+      {
+        title: "能否清空",
+        type: "switch",
+        field: "clearable",
+        isShow: true,
+        placeholder: "请选择能否清空",
+        defaultValue: true,
+        required: false,
         col: {
           span: 24,
         },
@@ -804,13 +997,15 @@ export default defineComponent({
     return {
       ...data,
       formRef,
-      aaa
+      aaa,
+      dialogIcon,
     };
   },
   components: {
     draggable,
     DraggableForm,
     ElForms,
+    DialogIcon
   }
 });
 </script>
@@ -878,5 +1073,12 @@ export default defineComponent({
 /deep/ .el-tabs__item{
   width:50%;
   text-align:center
+}
+/deep/.el-input-group__append{
+  padding:0
+}
+/deep/.pointer{
+  cursor: pointer;
+  padding:0 20px
 }
 </style>

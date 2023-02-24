@@ -14,7 +14,9 @@
 
     <DialogMask ref="dialogMask"></DialogMask>
 
-    <el-dialog v-model="selectIconDialog" destroy-on-close draggable :close-on-click-modal="false" :show-close="false"
+    <DialogIcon ref="dialogIcon" />
+
+    <!-- <el-dialog v-model="selectIconDialog" destroy-on-close draggable :close-on-click-modal="false" :show-close="false"
       :before-close="openIconDialog" title="图标" :fullscreen="dialogFull" lock-scroll>
       <template #header="{ close, titleId, titleClass }">
         <div>
@@ -45,7 +47,7 @@
           </div>
         </div>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
   </div>
 </template>
@@ -60,6 +62,7 @@ import { FormInterface, Options, Rules } from "#/form-config";
 import { ElMessage } from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import _ from 'lodash';
+import DialogIcon from '@/components/DialogIcon/DialogIcon.vue';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -69,6 +72,8 @@ export default defineComponent({
     const ctx = getCurrentInstance() as ComponentInternalInstance;
     provide("Pctx", ctx);
     const dialogMask = ref<InstanceType<typeof DialogMask>>();
+    const dialogIcon = ref<InstanceType<typeof DialogIcon>>();
+
 
     interface MenuType {
       tableData: tableConfigType<MenuListModel>;
@@ -77,8 +82,11 @@ export default defineComponent({
       dialogFull: boolean;
       searchIcon: string;
     }
-    const openIconDialog = (): void => {
-      menuModel.selectIconDialog = !menuModel.selectIconDialog;
+    const openIconDialog = async (): Promise<void> => {
+      // menuModel.selectIconDialog = !menuModel.selectIconDialog;
+      let data = await dialogIcon?.value?.openIconDialog();
+      dialogIcon?.value?.resetState();
+      dialogMask?.value?.editorFieldValue({icon:data});
     };
 
     const initState = (): MenuType => {
@@ -437,8 +445,12 @@ export default defineComponent({
       openIconDialog,
       ElementPlusIconsVue,
       selectIcons,
+      dialogIcon,
     };
   },
+  components:{
+    DialogIcon
+  }
 });
 </script>
 <style lang='stylus' scoped>

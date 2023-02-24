@@ -20,10 +20,13 @@ import {
   ElCheckboxGroup,
   ElCheckbox,
   ElSwitch,
+  ElSlider,
+  ElRate,
 } from "element-plus";
 import { FormInterface, Options, Rules } from "#/form-config";
 import { preProcessData } from "@/utils/objFilter";
 import { Generate } from "#/Generate";
+import { RawSlots } from "element-plus/es/utils";
 
 export default {
   name: "ElForms",
@@ -51,6 +54,8 @@ export default {
       radioGroup: ElRadioGroup,
       checkboxGroup: ElCheckboxGroup,
       switch: ElSwitch,
+      slider: ElSlider,
+      rate: ElRate,
     };
     const comB = {
       option: ElOption,
@@ -111,7 +116,7 @@ export default {
           const obj: Generate<typeof objType> = rules.value.reduce((sum, v) => ({ ...sum, [v.field]: v.value }), {});
           // return callback(_.omitBy(obj), valid);
           // return callback(preProcessData(Object.assign({}, props.formData, obj)), valid);
-          return callback(preProcessData(Object.assign({},obj, props.formData)), valid);
+          return callback(preProcessData(Object.assign({}, obj, props.formData)), valid);
         }
         // return callback({},valid);
       });
@@ -162,6 +167,21 @@ export default {
       rType,
       queryFormData,
     });
+
+    // 渲染前后缀
+    const renderTemplate = (item) => {
+      const obj: any = {};
+      if (item.prepend) {
+        obj.prepend = () => h('div', { class: 'pointer' }, item.prepend);
+      }
+      if (item.append) {
+        obj.append = () => h('div', { class: 'pointer' }, item.append);
+      }
+      if (Object.keys(obj).length === 0) {
+        return null as unknown as RawSlots;
+      }
+      return obj as RawSlots;
+    };
 
     const renderConponents = () => {
       if (rules.value.filter((item) => compA[item.type]).length) {
@@ -350,7 +370,9 @@ export default {
                   },
                   ...events,
                   class: "icm-w-search",
-                }),
+                },
+                  renderTemplate(item)
+                ),
               ];
           }
         };
@@ -432,4 +454,5 @@ export default {
   // 禁止点击label的时候聚焦到输入框上
   pointer-events: none;
 }
+
 </style>
