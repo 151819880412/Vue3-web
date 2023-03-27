@@ -1,5 +1,5 @@
 export declare interface FormInterface<R, O> {
-  placeholder?:string,
+  placeholder?: string,
   labelWidth?: string | number,
   type: string,
   title: string,
@@ -19,6 +19,9 @@ export declare interface FormInterface<R, O> {
   on?: {
     [propname: string]: (val: string | number | Array<string> | Array<number>) => void;
   },
+  sloatsOn?: {
+    [propname: string]: (val: string | number | Array<string> | Array<number>) => void;
+  },
   // on: Array<string>,
   queryOptionsFn?: {
     url: string,
@@ -26,17 +29,25 @@ export declare interface FormInterface<R, O> {
     label: string,
     value: string;
   };
-  _index?:number,
-  disabled?:boolean,
-  children?:[],
+  _index?: number,
+  disabled?: boolean,
+  children?: [],
   // 能否清空
-  clearable?:boolean
+  clearable?: boolean;
   // 显示字数
-  showWordLimit?:boolean
+  showWordLimit?: boolean;
   // 前缀
-  prepend?:string
+  prepend?: string;
   // 后缀
-  append?:string
+  append?: string;
+  // 是否只读
+  readonly?: boolean;
+
+  // 计数器属性
+  min?: number;
+  max?: number;
+  step?: number;
+  precision?: number;
 
 }
 
@@ -60,7 +71,7 @@ export declare interface Options {
   hide?: Array<string>;
   // 动态控制是否禁用
   disabled?: Array<string>;
-  children?:Options[]
+  children?: Options[];
 }
 
 export declare interface ColType {

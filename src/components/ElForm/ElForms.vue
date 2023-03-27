@@ -172,16 +172,17 @@ export default {
     const renderTemplate = (item) => {
       const obj: any = {};
       if (item.prepend) {
-        obj.prepend = () => h('div', { class: 'pointer' }, item.prepend);
+        obj.prepend = () => h('div', { class: 'pointer' ,...sloatsOn}, item.prepend);
       }
       if (item.append) {
-        obj.append = () => h('div', { class: 'pointer' }, item.append);
+        obj.append = () => h('div', { class: 'pointer',...sloatsOn }, item.append);
       }
       if (Object.keys(obj).length === 0) {
         return null as unknown as RawSlots;
       }
       return obj as RawSlots;
     };
+    const sloatsOn = {}
 
     const renderConponents = () => {
       if (rules.value.filter((item) => compA[item.type]).length) {
@@ -193,6 +194,14 @@ export default {
               events[`on${newName}`] = item.on?.[eventName];
               // 当全部事件由后端返回成字符串的时候使用这段代码
               // events[`on${newName}`] = Pctx.proxy![(item.on?.[eventName] as unknown as string)]
+            });
+          }
+          if (item.sloatsOn) {
+            Object.keys(item.sloatsOn).forEach((eventName) => {
+              const newName = eventName.slice(0, 1).toUpperCase() + eventName.slice(1);
+              sloatsOn[`on${newName}`] = item.sloatsOn?.[eventName];
+              // 当全部事件由后端返回成字符串的时候使用这段代码
+              // sloatsOn[`on${newName}`] = Pctx.proxy![(item.on?.[eventName] as unknown as string)]
             });
           }
           const placeholder = item?.props?.disabled ? "" : (["input"].includes(item.type)

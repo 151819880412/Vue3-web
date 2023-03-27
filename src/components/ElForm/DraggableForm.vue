@@ -207,7 +207,6 @@ export default defineComponent({
                 ),
               ];
             default:
-              console.log(111, item?.prepend);
               return [
                 h(components[item.type], {
                   placeholder,
@@ -284,5 +283,8 @@ export default defineComponent({
 /deep/.el-form-item__label{
   // 禁止点击label的时候聚焦到输入框上
   pointer-events: none;
+}
+/deep/.el-input-group__append{
+  padding:0 20px !important
 }
 </style>

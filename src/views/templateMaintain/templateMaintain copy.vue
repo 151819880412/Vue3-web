@@ -5,8 +5,6 @@
     </MainTable>
     <DialogMask ref="dialogMask"></DialogMask>
 
-    <CETable ref="ceTable"></CETable>
-
   </div>
 </template>
 
@@ -30,17 +28,16 @@ import DialogMask from "@/components/DialogMask/DialogMask.vue";
 import BaseInterface from '@/@types/baseInterface';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
-import CETable from '@/components/ElTable/CETable.vue';
+import { CETable } from '@/@types/CETable/CETable';
 
 export default defineComponent({
   name: 'templateMaintain',
   props: [],
   setup() {
+    console.log(new CETable(),1111)
     const ctx: ComponentInternalInstance | null = getCurrentInstance();
     provide("Pctx", ctx);
     const dialogMask = ref<InstanceType<typeof DialogMask>>();
-    const ceTable = ref<InstanceType<typeof CETable>>();
-      
     const router = useRouter();
 
 
@@ -176,13 +173,9 @@ export default defineComponent({
     return {
       ...data,
       templateMaintainImpl,
-      dialogMask,
-      ceTable
+      dialogMask
     };
   },
-  components:{
-    CETable
-  }
 });
 </script>
 <style lang='stylus' scoped>
