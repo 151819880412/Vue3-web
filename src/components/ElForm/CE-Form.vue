@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button @click="submit">提交</el-button>
+    <!-- <el-button @click="submit">提交</el-button> -->
     <!-- <el-form
       :model="ceFormData"
       :rules="ceRules"
@@ -33,19 +33,20 @@
     <el-form :model="ceFormData" :rules="ceRules" ref="CEFormRef" style="padding: 40px">
       <div v-for="item in ceFormItems" :key="item.prop">
         <el-form-item v-if="item.ceShow" v-bind="transformProps(item)">
-          <component :is="item.component" v-model="ceFormData[item.prop]" v-bind="item" v-on="item" :update:modelvalue="updateModelvalue(item)">
+          <component :is="item.component" v-model="ceFormData[item.prop]" v-bind="item" v-on="item"
+            :update:modelvalue="updateModelvalue(item)">
             <template v-for="item3 in item.slots" :key="item3.slotName" v-slot:[item3.slotName]="slotProp">
               <span>{{ slotProp?.data?.label }}</span>
               <div v-html="item3.slotHtml"></div>
               <div v-if="item3.component">
                 <!-- 单选框和多选框的label和value是反的 -->
-                <div v-if="['el-radio-group','el-checkbox-group'].includes(item.component)">
-                <component v-for="item2 in item3.options" :key="item2.value" :is="item3.component"
-                  v-bind="{ ...item3, ...item2 }" :label="item2.value">{{ item2.showLabel || item2.label }}</component>
+                <div v-if="['el-radio-group', 'el-checkbox-group'].includes(item.component)">
+                  <component v-for="item2 in item3.options" :key="item2.value" :is="item3.component"
+                    v-bind="{ ...item3, ...item2 }" :label="item2.value">{{ item2.showLabel || item2.label }}</component>
                 </div>
                 <div v-else>
-                  <component v-for="item2 in item3.options" :key="item2.value" :is="item2.component||item3.component"
-                  v-bind="{ ...item3, ...item2 }">{{ item2.showLabel || item2.label }}</component>
+                  <component v-for="item2 in item3.options" :key="item2.value" :is="item2.component || item3.component"
+                    v-bind="{ ...item3, ...item2 }">{{ item2.showLabel || item2.label }}</component>
                 </div>
               </div>
             </template>
@@ -106,11 +107,12 @@ import { CEComponents, CEtypes } from "@/@types/CEForm/CEIndex";
 
 interface CEForm {
   ceFormData: object;
+  returnFormData: object;
   ceFormItems: CEtypes[];
   ceRules: object;
-  initCEForm: (data: CEtypes[]) => void;
+  initCEForm: (data: CEtypes[]) =>void;
   getCEFormData: () => object;
-  submit: () => void;
+  submit: () => Promise<any>;
   resetCEForm: () => void;
   validateField: (field: string) => void;
 }
@@ -144,11 +146,13 @@ export default defineComponent({
   },
   setup() {
     const CEFormRef = ref<InstanceType<typeof ElForm>>();
+    // let returnFormData = reactive({})
 
     const initState = (): CEForm => {
       return {
         ceFormData: {},
-        ceFormItems:[],
+        returnFormData: {},
+        ceFormItems: [],
         // ceFormItems: [
         //   new CEInput({
         //     label: "Input1",
@@ -699,7 +703,6 @@ export default defineComponent({
         //       label: "Button",
         //       prop: "button",
         //       component: "el-button",
-        //       width: 100,
         //       type: "primary",
         //       size: "",
         //       icon: "",
@@ -710,9 +713,9 @@ export default defineComponent({
         //       autofocus: false,
         //       round: false,
         //       circle: false,
-        //       onClick: (event: Event) => console.log("button clicked", event),
-        //       onFocus: () => console.log("button focused"),
-        //       onBlur: () => console.log("button blurred"),
+        //       // onClick: (event: Event) => console.log("button clicked", event),
+        //       // onFocus: () => console.log("button focused"),
+        //       // onBlur: () => console.log("button blurred"),
         //     }],
         //     // beforeUpload: (file: File) => {
         //     //   console.log('before upload', file);
@@ -819,30 +822,27 @@ export default defineComponent({
         ceRules: {},
         initCEForm(data: CEtypes[]) {
           const arr: CEtypes[] = _.cloneDeep(data);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          model.ceFormItems = CEComponents(arr) as any;
           arr.forEach((item) => {
             if (item.modelValue) {
               model.ceFormData[item.prop] = item.modelValue;
-              if (item.rules) {
-                model.ceRules[item.prop] = item.rules;
-              }
+            }
+            if (item.rules) {
+              model.ceRules[item.prop] = item.rules;
             }
           });
-          // const com = CEComponents(ele);
-          // com.prop += model.dragComponentList.length;
-          // console.log(ele, com, 111);
-          // model.dragComponentList.push(com);
-          // model.activeItem(ele,model.dragComponentList.length-1)
+          model.ceFormItems = CEComponents(arr) as any;
         },
         getCEFormData: () => {
           return _.cloneDeep(model.ceFormData);
         },
         submit: () => {
-          CEFormRef.value?.validate((valid: boolean) => {
-            if (valid) {
-              console.log(valid);
-            }
+          return new Promise((res) => {
+            CEFormRef.value?.validate((valid: boolean) => {
+              if (valid) {
+                model.returnFormData = _.cloneDeep(model.ceFormData);
+                res(model.returnFormData);
+              }
+            });
           });
         },
         resetCEForm: () => {
@@ -864,15 +864,16 @@ export default defineComponent({
       }
       return row;
     };
-    const updateModelvalue =(row)=>{
-      console.log(row)
+    const updateModelvalue = (row) => {
+      row;
       // model.dragComponentList[model.aciveIndex].defaultValue = row.modelValue
-    }
+    };
     return {
       ...data,
       CEFormRef,
       transformProps,
       updateModelvalue,
+      // returnFormData,
     };
   },
 });

@@ -1,8 +1,13 @@
 import { getUuid } from "@/utils";
 
 export interface CETableColumnProps {
-  ceId: string;
-  type: 'selection' | 'index' | 'expand';
+  slots?: any;
+  operationBtn?: any[];
+  ceFormatter?: string;
+  ceShow?: boolean;
+
+  ceId?: string;
+  type?: 'selection' | 'index' | 'expand' | 'operation';
   index?: number | ((index: number) => number);
   label?: string;
   columnKey?: string;
@@ -32,8 +37,13 @@ export interface CETableColumnProps {
 }
 
 export class CEColumn implements CETableColumnProps {
-  ceId: string = getUuid();
-  type: 'selection' | 'index' | 'expand' = 'expand';
+  slots?: any;
+  operationBtn?: any[] = [];
+  ceFormatter?: string | undefined;
+  ceShow?: boolean = true;
+
+  ceId?: string = getUuid();
+  type?: 'selection' | 'index' | 'expand' | 'operation';
   index?: number | ((index: number) => number) | undefined;
   label?: string | undefined;
   columnKey?: string | undefined;
@@ -42,24 +52,28 @@ export class CEColumn implements CETableColumnProps {
   minWidth?: string | number | undefined;
   fixed?: string | boolean | undefined;
   renderHeader?: (({ column, $index }: { column: any; $index: any; }) => any) | undefined;
-  sortable?: string | boolean | undefined;
+  sortable?: string | boolean | undefined = false;
   sortMethod?: ((a: any, b: any) => number) | undefined;
   sortBy?: string | string[] | ((row: any, index: number) => any) | undefined;
-  sortOrders?: ("ascending" | "descending" | null)[] | undefined;
-  resizable?: boolean | undefined;
+  sortOrders?: ("ascending" | "descending" | null)[] | undefined = ['ascending', 'descending', null];
+  resizable?: boolean | undefined = true;
   formatter?: ((row: any, column: any, cellValue: any, index: number) => any) | undefined;
-  showOverflowTooltip?: boolean | object | undefined;
-  align?: "left" | "center" | "right" | undefined;
-  headerAlign?: "left" | "center" | "right" | undefined;
+  showOverflowTooltip?: boolean | object | undefined = false;
+  align?: "left" | "center" | "right" | undefined = 'center';
+  headerAlign?: "left" | "center" | "right" | undefined = 'center';
   className?: string | undefined;
   labelClassName?: string | undefined;
   selectable?: ((row: any, index: number) => boolean) | undefined;
-  reserveSelection?: boolean | undefined;
+  reserveSelection?: boolean | undefined = false;
   filters?: { text: string; value: string; }[] | undefined;
   filterPlacement?: string | undefined;
-  filterMultiple?: boolean | undefined;
+  filterMultiple?: boolean | undefined = true;
   filterMethod?: ((value: any, row: any, column: any) => boolean) | undefined;
   filteredValue?: any[] | undefined;
+
+  constructor(data: Partial<CETableColumnProps>) {
+    Object.assign(this, data);
+  }
 
 }
 

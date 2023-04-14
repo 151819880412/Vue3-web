@@ -4,11 +4,12 @@ import { EpPropMergeType } from "element-plus/es/utils";
 import { Component } from "vue";
 
 export interface CEButtonProps extends ButtonProps, ButtonEmits {
-
+  defaultValue: string;
 }
 
 export class CEFormButton extends CEFormItem implements CEButtonProps {
-  modelValue=[]
+  defaultValue = '';
+  modelValue = [];
   type: EpPropMergeType<StringConstructor, "" | "success" | "default" | "info" | "warning" | "danger" | "text" | "primary", unknown> = '';
   disabled = false;
   text = false;
@@ -32,6 +33,7 @@ export class CEButton implements CEButtonProps {
   type: EpPropMergeType<StringConstructor, "" | "success" | "default" | "info" | "warning" | "danger" | "text" | "primary", unknown> = '';
   disabled = false;
   text = false;
+  defaultValue = '';
   nativeType: EpPropMergeType<StringConstructor, "button" | "submit" | "reset", unknown> = 'button';
   loading = false;
   loadingIcon: string | Component = 'Loading';

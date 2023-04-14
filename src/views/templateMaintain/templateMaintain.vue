@@ -1,36 +1,35 @@
 <template>
   <div class='templateMaintain'>
+    111
+    <CETable ref="ceTable" :searchFn="templateMaintainImpl.queryTemListByPage" />
+    <CEDialogMask ref="ceDialogMask"></CEDialogMask>
 
-    <MainTable :searchFn="templateMaintainImpl.queryTemListByPage" :tableConfig="tableData">
-    </MainTable>
-    <DialogMask ref="dialogMask"></DialogMask>
-
-    <CETable ref="ceTable"></CETable>
-
+    111
   </div>
 </template>
 
 <script lang='ts'>
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface templateMaintain extends BaseInterface<MenuListModel> {
-  openDialog: () => void;
+interface templateMaintain {
+  dialogFormConfig: any;
   editorTemp: (row: TemplateMaintainPageModel) => void;
-  delTemp: (row: TemplateMaintainPageModel) => void;
+  submitDialogEdit: (row: TemplateMaintainPageModel) => Promise<boolean>;
+  openDialog: () => Promise<void>;
+  submitDialogAdd: (row: TemplateMaintainPageModel) => Promise<boolean>;
+  submitDialogDatabaseConfig: (row: any) => Promise<boolean>;
+  delTemp: (row: TemplateMaintainPageModel) => Promise<void>;
   tempConfig: (row: TemplateMaintainPageModel) => void;
   databaseConfig: (row: TemplateMaintainPageModel) => void;
-  submitDialogAdd: (row: TemplateMaintainPageModel) => Promise<boolean>;
-  submitDialogEditor: (row: TemplateMaintainPageModel) => Promise<boolean>;
 
 }
-import { MenuListModel } from '@/api/menu/model/menuModel';
-import { reactive, toRefs, getCurrentInstance, defineComponent, ComponentInternalInstance, ToRefs, provide, ref } from 'vue';
-import templateMaintainImpl from '@/api/templateMaintain/index';
+import { reactive, toRefs, getCurrentInstance, defineComponent, ComponentInternalInstance, ToRefs, ref, onMounted, nextTick, provide } from 'vue';
+import CETable from '@/components/ElTable/CE-Table.vue';
+import { CETableProps } from '@/@types/CETable/CETable';
 import { TemplateMaintainPageModel } from '@/api/templateMaintain/model/templateMaintain';
-import DialogMask from "@/components/DialogMask/DialogMask.vue";
-import BaseInterface from '@/@types/baseInterface';
+import templateMaintainImpl from '@/api/templateMaintain';
+import CEDialogMask from "@/components/DialogMask/CEDialogMask.vue";
 import { ElMessage } from 'element-plus';
+import EventBus from '@/utils/mitt/mitt';
 import { useRouter } from 'vue-router';
-import CETable from '@/components/ElTable/CETable.vue';
 
 export default defineComponent({
   name: 'templateMaintain',
@@ -38,96 +37,33 @@ export default defineComponent({
   setup() {
     const ctx: ComponentInternalInstance | null = getCurrentInstance();
     provide("Pctx", ctx);
-    const dialogMask = ref<InstanceType<typeof DialogMask>>();
     const ceTable = ref<InstanceType<typeof CETable>>();
-      
+    const ceDialogMask = ref<InstanceType<typeof CEDialogMask>>();
     const router = useRouter();
-
-
 
     const initState = (): templateMaintain => {
       return {
-        tableData: {
-          tableProps: {
-            rowClassName: function ({ rowIndex }) {
-              return rowIndex % 2 == 0 ? "selfClass" : "dubbleClass";
-            },
-            border: true,
-            data: [],
-            rowKey: "id",
-            defaultExpandAll: true
-          },
-          columns: [
-            {
-              type: "selection",
-              label: "勾选列",
-              visible: true
-            },
-            {
-              type: "index",
-              label: "序号",
-              visible: true
-            },
-            {
-              label: "模板名称",
-              prop: "templateMaintainName",
-              showOverflowTooltip: true,
-              visible: true
-            },
-            {
-              label: "状态",
-              prop: "state",
-              slot: "formatterSlot",
-              showOverflowTooltip: true,
-              visible: true
-            },
-            {
-              label: "操作",
-              width: 200,
-              fixed: 'right',
-              visible: true,
-              operationBtn: [
-                {
-                  label: "编辑",
-                  operationFn: 'editorTemp(row)'
-                },
-                {
-                  label: "删除",
-                  operationFn: 'delTemp(row)'
-                },
-                {
-                  label: "模板配置",
-                  operationFn: 'tempConfig(row)'
-                },
-                {
-                  label: "数据库配置",
-                  operationFn: 'databaseConfig(row)'
-                },
-              ]
-            },
-          ],
-        },
         dialogFormConfig: [
-
           {
-            type: "input",
-            title: "模板名称",
-            field: "templateMaintainName",
-            defaultValue: "",
-            maxlength: 40,
+            label: "模板名称",
+            prop: "templateMaintainName",
+            component: "el-input",
+            placeholder: "请输入内容",
+            disabled: false,
+            clearable: true,
+            readonly: false,
+            autofocus: false,
             required: true,
-            rules: [{ message: "请输入中文名", required: true, trigger: "blur" }],
-            col: {
-              span: 12,
-            },
-            isShow: true,
+            name: "templateMaintainName",
+            rules: [{ message: "请输入模板名称", required: true, trigger: "blur" }],
+            resize: "none",
+            type: "text",
           },
         ],
         // 打开弹窗
         openDialog: async (): Promise<void> => {
-          console.log(dialogMask);
-          await dialogMask?.value?.initConfig(model.dialogFormConfig);
-          dialogMask.value?.openDialog('Add');
+          ceDialogMask?.value?.initComponent({ configList: model.dialogFormConfig, type: "Add", data: {} });
+          ceDialogMask.value?.openDialog('Add');
         },
         // 新增提交
         submitDialogAdd: async (formData: TemplateMaintainPageModel): Promise<boolean> => {
@@ -138,14 +74,24 @@ export default defineComponent({
           });
           return true;
         },
+        submitDialogDatabaseConfig: async (formData: any): Promise<boolean> => {
+          // let { message } = await templateMaintainImpl.addTemplate(formData);
+          // ElMessage({
+          //   message,
+          //   type: "success",
+          // });
+          // return true;
+          console.log(formData);
+          return false;
+        },
         // 编辑弹窗
         editorTemp: async (formData: TemplateMaintainPageModel): Promise<void> => {
           const { data } = await templateMaintainImpl.queryTemplateById(formData.templateMaintainId);
-          await dialogMask?.value?.initConfig(model.dialogFormConfig, data);
-          dialogMask.value?.openDialog("Editor");
+          console.log(data);
+          ceDialogMask?.value?.initComponent({ configList: model.dialogFormConfig, data, type: "Edit" });
         },
         // 编辑提交
-        submitDialogEditor: async (formData: TemplateMaintainPageModel): Promise<boolean> => {
+        submitDialogEdit: async (formData: TemplateMaintainPageModel): Promise<boolean> => {
           let { message } = await templateMaintainImpl.editorTemplate(formData);
           ElMessage({
             message,
@@ -153,34 +99,347 @@ export default defineComponent({
           });
           return true;
         },
-        // 删除模板
-        delTemp: (row: TemplateMaintainPageModel): void => {
-          console.log(row);
+        // 删除
+        delTemp: async (formData: TemplateMaintainPageModel): Promise<void> => {
+          let { message } = await templateMaintainImpl.delTemplate(formData);
+          ElMessage({
+            message,
+            type: "success",
+          });
+          EventBus.emit('refresh');
         },
         // 模板配置
         tempConfig: (row: TemplateMaintainPageModel): void => {
           console.log(row);
           router.push({
-          path: '/templateConfig'
-        });
+            path: '/templateConfig'
+          });
         },
         // 数据库配置
-        databaseConfig:(row: TemplateMaintainPageModel)=>{
-          console.log(row)
+        databaseConfig: (row: TemplateMaintainPageModel) => {
+
+          const ceTableData: Partial<CETableProps<any>> = {
+            border: true,
+            data: [],
+            column: [
+              {
+                type: "selection",
+                label: "勾选",
+              },
+              {
+                label: "模板名称",
+                prop: "templateMaintainName",
+              }, {
+                label: "状态",
+                prop: "state",
+                ceFormatter: "state",
+                slots: {
+                  formatter: "",
+                  slotName: "a",
+                  slotLabel: ""
+                },
+              },
+              {
+                label: "创建时间",
+                prop: "createdTime",
+              },
+              {
+                label: "更新时间",
+                prop: "updatedTime",
+              }
+            ]
+          };
+          const formTable: any = reactive({ tableData: [] });
+
+          const configList: any = {
+            is: 'el-form',
+            model: formTable,
+            rules: {
+              tableName: [
+                {
+                  required: true,
+                  message: "请输入表名",
+                  trigger: "blur",
+                },
+              ],
+              name: [
+                {
+                  required: true,
+                  message: "请输入列名",
+                  trigger: "blur",
+                },
+              ],
+              type: [
+                {
+                  required: true,
+                  message: "请输入类型",
+                  trigger: "blur",
+                },
+              ],
+              length: [
+                {
+                  required: true,
+                  message: "请输入长度",
+                  trigger: "change",
+                },
+              ],
+
+            },
+            children: [
+              {
+                is: "el-form-item",
+                prop: "tableName",
+                label: "表名称",
+                children: [
+                  {
+                    is: "el-input",
+                    prop: "tableName",
+                  }
+                ]
+              },
+              {
+                is: "el-table",
+                data: formTable.tableData,
+                border: true,
+                children: [
+                  {
+                    is: "el-table-column",
+                    width: '70px',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'header',
+                        is: "el-button",
+                        icon: "Plus",
+                        circle: true,
+                        size: "mini",
+                        border: true,
+                        click: () => {
+                          formTable.tableData.push({
+                            name: "",
+                            type: "",
+                            length: 20,
+                            default: "",
+                            isNullable: false
+                          });
+                        }
+                      },
+                      {
+                        slotName: 'default',
+                        is: "el-button",
+                        icon: "Minus",
+                        circle: true,
+                        size: "mini",
+                        border: true,
+                        click: (slotProp) => {
+                          console.log(222, slotProp);
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    is: "el-table-column",
+                    label: '序号',
+                    width: '70px',
+                    align: 'center',
+                    type: 'index',
+                  },
+                  {
+                    is: "el-table-column",
+                    prop: 'name',
+                    label: '列名',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'default',
+                        is: "el-form-item",
+                        prop: "name",
+                        slots: [
+                          {
+                            slotName: 'default',
+                            is: "el-input",
+                            model: "",
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    is: "el-table-column",
+                    prop: 'type',
+                    label: '类型',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'default',
+                        is: "el-form-item",
+                        prop: "type",
+                        slots: [
+                          {
+                            slotName: 'default',
+                            is: "el-input",
+                            model: "",
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    is: "el-table-column",
+                    prop: 'length',
+                    label: '长度',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'default',
+                        is: "el-form-item",
+                        prop: "length",
+                        slots: [
+                          {
+                            slotName: 'default',
+                            is: "el-input-number",
+                            max: 20,
+                            model: 0,
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    is: "el-table-column",
+                    prop: 'default',
+                    label: '默认值',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'default',
+                        is: "el-form-item",
+                        prop: "default",
+                        slots: [
+                          {
+                            slotName: 'default',
+                            prop: "default",
+                            is: "el-input",
+                            model: "",
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    is: "el-table-column",
+                    prop: 'isNullable',
+                    label: '能否为空',
+                    align: 'center',
+                    slots: [
+                      {
+                        slotName: 'default',
+                        is: "el-form-item",
+                        prop: "isNullable",
+                        class: "ce-switeh",
+                        slots: [
+                          {
+                            slotName: 'default',
+                            is: "el-switch",
+                            model: true,
+                            modelValue: true,
+                            activeValue: true,
+                            inactiveValue: false,
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                ]
+              }
+            ]
+          };
+          console.log(configList, ceTableData);
+          ceDialogMask?.value?.initComponent({ configList: configList, data: {}, type: "DatabaseConfig", component: 'form-table' });
+
+          console.log(row);
         }
       };
     };
     const model: templateMaintain = reactive(initState());
     let data: ToRefs<templateMaintain> = toRefs(model);
+    let resetState = (): void => {
+      Object.assign(model, initState()); // 将新状态对象的属性分配到现有响应式对象
+    };
 
+    onMounted(() => {
+      nextTick(() => {
+        const ceTableData: Partial<CETableProps<any>> = {
+          border: true,
+          data: [],
+          column: [
+            {
+              type: "selection",
+              label: "勾选",
+            },
+            {
+              label: "模板名称",
+              prop: "templateMaintainName",
+            }, {
+              label: "状态",
+              prop: "state",
+              ceFormatter: "state",
+              slots: {
+                formatter: "",
+                slotName: "a",
+                slotLabel: ""
+              },
+            },
+            {
+              label: "创建时间",
+              prop: "createdTime",
+            },
+            {
+              label: "更新时间",
+              prop: "updatedTime",
+            }, {
+              type: 'operation',
+              label: "操作",
+              operationBtn: [
+                {
+                  label: "编辑",
+                  operationMethod: "editorTemp",
+                  ceShow: true,
+                },
+                {
+                  label: "删除",
+                  operationMethod: 'delTemp',
+                  ceShow: true,
+                },
+                {
+                  label: "模板配置",
+                  operationMethod: 'tempConfig',
+                  ceShow: true,
+                },
+                {
+                  label: "数据库配置",
+                  operationMethod: 'databaseConfig',
+                  ceShow: true,
+                },
+              ]
+            }
+          ]
+        };
+
+        ceTable.value?.initCETable(ceTableData);
+
+        console.log(ceTable.value, 111);
+      });
+    });
     return {
       ...data,
+      resetState,
+      ceTable,
       templateMaintainImpl,
-      dialogMask,
-      ceTable
+      ceDialogMask
     };
   },
-  components:{
+  components: {
     CETable
   }
 });

@@ -3,10 +3,12 @@ import { CEFormItem } from "./CEFormItem";
 import { EpPropMergeType } from "element-plus/es/utils";
 
 export interface CETransferProps extends TransferProps, TransferEmits {
+  defaultValue: TransferKey[];
 
 }
 
 export class CETransfer extends CEFormItem implements CETransferProps {
+  defaultValue = [];
   data: TransferDataItem[] = [];
   titles: [string, string] = ['List 1', 'List 2'];
   buttonTexts: [string, string] = ['To left', 'To right'];

@@ -3,10 +3,13 @@ import { CEFormItem } from "./CEFormItem";
 import { EpPropMergeType } from "element-plus/es/utils";
 
 export interface CEColorPickerProps extends ColorPickerProps, ColorPickerEmits {
+  defaultValue: string;
 
 }
 
 export class CEColorPicker extends CEFormItem implements CEColorPickerProps {
+  defaultValue = '';
+
   disabled = false;
   validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;
   showAlpha = false;

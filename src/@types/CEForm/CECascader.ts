@@ -5,6 +5,8 @@ import { EpPropMergeType } from "element-plus/es/utils";
 
 
 export interface CECascaderProps extends CascaderProps {
+  defaultValue: string;
+
   change: (value: CascaderValue) => void;
   expandChange: (value: CascaderValue) => void;
   blur: (event: FocusEvent) => void;
@@ -12,7 +14,7 @@ export interface CECascaderProps extends CascaderProps {
   visibleChange: (value: boolean) => void;
   removeTag: (value: CascaderNode['valueByOption']) => void;
 
-  modelValue:string[] | number[] | any
+  modelValue: string[] | number[] | any;
   // 可选项数据源，键名可通过 Props 属性配置
   options: Record<string, unknown>[];
   // 配置选项，具体见下表
@@ -50,7 +52,8 @@ export interface CECascaderProps extends CascaderProps {
 }
 
 export class CECascader extends CEFormItem implements CECascaderProps {
-  modelValue = []
+  defaultValue = '';
+  modelValue = [];
   options: Record<string, unknown>[] = [];
   props: CascaderProps = {};
   placeholder = '';
@@ -65,7 +68,7 @@ export class CECascader extends CEFormItem implements CECascaderProps {
   "popperClass": string;
   teleported = true;
   "tagType": "success" | "info" | "warning" | "danger";
-  "validateEvent": boolean;
+  "validateEvent": boolean = true;
 
   change!: (value: CascaderValue) => void;
   expandChange!: (value: CascaderValue) => void;

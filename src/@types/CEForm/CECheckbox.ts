@@ -3,10 +3,12 @@ import { CEFormItem } from "./CEFormItem";
 
 
 export interface CECheckboxProps extends CheckboxProps, CheckboxEmits {
+  defaultValue: string;
 
 }
 
 export class CECheckbox extends CEFormItem implements CECheckboxProps {
+  defaultValue = '';
   slotName = 'default';
   slotHtml?: string;
   component = 'el-checkbox';

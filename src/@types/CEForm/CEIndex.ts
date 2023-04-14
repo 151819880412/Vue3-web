@@ -15,9 +15,10 @@ import { CESlider } from './CESlider';
 import { CESwitch } from './CESwitch';
 import { CETransfer } from './CETransfer';
 import { CEUpload } from './CEUpload';
+import { CEOption } from './CEOption';
 
 export type CEtypes = CEFormButton | CECascader | CECheckbox | CECheckboxGroup | CEColorPicker | CEDateTimePicker | CEFormImage
-  | CEInput | CEInputNumber | CERadio | CERadioGroup | CERate | CESelect | CESlider | CESwitch | CETransfer | CEUpload;
+  | CEInput | CEInputNumber | CERadio | CERadioGroup | CERate | CESelect | CESlider | CESwitch | CETransfer | CEUpload | CEOption
 
 export const CEIndex = {
   CEFormButton, CECascader, CECheckbox, CECheckboxGroup, CEColorPicker, CEDateTimePicker, CEFormImage

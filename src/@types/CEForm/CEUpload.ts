@@ -4,14 +4,15 @@ import { Awaitable, EpPropMergeType } from "element-plus/es/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface CEUploadProps extends UploadProps {
-
+  defaultValue: string;
 }
 
 export class CEUpload extends CEFormItem implements CEUploadProps {
-  modelValue=[]
+  defaultValue = '';
+  modelValue = [];
   type = '';
   disabled = false;
-  slots: (object[] & { slotName: string; slotHtml?: string | undefined; }[]) | Array<never> = [];
+  // slots: (object[] & { slotName: string; slotHtml?: string | undefined; }[]) | Array<never> = [];
   beforeUpload!: (rawFile: UploadRawFile) => Awaitable<boolean | void | File | Blob | null | undefined>;
   onRemove!: (uploadFile: UploadFile, uploadFiles: UploadFiles) => void;
   onChange!: (uploadFile: UploadFile, uploadFiles: UploadFiles) => void;

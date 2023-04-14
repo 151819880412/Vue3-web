@@ -43,9 +43,6 @@ import userServiceImpl from "@/api/user/index";
 import { ElMessage } from "element-plus";
 import EventBus from "@/utils/mitt/mitt";
 import _ from "lodash";
-import CETable from '@/components/ElTable/CETable.vue';
-import CEForm from '@/components/ElForm/CEForm.vue';
-
 
 
 export default defineComponent({
@@ -222,8 +219,6 @@ export default defineComponent({
   },
   components: {
     ElForms,
-    CETable,
-    CEForm,
   },
 });
 </script>

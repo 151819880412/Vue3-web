@@ -4,22 +4,25 @@ import { EpPropMergeType } from "element-plus/es/utils";
 import { StyleValue } from "vue";
 
 export interface CEInputProps extends InputProps, InputEmits {
+  defaultValue: string;
 
 }
 
 export class CEInput extends CEFormItem implements CEInputProps {
+  defaultValue = '';
   type = 'text';
   disabled = false;
   autosize: InputAutoSize = false;
   // modelValue: EpPropMergeType<(new (...args: any[]) => string | number) | (() => string | number | null | undefined) | ((new (...args: any[]) => string | number) | (() => string | number | null | undefined))[], unknown, unknown>;
   modelValue = '';
   autocomplete = 'off';
+  declare component: 'el-input';
   readonly: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
-  clearable: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
+  clearable: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;
   showPassword: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
   showWordLimit: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
   tabindex: EpPropMergeType<readonly [StringConstructor, NumberConstructor], unknown, unknown> = 0;
-  validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
+  validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;
   inputStyle: StyleValue = [];
   id?: string | undefined;
   resize: EpPropMergeType<StringConstructor, "vertical" | "none" | "both" | "horizontal", unknown> = 'none';

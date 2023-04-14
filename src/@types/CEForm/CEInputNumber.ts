@@ -3,6 +3,7 @@ import { CEFormItem } from "./CEFormItem";
 import { EpPropMergeType } from "element-plus/es/utils";
 
 export interface CEInputNumberProps extends InputNumberProps, InputNumberEmits {
+  defaultValue: number;
   name: CEFormItem['name'];
   change: (prev: number | undefined, cur: number | undefined) => boolean;
   blur: (e: FocusEvent) => boolean;
@@ -12,6 +13,7 @@ export interface CEInputNumberProps extends InputNumberProps, InputNumberEmits {
 }
 
 export class CEInputNumber extends CEFormItem implements CEInputNumberProps {
+  defaultValue = 0;
   change!: (prev: number | undefined, cur: number | undefined) => boolean;
   blur!: (e: FocusEvent) => boolean;
   focus!: (e: FocusEvent) => boolean;
@@ -29,7 +31,7 @@ export class CEInputNumber extends CEFormItem implements CEInputNumberProps {
   controls: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;
   controlsPosition: EpPropMergeType<StringConstructor, "" | "right", unknown> = '';
   valueOnClear: number | null | 'min' | 'max' = null;
-  validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
+  validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;
   id?: string | undefined;
   modelValue?: number | undefined;
   placeholder?: string | undefined;

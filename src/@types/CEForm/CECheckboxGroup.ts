@@ -4,11 +4,13 @@ import { CEFormItem } from "./CEFormItem";
 
 
 export interface CECheckboxGroupProps extends CheckboxGroupProps, CheckboxGroupEmits {
+  defaultValue:(string | number)[]
 
 }
 
 export class CECheckboxGroup extends CEFormItem implements CECheckboxGroupProps {
   // declare slots?: CECheckbox[];
+  defaultValue = []
 
   indeterminate = false;
   disabled = false;

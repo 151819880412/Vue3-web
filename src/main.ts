@@ -3,6 +3,7 @@ import App from './App.vue';
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import store from './store';
+import global from '@/components/global/index'
 // import piniaStore from '@/piniaStore/index.js'
 // 初始化
 import { initAppConfigStore } from '@/logics/initAppConfig';
@@ -30,6 +31,7 @@ import './assets/icons'; // icon
 import MainTable from '@/components/MainTable/MainTable.vue';
 // import DialogMask from '@/components/DialogMask/DialogMask.vue'
 const DialogMask = defineAsyncComponent(() => import('@/components/DialogMask/DialogMask.vue'));
+const CEDialogMask = defineAsyncComponent(() => import('@/components/DialogMask/CEDialogMask.vue'));
 
 
 
@@ -85,6 +87,7 @@ setupErrorHandle(app);
 // 全局组件
 app.component("MainTable", MainTable);
 app.component("DialogMask", DialogMask);
+app.component("CEDialogMask", CEDialogMask);
 app.component("SvgIcon", SvgIcon);
 
 // 安装 Pinia
@@ -96,5 +99,7 @@ app.use(Loading);
 app.use(ElementPlus, { locale });
 app.mount('#app');
 // watchError(app)
+// 全局组件
+global.install(app)
 
 export default app;

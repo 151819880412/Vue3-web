@@ -4,10 +4,12 @@ import { EpPropMergeType } from "element-plus/es/utils";
 import { Component } from "vue";
 
 export interface CESwitchProps extends SwitchProps, SwitchEmits {
+  defaultValue: string | number | boolean;
 
 }
 
 export class CESwitch extends CEFormItem implements CESwitchProps {
+  defaultValue = '';
   modelValue: EpPropMergeType<readonly [BooleanConstructor, StringConstructor, NumberConstructor], unknown, unknown> = '';
   value: EpPropMergeType<readonly [BooleanConstructor, StringConstructor, NumberConstructor], unknown, unknown> = '';
   disabled: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;

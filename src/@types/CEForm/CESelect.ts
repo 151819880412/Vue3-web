@@ -6,6 +6,7 @@ import { Component, ComputedOptions, MethodOptions } from "vue";
 // import { CEOption } from './CEOption';
 
 export interface CESelectProps extends ISelectProps {
+  defaultValue: string;
   change: (prev: number | undefined, cur: number | undefined) => boolean;
   visibleChange: (val: boolean) => boolean;
   removeTag: (val: Array<any>) => boolean;
@@ -17,6 +18,7 @@ export interface CESelectProps extends ISelectProps {
 }
 
 export class CESelect extends CEFormItem implements CESelectProps {
+  defaultValue = ''
   // declare slots?: CEOption
   change!: (prev: number | undefined, cur: number | undefined) => boolean;
   visibleChange!: (val: boolean) => boolean;
@@ -30,7 +32,7 @@ export class CESelect extends CEFormItem implements CESelectProps {
   allowCreate = false;
   autocomplete: "inline" | "none" | "both" | "list" = 'none';
   automaticDropdown = false;
-  clearable = false;
+  clearable = true;
   clearIcon!: string | Component<any, any, any, ComputedOptions, MethodOptions>;
   effect = 'light';
   collapseTags = false;

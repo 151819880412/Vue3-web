@@ -252,6 +252,10 @@ const transform: AxiosTransform = {
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
 
+    if(response.data.code == 40001){
+      ElMessage.error('参数异常');
+      throw new Error('参数异常');
+    }
 
 
     // try {

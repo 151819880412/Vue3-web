@@ -1,7 +1,9 @@
-import { CETableColumnProps } from "./CETableColumn ";
+import { CETableColumnProps } from "./CETableColumn";
 
 export interface CETableProps<T> {
-  ceRef: string;
+  is?: string;
+
+  // ceRef: string;
   column: CETableColumnProps[];
   data: T[]; // 显示的数据
   height: string | number; // Table 的高度，可以是数字类型的像素值，也可以是表示样式高度的字符串
@@ -25,25 +27,26 @@ export interface CETableProps<T> {
   emptyText: string; // 空数据时显示的文本内容
   defaultExpandAll: boolean; // 是否默认展开所有行
   expandRowKeys: (string | number)[]; // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组。
-  defaultSort: { prop: string, order: 'ascending' | 'descending' }; // 默认的排序列的 prop 和顺序，prop 属性指定默认的排序的列，order 指定默认排序的顺序
+  defaultSort: { prop: string, order: 'ascending' | 'descending'; }; // 默认的排序列的 prop 和顺序，prop 属性指定默认的排序的列，order 指定默认排序的顺序
   tooltipEffect: 'dark' | 'light'; // 溢出的 tooltip 的 effect
   tooltipOptions: object; // 溢出 tooltip 的选项，参见下述 tooltip 组件
   showSummary: boolean; // 是否在表尾显示合计行
   sumText: string; // 显示摘要行第一列的文本
-  summaryMethod: (props: { columns: any[], data: any[] }) => any[]; // 自定义的合计计算方法
-  spanMethod: (props: { row: any, column: any, rowIndex: number, columnIndex: number }) => [number, number]; // 合并行或列的计算方法
+  summaryMethod: (props: { columns: any[], data: any[]; }) => any[]; // 自定义的合计计算方法
+  spanMethod: (props: { row: any, column: any, rowIndex: number, columnIndex: number; }) => [number, number]; // 合并行或列的计算方法
   selectOnIndeterminate: boolean; // 在多选表格中，当仅有部分行被选中时，点击表头的多选框时的行为，若为 true，则选中所有行；若为 false，则取消选择所有行。
   indent: number; // 展示树形数据时，树节点的缩进
   lazy: boolean; // 是否懒加载子节点数据
   load: (row: any, treeNode: any, resolve: Function) => void; // 加载子节点数据的函数，lazy 为 true 时生效
-  treeProps: { hasChildren: string, children: string }; // 渲染嵌套数据的配置选项
+  treeProps: { hasChildren: string, children: string; }; // 渲染嵌套数据的配置选项
   tableLayout: 'fixed' | 'auto'; // 设置表格单元、行和列的布局方式
   scrollbarAlwaysOn: boolean; // 总是显示滚动条
   flexible: boolean; // 确保主轴的最小尺寸
 }
 
 export class CETable<T> implements CETableProps<T> {
-  ceRef: string = 'ceTableRef';
+  is?: string = 'el-table';
+  // ceRef: string = 'ceTableRef';
   column: CETableColumnProps[] = [];
   data: T[] = [];
   height!: string | number;
@@ -82,6 +85,10 @@ export class CETable<T> implements CETableProps<T> {
   tableLayout: "fixed" | "auto" = 'fixed';
   scrollbarAlwaysOn: boolean = false;
   flexible: boolean = false;
+
+  constructor(data: Partial<CETable<T>>) {
+    Object.assign(this, data);
+  }
 }
 
 
@@ -104,7 +111,7 @@ export class CETable<T> implements CETableProps<T> {
 // import { TableColumnCtx } from 'element-plus/lib/components/table/src/table-column/defaults';
 // import { ColumnCls, ColumnStyle, Sort, SummaryMethod, TableProps,Table, TreeNode } from 'element-plus/lib/components/table/src/table/defaults';
 // import { CSSProperties, } from 'vue';
-// import { CETableColumnProps } from './CETableColumn ';
+// import { CETableColumnProps } from './CETableColumn';
 
 
 // export interface CETableProps<T> extends TableProps<T> {

@@ -14,24 +14,29 @@ export interface CEColProps {
   tag?: string;
 }
 
-export interface CEFormItemProps<T = object> extends FormItemProps {
+export interface CEFormItemProps extends FormItemProps {
+  is?: string;
+
   component: string;
   prop: string;
   name: string;
   rules: FormItemProps['rules'];
-  ceShow:boolean
-  showLabel:boolean
-  slots: (T & { slotName: string, slotHtml?: string; }[])|Array<never>;
+  ceShow: boolean;
+  showLabel: boolean;
+  // slots: (Partial<CEtypes> & { slotName: string, slotHtml?: string; })[]
+  slots: any[];
 }
 
-export class CEFormItem<T = object> implements CEFormItemProps {
+export class CEFormItem implements CEFormItemProps {
+  is?: string = 'el-form-item';
+
   component = '';
   prop = '';
   name = '';
   rules = {};
   ceShow = true;
   showLabel = true;
-  slots: (T & { slotName: string, slotHtml?: string; }[])|Array<never> = [];
+  slots: any[] = [];
   col?: CEColProps = {
     span: 12,
     // xs: 1,

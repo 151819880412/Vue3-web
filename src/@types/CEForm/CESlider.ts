@@ -4,10 +4,12 @@ import { EpPropMergeType, Arrayable } from "element-plus/es/utils";
 
 
 export interface CESliderProps extends SliderProps, SliderEmits {
+  defaultValue: number;
 
 }
 
 export class CESlider extends CEFormItem implements CESliderProps {
+  defaultValue = 0;
   modelValue: EpPropMergeType<(new (...args: any[]) => number | number[]) | (() => Arrayable<number>) | ((new (...args: any[]) => number | number[]) | (() => Arrayable<number>))[], unknown, unknown> = 0;
   disabled = false;
   validateEvent: EpPropMergeType<BooleanConstructor, unknown, unknown> = true;

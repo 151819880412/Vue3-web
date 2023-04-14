@@ -4,10 +4,11 @@ import { EpPropMergeType } from "element-plus/es/utils";
 // import { CERadio } from "./CERadio";
 
 export interface CERadioGroupProps extends RadioGroupProps, RadioGroupEmits {
-
+  defaultValue: string | number;
 }
 
 export class CERadioGroup extends CEFormItem implements CERadioGroupProps {
+  defaultValue = '';
   // declare slots?: CERadio[]
   'update:modelValue': (val: string | number | boolean) => boolean = (val: string | number | boolean) => {
     this.modelValue = val;

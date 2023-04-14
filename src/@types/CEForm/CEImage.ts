@@ -4,11 +4,13 @@ import { EpPropMergeType } from "element-plus/es/utils";
 
 
 export interface CEImageProps extends ImageProps, ImageEmits {
+  defaultValue: string;
 
 }
 
 export class CEFormImage extends CEFormItem implements CEImageProps {
-  modelValue=[]
+  defaultValue = '';
+  modelValue = [];
   hideOnClickModal: EpPropMergeType<BooleanConstructor, unknown, unknown> = false;
   src = '';
   fit: EpPropMergeType<StringConstructor, "" | "fill" | "none" | "contain" | "cover" | "scale-down", unknown> = '';
