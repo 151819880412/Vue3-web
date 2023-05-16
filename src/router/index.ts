@@ -1,25 +1,42 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import type { RouteRecordRaw } from 'vue-router';
+import type { App } from 'vue';
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+import { createRouter, createWebHashHistory } from 'vue-router';
+import { basicRoutes } from './routes/index';
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+// 白名单应该包含基本静态路由
+const WHITE_NAME_LIST: string[] = [];
+const getRouteNames = (array: any[]) =>
+  array.forEach((item) => {
+    WHITE_NAME_LIST.push(item.name);
+    getRouteNames(item.children || []);
+  });
+getRouteNames(basicRoutes);
 
-export default router
+// app router
+// 创建一个可以被 Vue 应用程序使用的路由实例
+export const router = createRouter({
+  // 创建一个 hash 历史记录。
+  history: createWebHashHistory('/'),
+  // 应该添加到路由的初始路由列表。
+  routes: basicRoutes as unknown as RouteRecordRaw[],
+  // 是否应该禁止尾部斜杠。默认为假
+  strict: true,
+  scrollBehavior: () => ({ left: 0, top: 0 }),
+});
+
+// reset router
+export function resetRouter() {
+  router.getRoutes().forEach((route) => {
+    const { name } = route;
+    if (name && !WHITE_NAME_LIST.includes(name as string)) {
+      router.hasRoute(name) && router.removeRoute(name);
+    }
+  });
+}
+
+// config router
+// 配置路由器
+export function setupRouter(app: App<Element>) {
+  app.use(router);
+}
