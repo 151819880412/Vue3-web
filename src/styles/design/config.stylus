@@ -1,2 +1,0 @@
-@import (reference) 'color.stylus';
-@import (reference) 'var/index.stylus';
