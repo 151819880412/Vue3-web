@@ -7,11 +7,18 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "element-plus": "^2.3.4",
+    "mitt": "^3.0.0",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.36",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.194",
+    "@types/nprogress": "^0.2.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
