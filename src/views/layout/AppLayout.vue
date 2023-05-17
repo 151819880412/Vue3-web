@@ -5,20 +5,12 @@
 <script lang='ts'>
 interface AppLayout {
 }
-import { reactive,toRefs,onBeforeMount,onMounted, getCurrentInstance,defineComponent,ComponentInternalInstance,ToRefs} from 'vue'
+import { reactive,toRefs,defineComponent,ToRefs} from 'vue'
 export default defineComponent({
    name: 'AppLayout',
    props: [],
    setup() {
-     const ctx:ComponentInternalInstance | null = getCurrentInstance()
-     console.log(ctx)
-     console.log('1-开始创建组件-setup')
-     onBeforeMount(() => {
-        console.log('2.组件挂载页面之前执行----onBeforeMount')
-     })
-     onMounted(() => {
-       console.log('3.-组件挂载到页面之后执行-------onMounted')
-     })
+
      const initState = (): AppLayout => {
        return {
        };

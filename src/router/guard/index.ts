@@ -46,7 +46,7 @@ function createPageGuard(router: Router) {
 
 //用于处理页面加载状态
 function createPageLoadingGuard(router: Router) {
-  console.log(router)
+  router;
   // const userStore = useUserStoreWithOut();
   // const appStore = useAppStoreWithOut();
   // const { getOpenPageLoading } = useTransitionSetting();

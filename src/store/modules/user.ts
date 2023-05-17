@@ -42,8 +42,9 @@ export const useUserStore = defineStore({
       this.token = info;
       Persistent.setLocal(TOKEN_KEY, info, true);
     },
-    setUserInfo(info: UserInfo | null) {
+    setUserInfo(info: UserInfo ) {
       this.userInfo = info;
+      console.log(JSON.parse(JSON.stringify(info)),111)
       Persistent.setLocal(USER_INFO_KEY, info, true);
     },
 

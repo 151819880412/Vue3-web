@@ -9,7 +9,7 @@ interface CustomApp extends AppType {
 }
 
 const app = createApp(App) as CustomApp;
-console.log(app)
+
 // 配置路由
 setupRouter(app);
 // 路由守卫

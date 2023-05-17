@@ -28,7 +28,7 @@ export interface Token {
 }
 
 interface BasicStore {
-  [TOKEN_KEY]: string | number | null | undefined;
+  [TOKEN_KEY]: Token;
   [USER_INFO_KEY]: UserInfo;
   [ROLES_KEY]: string[];
   [LOCK_INFO_KEY]: LockInfo;
