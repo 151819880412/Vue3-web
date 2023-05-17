@@ -59,7 +59,7 @@ function initPersistentMemory() {
 
 export class Persistent {
   static getLocal<T>(key: LocalKeys) {
-    return localMemory.get(key)?.value as Nullable<T>;
+    return localMemory.get(key) as Nullable<T>;
   }
 
   static setLocal(key: LocalKeys, value: LocalStore[LocalKeys], immediate = false): void {

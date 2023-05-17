@@ -17,7 +17,7 @@ export class Memory {
   set(key: string, value: any,) {
     let item = this.get(key);
     if (item) {
-      this.cache[key] = item;
+      this.cache[key] = value;
     } else {
       this.cache[key] = value;
     }
@@ -31,8 +31,12 @@ export class Memory {
   }
 
   resetCache(cache: any) {
-    cache;
-    this.clear();
+    Object.keys(cache).forEach((key) => {
+      const item = cache[key];
+      if (item) {
+        this.set(key, item);
+      }
+    });
   }
 
   clear() {

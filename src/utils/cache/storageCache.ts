@@ -19,7 +19,13 @@ export const createStorage = ({
     get(key: string, def: any = null): any {
       const val = this.storage.getItem(key);
       if (!val) return def;
-      return val;
+      try {
+        const data = JSON.parse(val);
+        // this.remove(key);
+        return data
+      } catch (e) {
+        return def;
+      }
     }
 
     remove(key: string) {

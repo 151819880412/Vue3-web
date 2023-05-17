@@ -126,7 +126,6 @@ export const usePermissionStore = defineStore({
           arr[i].title = arr[i].menuName
         }
       };
-      // arr[1].component = ()=>import('@/views/home/home.vue');
       treeFor(arr);
       routes = arr as unknown as Array<AppRouteRecordRaw>;
 

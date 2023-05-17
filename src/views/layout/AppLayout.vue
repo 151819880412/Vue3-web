@@ -1,5 +1,7 @@
 <template>
-  <div class='AppLayout'>111</div>
+  <router-view>
+  </router-view>
+  <div class='AppLayout'>AppLayout</div>
 </template>
 
 <script lang='ts'>
