@@ -6,7 +6,7 @@ export class Memory {
     return this.cache;
   }
 
-  setCache(cache) {
+  set setCache(cache: any) {
     this.cache = cache;
   }
 

@@ -1,39 +1,55 @@
 <template>
-  <div class='user'>user</div>
+  <div class='user'>
+    <RForm />
+    <ElInput :prefix-icon="bbb" :suffix-icon="sun" />
+    <el-switch v-model="aaa" class="themeConfig" inline-prompt size="large" :active-icon="sun" :inactive-icon="sun"
+      style="--el-switch-on-color: #151515; --el-switch-off-color: #151515" />
+  </div>
 </template>
 
 <script lang='ts'>
+import RForm from '@/components/ELForm/RForm.vue';
 interface user {
 }
-import { reactive,toRefs,onBeforeMount,onMounted, getCurrentInstance,defineComponent,ComponentInternalInstance,ToRefs} from 'vue'
+import { reactive, toRefs, defineComponent, ToRefs, createVNode, ref } from 'vue';
+import SvgIcon from '@/components/Icon/SvgIcon.vue';
+import { useIcon } from '@/assets/icons';
 export default defineComponent({
-   name: 'User',
-   props: [],
-   setup() {
-     const ctx:ComponentInternalInstance | null = getCurrentInstance()
-     console.log(ctx)
-     console.log('1-开始创建组件-setup')
-     onBeforeMount(() => {
-        console.log('2.组件挂载页面之前执行----onBeforeMount')
-     })
-     onMounted(() => {
-       console.log('3.-组件挂载到页面之后执行-------onMounted')
-     })
-     const initState = (): user => {
-       return {
-       };
-     };
-     const model:user = reactive(initState());
-     let data: ToRefs<user> = toRefs(model);
-     let resetState = (): void => {
+  name: 'User',
+  props: [],
+  setup() {
+    const initState = (): user => {
+      return {
+      };
+    };
+    const model: user = reactive(initState());
+    let data: ToRefs<user> = toRefs(model);
+    let resetState = (): void => {
       Object.assign(model, initState()); // 将新状态对象的属性分配到现有响应式对象
-     }
-     return {
-       ...data,
-       resetState
-      }
-   }
-})
+    };
+
+    let sun = createVNode(SvgIcon, {
+      iconClass: "sun",
+      name: "sun",
+      className: "sun",
+      size: '1.5rem'
+    });
+
+
+    const aaa = ref('');
+
+    return {
+      ...data,
+      resetState,
+      sun,
+      aaa,
+      bbb: useIcon('Edit', false)
+    };
+  },
+  components: {
+    RForm
+  }
+});
 </script>
 <style lang='stylus' scoped>
 </style>
