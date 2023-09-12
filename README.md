@@ -25,7 +25,7 @@
     + TS的配置文件
 
 ## 和Vue2相比的差异
-  1. vue2对对象的响应式：通过Object.definePropety进行监视
+  1. vue2对对象的响应式:通过Object.definePropety进行监视
   2. vue2数组重写方法进行监视
   3. vue2不能监视对象新增或删除的属性
   4. vue2通过修改数组下标和数组长度是不能监视的
@@ -99,7 +99,7 @@
 # 5.reactive 函数
     作用: 定义多个数据的响应式
     const proxy = reactive(obj): 接收一个普通对象然后返回该普通对象的响应式代理器对象
-    响应式转换是“深层的”：会影响对象内部所有嵌套的属性
+    响应式转换是“深层的”:会影响对象内部所有嵌套的属性
     内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据都是响应式的
 # 6.比较Vue2与Vue3的响应式(重要)
   ## vue2的响应式
@@ -168,7 +168,7 @@
     attrs: 包含没有在props配置中声明的属性的对象, 相当于 this.$attrs
     slots: 包含所有传入的插槽内容的对象, 相当于 this.$slots
     emit: 用来分发自定义事件的函数, 相当于 this.$emit
-    context：里面有 attrs 对象(获取当前组件标签上的属性，但是该属性是在props中没有声明接收的所有参数)
+    context:里面有 attrs 对象(获取当前组件标签上的属性，但是该属性是在props中没有声明接收的所有参数)
 # 8.reactive与ref-细节
     是Vue3的 composition API中2个最重要的响应式API
     ref用来处理基本类型数据, reactive用来处理对象(递归深度响应式)
@@ -273,7 +273,7 @@
     readonly:
     深度只读数据
     获取一个对象 (响应式或纯对象) 或 ref 并返回原始代理的只读代理。
-    只读代理是深层的：访问的任何嵌套 property 也是只读的。
+    只读代理是深层的:访问的任何嵌套 property 也是只读的。
     shallowReadonly
     浅只读数据
     创建一个代理，使其自身的 property 为只读，但不执行嵌套对象的深度只读转换
@@ -493,7 +493,7 @@
     }
 
 
-    1：方法
+    1:方法
       defineComponent 目的是定义一个组件,内部可以传入一个配置对象 export default defineComponent({})
       setup           组合API setup是组合API中第一个要使用的函数
       ref             定义一个响应式的数据,返回的是一个Ref对象,对象中有一个value属性,如果需要对数据进行操作,需要使用该Ref对象调用value属性的方式进行数据的操作
@@ -534,7 +534,7 @@
       isReadonly        检查一个对象是否是由 readonly 创建的只读代理
       isProxy           检查一个对象是否是由 reactive 或者 readonly 方法创建的代理
 
-  2：响应式原理：
+  2:响应式原理:
       利用ES6的Proxy 包装代理对象通过get、set、deleteProperty和Reflect.get/set/deleteProperty代理读取修改删除
         const proxyUser = new Proxy(user, {
           // 获取目标对象的某个属性值
@@ -553,7 +553,7 @@
             return Reflect.deleteProperty(target,prop)
           }
         })
-  3：setup细节问题
+  3:setup细节问题
       // setup是在beforeCreate生命周期回调之前就执行了,而且就执行一次
       // 由此可以推断出:setup在执行的时候,当前的组件还没有创建出来,也就意味着:组件实例对象this根本就不能用
       // this是undefined,说明,就不能通过this再去调用data/computed/methods/props中的相关内容了
@@ -566,7 +566,7 @@
       // 一般不要混合使用: methods中可以访问setup提供的属性和方法, 但在setup方法中不能访问data和methods
       // setup不能是一个async函数: 因为返回值不再是return的对象, 而是promise, 模板看不到return对象中的属性数据
 
-  4：ref和reactive细节问题
+  4:ref和reactive细节问题
       // 是Vue3的 composition API中2个最重要的响应式API(ref和reactive)
       // ref用来处理基本类型数据, reactive用来处理对象(递归深度响应式)
       // 如果用ref对象/数组, 内部会自动将对象/数组转换为reactive的代理对象
@@ -574,7 +574,7 @@
       // reactive内部: 通过使用Proxy来实现对对象内部所有数据的劫持, 并通过Reflect操作对象内部数据
       // ref的数据操作: 在js中要.value, 在模板中不需要(内部解析模板时会自动添加.value)
 
-  5：计算属性和watch
+  5:计算属性和watch
    * computed
    *  fullName1 默认 get user.firstName + '_' + user.lastName
    *  fullName2 get user.firstName + '_' + user.lastName
@@ -583,7 +583,7 @@
    *  fullName3 mmediate 默认会执行一次watch
    * watchEffect 不需要配置immediate,本身默认就会进行监视,(默认执行一次)
 
-  6：生命周期
+  6:生命周期
     * 初始化执行顺序 setup beforeCreate created onBeforeMount beforeMount onMounted mounted
     * 更新执行顺序   onBeforeUpdate beforeUpdate onUpdated updated
     * 销毁执行顺序   onBeforeUnmount beforeUnmount onUnmounted unmounted
@@ -839,7 +839,7 @@ https://www.bilibili.com/video/BV1rC4y187Vw?from=search&seid=1788043176196698630
   }
   let product = { price: 5, quantity: 2 }
   let total = 0
-  // effect：效果  
+  // effect:效果  
   let effect = () => {
     total = product.price * product.quantity
   }
@@ -910,6 +910,50 @@ https://www.bilibili.com/video/BV1rC4y187Vw?from=search&seid=1788043176196698630
     console.log(total)
   
     
+# 高级用法
+```
+  1.Composition API:Composition API 是 Vue 3 中的一个新特性，它提供了一种更灵活的方式来组织代码。与传统的 Options API 不同，Composition API 允许您按逻辑关系组织代码，
+    而不是按选 项组织代码。这使得代码更易于重用和测试。
+  2.Teleport:Teleport 将其插槽内容渲染到 DOM 中的另一个位置。<teleport to="#popup" :disabled="displayVideoInline">xxxxxxx</teleport>
+  3.Fragments:Fragments 为了更方便的书写组件模板，新增了一个类似 dom 的标签元素 <Fragment></Fragment>，也就是 vue3 中组件可以拥有多个根了。
+  4.Suspense:Suspense 是一个新的内置组件，它允许您在加载数据时显示占位符。这对于创建更流畅的用户体验非常有用。
+  5.全局 API:Vue 3 中的全局 API 允许您在整个应用程序中共享功能。这使得编写插件和库变得更加简单。
+  6.V-model 的多重绑定:在 Vue 3 中，您可以使用 .sync 修饰符来实现多重 v-model 绑定。这使得在多个组件之间共享数据变得更加容易。
+  7.自定义指令和渲染函数:Vue 3 允许您编写自定义指令和渲染函数。这使得您可以更好地控制应用程序的渲染和行为。
+  8.静态属性提升:Vue 3 引入了静态属性提升的概念，可以在编译时将常量提升到渲染函数的外部，从而提高应用程序的性能。
+  9.全局配置的修改:Vue 3 允许您在应用程序启动之前修改全局配置，从而更好地定制 Vue 的行为。
+  10.更好的响应式系统:Vue 3 采用了 Proxy 对象来实现响应式系统，相比 Vue 2 的 Object.defineProperty 实现，具有更好的性能和更强大的功能。
+  11.高效的 Virtual DOM:Vue 3 的 Virtual DOM 实现更加高效，可以帮助您更快地更新 DOM。
+  12.自定义渲染器:Vue 3 允许您编写自定义渲染器，从而将 Vue 应用程序渲染到非浏览器环境，如移动应用程序或命令行应用程序。
+  13.更好的 TypeScript 支持:Vue 3 在设计时考虑了 TypeScript 的支持，使得使用 TypeScript 开发 Vue 应用变得更加容易和高效。
+  14.新的生命周期钩子函数:Vue 3 引入了两个新的生命周期钩子函数 beforeUnmount 和 onUnmounted，使得在组件卸载之前和之后执行一些操作更加方便。
+  15.基于 Proxy 的响应式系统:Vue 3 的响应式系统使用 Proxy 对象代替了 Object.defineProperty，不仅性能更好，而且支持监听更多类型的数据变化。
+  16.新的事件 API:Vue 3 引入了一个新的事件 API，使得在组件之间传递事件和处理事件更加简单和可靠。
+  17.更好的性能:Vue 3 在许多方面都进行了优化，包括编译器、渲染器、响应式系统等，使得应用程序的性能更高效。
+  18.新的插槽语法:Vue 3 引入了一种新的插槽语法，使得插槽更加易于使用和理解。
+  19.更好的模板编译器:Vue 3 的模板编译器是全新的，采用了优化过的算法，可以更快地编译模板。
+  20.更好的自定义元素支持:Vue 3 引入了一个新的 API，使得在 Vue 组件中使用自定义元素更加容易和灵活。
+  21.静态资源导入:Vue 3 允许您在模板和 JavaScript 代码中直接导入静态资源，例如图片和 CSS 文件，而不需要像 Vue 2 那样使用 require 或 import。
+  22.全局组件自动导入:在 Vue 3 中，您可以使用一个特殊的 API 来自动导入全局组件，这使得在大型应用程序中管理组件变得更加容易。
+  23.Fragments 支持具名插槽:Vue 3 中的 Fragments 支持具名插槽，这使得组合组件变得更加灵活。
+  24.组合式 API:除了 Composition API 外，Vue 3 还提供了许多其他的组合式 API，例如 provide 和 inject、watchEffect 和 watch、ref 和 reactive 等。
+  25.支持多个根节点:Vue 3 允许模板中有多个根节点，而不需要将它们包装在一个容器元素中。
+  26.针对 TypeScript 的改进:Vue 3 在许多方面都改进了 TypeScript 的支持，包括类型推断、类型定义文件等。
+  27.静态类型检查:Vue 3 提供了一个名为 template type checking 的功能，可以在编译时检查模板中的类型错误。
+  28.支持 TypeScript 类型推断的 inject 和 provide:在 Vue 3 中，您可以使用 provide 和 inject 提供和注入依赖项，并获得 TypeScript 类型推断的支持。
+  29.支持异步组件的新语法:Vue 3 引入了一种新的语法来支持异步组件的加载，使得代码更简洁，更易于维护。
+  30.支持自定义渲染器 API 的插件:Vue 3 允许您编写插件来扩展自定义渲染器的功能，从而将 Vue 应用程序渲染到更多的环境中。
+  31.Teleport Targets: Vue 3 的 Teleport 组件不仅可以将组件渲染到任何位置，还可以在组件中指定渲染目标，这使得代码更具可读性和易于维护。
+  32.全局指令注册: 在 Vue 3 中，您可以使用全局 API 注册自定义指令，这样您就可以在整个应用程序中共享指令，而不需要在每个组件中都注册一次。
+  33.插件 API 的变化: Vue 3 中的插件 API 发生了变化，使得编写插件更加简单和直观。
+  34.Composition API 中的 Reactivity Hooks: Vue 3 的 Composition API 中引入了一组 Reactivity Hooks，这些 Hooks 可以帮助您更轻松地使用响应式数据和生命周期钩子。
+  35.Vite 构建工具: Vue 3 推荐使用 Vite 构建工具来构建应用程序，它具有更快的开发和构建速度，并且支持 HMR（热模块替换）等功能。
+  36.Teleport 和 Suspense 结合使用: 在 Vue 3 中，您可以将 Teleport 和 Suspense 组件结合使用，以便在异步加载组件时显示占位符，提供更好的用户体验。
+  37.Fragments 中的 key: Vue 3 的 Fragments 组件中支持 key 属性，这可以帮助您更好地管理子元素。
+  38.自定义渲染器中的 Virtual DOM: 在 Vue 3 中编写自定义渲染器时，您可以使用 Virtual DOM 来更好地管理应用程序的状态和性能。
+  39.多路插槽: Vue 3 的插槽语法支持多路插槽，这使得在组件中使用插槽更加灵活和高效。
+  40.静态树提升: Vue 3 中的编译器可以在编译时分析模板并将静态节点提升到渲染函数的外部，从而提高应用程序的性能。
+```
 
 // 常用配置
 {
@@ -930,7 +974,7 @@ https://www.bilibili.com/video/BV1rC4y187Vw?from=search&seid=1788043176196698630
   /*
       tsconfig.json是ts编译器的配置文件，ts可以根据它的信息来对待吗进行编译 可以再tsconfig中写注释
       include : 用来指定哪些文件需要被编译
-      exclude : 用来指定哪些文件不需要被编译 ：默认node_module
+      exclude : 用来指定哪些文件不需要被编译 :默认node_module
       extends : 用来指定继承的配置文件
       files   : 用来指定被编译的文件列表，只有编译少量文件才使用
       compilerOptions : 编译器的选项是配置文件中非常重要也是非常复杂的配置选项

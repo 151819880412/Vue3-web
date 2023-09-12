@@ -136,6 +136,8 @@ export const usePermissionStore = defineStore({
 
       this.setMenuList(routes);
       patchHomeAffix(routes);
+      console.log('addroutes-----',routes,arr)
+
       return routes;
     },
   },

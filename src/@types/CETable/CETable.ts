@@ -1,7 +1,7 @@
 import { CETableColumnProps } from "./CETableColumn";
 
 export interface CETableProps<T> {
-  is?: string;
+  component?: string;
 
   // ceRef: string;
   column: CETableColumnProps[];
@@ -45,7 +45,7 @@ export interface CETableProps<T> {
 }
 
 export class CETable<T> implements CETableProps<T> {
-  is?: string = 'el-table';
+  component?: string = 'el-table';
   // ceRef: string = 'ceTableRef';
   column: CETableColumnProps[] = [];
   data: T[] = [];

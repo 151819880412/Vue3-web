@@ -152,7 +152,7 @@ export default defineComponent({
           const formTable: any = reactive({ tableData: [] });
 
           const configList: any = {
-            is: 'el-form',
+            component: 'el-form',
             model: formTable,
             rules: {
               tableName: [
@@ -187,29 +187,86 @@ export default defineComponent({
             },
             children: [
               {
-                is: "el-form-item",
+                component: "el-form-item",
                 prop: "tableName",
                 label: "表名称",
                 children: [
                   {
-                    is: "el-input",
+                    component: "el-input",
                     prop: "tableName",
                   }
                 ]
               },
               {
-                is: "el-table",
+                component: "el-form-item",
+                prop: "isPrimary",
+                label: "主键",
+                children: [
+                  {
+                    component: "el-select",
+                    prop: "isPrimary",
+                    visibleChange:()=>{
+                      configList.children[1].children[0].slots[0].options = []
+                      formTable.tableData.forEach(item=>{
+                        configList.children[1].children[0].slots[0].options.push({
+                          label:item.name,
+                          value:item.name,
+                        })
+                      })
+                      console.log(configList)
+                    },
+                    slots: [
+                      {
+                        slotName: "default",
+                        component: "el-option",
+                        options: [],
+                      },
+                    ],
+                  }
+                ]
+              },
+              {
+                component: "el-form-item",
+                prop: "isUnique",
+                label: "索引",
+                children: [
+                  {
+                    component: "el-select",
+                    prop: "isUnique",
+                    multiple: true,
+                    visibleChange:()=>{
+                      configList.children[2].children[0].slots[0].options = []
+                      formTable.tableData.forEach(item=>{
+                        configList.children[2].children[0].slots[0].options.push({
+                          label:item.name,
+                          value:item.name,
+                        })
+                      })
+                      console.log(configList)
+                    },
+                    slots: [
+                      {
+                        slotName: "default",
+                        component: "el-option",
+                        options: [],
+                      },
+                    ],
+                  }
+                ]
+              },
+              {
+                component: "el-table",
                 data: formTable.tableData,
                 border: true,
                 children: [
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     width: '70px',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'header',
-                        is: "el-button",
+                        component: "el-button",
                         icon: "Plus",
                         circle: true,
                         size: "mini",
@@ -226,7 +283,7 @@ export default defineComponent({
                       },
                       {
                         slotName: 'default',
-                        is: "el-button",
+                        component: "el-button",
                         icon: "Minus",
                         circle: true,
                         size: "mini",
@@ -238,26 +295,26 @@ export default defineComponent({
                     ]
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     label: '序号',
                     width: '70px',
                     align: 'center',
                     type: 'index',
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     prop: 'name',
                     label: '列名',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'default',
-                        is: "el-form-item",
+                        component: "el-form-item",
                         prop: "name",
                         slots: [
                           {
                             slotName: 'default',
-                            is: "el-input",
+                            component: "el-input",
                             model: "",
                           }
                         ]
@@ -265,19 +322,19 @@ export default defineComponent({
                     ]
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     prop: 'type',
                     label: '类型',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'default',
-                        is: "el-form-item",
+                        component: "el-form-item",
                         prop: "type",
                         slots: [
                           {
                             slotName: 'default',
-                            is: "el-input",
+                            component: "el-input",
                             model: "",
                           }
                         ]
@@ -285,19 +342,19 @@ export default defineComponent({
                     ]
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     prop: 'length',
                     label: '长度',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'default',
-                        is: "el-form-item",
+                        component: "el-form-item",
                         prop: "length",
                         slots: [
                           {
                             slotName: 'default',
-                            is: "el-input-number",
+                            component: "el-input-number",
                             max: 20,
                             model: 0,
                           }
@@ -306,20 +363,20 @@ export default defineComponent({
                     ]
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     prop: 'default',
                     label: '默认值',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'default',
-                        is: "el-form-item",
+                        component: "el-form-item",
                         prop: "default",
                         slots: [
                           {
                             slotName: 'default',
                             prop: "default",
-                            is: "el-input",
+                            component: "el-input",
                             model: "",
                           }
                         ]
@@ -327,20 +384,20 @@ export default defineComponent({
                     ]
                   },
                   {
-                    is: "el-table-column",
+                    component: "el-table-column",
                     prop: 'isNullable',
                     label: '能否为空',
                     align: 'center',
                     slots: [
                       {
                         slotName: 'default',
-                        is: "el-form-item",
+                        component: "el-form-item",
                         prop: "isNullable",
                         class: "ce-switeh",
                         slots: [
                           {
                             slotName: 'default',
-                            is: "el-switch",
+                            component: "el-switch",
                             model: true,
                             modelValue: true,
                             activeValue: true,

@@ -1,22 +1,30 @@
 <template>
   <div class='FormTable'>
     <!-- form -->
-    <component :is="formTable.is" :model="formTable.model" :rules="formTable.rules" ref="ceFormTable">
+    <component :is="formTable.component" :model="formTable.model" :rules="formTable.rules" ref="ceFormTable">
       <!-- table/form-item -->
-      <component v-for="(item, index) in formTable.children" :key="index" v-bind="item" :is="item.is">
+      <component v-for="(item, index) in formTable.children" :key="index" v-bind="item" :is="item.component">
 
         <!-- column/input -->
-        <component v-for="(item2, index2) in item.children" :key="index2" v-bind="item2" :is="item2.is"
-          v-model="formTable.model[item2.prop || '']">
+        <component v-for="(item2, index2) in item.children" :key="index2" v-bind="item2" :is="item2.component"
+          v-model="formTable.model[item2.prop || '']"  v-on="getEventHandlers(item2)">
 
           <!-- form-item/append -->
           <template v-for="item3 in item2.slots" :key="item3.slotName" v-slot:[item3.slotName]="slotProp">
-            <component :is='item3.is' v-bind="item3" v-on="getEventHandlers(item3, slotProp)" class="ceSlots"
-              :prop="renderProp(item3, slotProp)" :rules="renderRules(item3)">
+            <!-- /options -->
+            <template v-if="item3.options">
+              <component :is="item3.component" v-for="item4 in item3.options" :key="item4.value"
+                v-bind="{ ...item3, ...item4 }" v-on="getEventHandlers(item3, slotProp)" class="ceSlots"
+                :prop="renderProp(item3, slotProp)" :rules="renderRules(item3)">
+                {{ item4.label }}
+              </component>
+            </template>
+            <component :is='item3.component' v-else v-bind="item3" v-on="getEventHandlers(item3, slotProp)"
+              class="ceSlots" :prop="renderProp(item3, slotProp)" :rules="renderRules(item3)">
               <!-- input/ -->
               <template v-if="item3.slots">
                 <template v-for="item4 in item3.slots" :key="item4.slotName">
-                  <component :is='item4.is' v-bind="item4" v-model="slotProp.row[item3.prop]">
+                  <component :is='item4.component' v-bind="item4" v-model="slotProp.row[item3.prop]">
                   </component>
                 </template>
               </template>
@@ -38,7 +46,7 @@
 type form = Partial<CEFormItem> & { children?: any; };
 type table = Partial<CETable<any>> & { children?: any; };
 type formTables = {
-  is: string;
+  component: string;
   model: any;
   rules: FormRules,
   children: form[] | table[];
@@ -46,7 +54,7 @@ type formTables = {
 
 interface FormTable {
   submit: () => Promise<any>;
-  getEventHandlers: (row: CEFormItem, slotProp: { row: any, column: any, $index: number; }) => object;
+  getEventHandlers: (row: CEFormItem, slotProp?: { row: any, column: any, $index: number; }) => object;
   renderProp: (row: CEFormItem, slotProp: { row: any, column: any, $index: number; }) => string;
   renderRules: (row: CEFormItem) => Arrayable<FormItemRule> | undefined;
   formTable: formTables;
@@ -67,7 +75,7 @@ export default defineComponent({
     const initState = (): FormTable => {
       return {
         formTable: {
-          is: '',
+          component: '',
           model: "",
           rules: {},
           children: []
@@ -297,7 +305,7 @@ export default defineComponent({
           return handlers;
         },
         renderProp: (row, slotProp) => {
-          if (row.is === 'el-form-item') {
+          if (row.component === 'el-form-item') {
             return 'tableData.' + slotProp.$index + '.' + row.prop;
           }
           return row.prop;

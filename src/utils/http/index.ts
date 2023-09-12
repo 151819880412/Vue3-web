@@ -99,7 +99,7 @@ const transform: AxiosTransform = {
     if (joinPrefix) {
       config.url = `${urlPrefix}${config.url}`;
     }
-
+    console.log(apiUrl)
     if (apiUrl && isString(apiUrl)) {
       config.url = `${apiUrl}${config.url}`;
     }
@@ -252,7 +252,7 @@ const transform: AxiosTransform = {
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
 
-    if(response.data.code == 40001){
+    if(response&&response.data&&response.data.code == 40001){
       ElMessage.error('参数异常');
       throw new Error('参数异常');
     }

@@ -160,6 +160,7 @@ export default {
 
     let lastHideList: string[] = [];
 
+    // 暴露方法
     expose({
       validate,
       neoResetFields,

@@ -15,9 +15,8 @@ export interface CEColProps {
 }
 
 export interface CEFormItemProps extends FormItemProps {
-  is?: string;
-
   component: string;
+
   prop: string;
   name: string;
   rules: FormItemProps['rules'];
@@ -28,9 +27,8 @@ export interface CEFormItemProps extends FormItemProps {
 }
 
 export class CEFormItem implements CEFormItemProps {
-  is?: string = 'el-form-item';
+  component: string = 'el-form-item';
 
-  component = '';
   prop = '';
   name = '';
   rules = {};

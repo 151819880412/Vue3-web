@@ -25,7 +25,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css';
 // import './assets/iconfont/iconfont.css';
 // import './assets/icons/index.js';
 import SvgIcon from '@/components/Icon/SvgIcon.vue';
-import './assets/icons'; // icon
+import './assets/icons/index'; // icon
 
 
 import MainTable from '@/components/MainTable/MainTable.vue';

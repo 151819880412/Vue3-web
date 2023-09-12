@@ -97,7 +97,10 @@ export async function createPermissionGuard(router: Router) {
         router.addRoute(route as unknown as RouteRecordRaw);
       }
     });
+    console.log(routes,router.getRoutes())
+
     permissionStore.setDynamicAddedRoute(true);
+    console.log(to , PAGE_NOT_FOUND_ROUTE.name)
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
       // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容

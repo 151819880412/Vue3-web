@@ -37,7 +37,7 @@ export const createStorage = ({
     }
 
     clear(): void {
-    this.storage.clear();
+    // this.storage.clear();
     }
   };
 

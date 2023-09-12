@@ -16,7 +16,7 @@ export function setupRouterGuard(router: Router) {
   createScrollGuard(router);
   createMessageGuard(router);
   createProgressGuard(router);
-  createPermissionGuard(router);
+  createPermissionGuard(router); 
   createParamMenuGuard(router); // 必须在createPermissionGuard（菜单已生成）之后执行
   createStateGuard(router);
 }
