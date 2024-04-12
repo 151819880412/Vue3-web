@@ -1,5 +1,5 @@
 import * as Icons from "@element-plus/icons-vue";
-import { createVNode } from "vue";
+import { createVNode, h } from "vue";
 import SvgIcon from '@/components/Icon/SvgIcon.vue';
 
 // 导入本地 SVG 图标
@@ -33,13 +33,24 @@ function useElementPlusIcon(iconName: string) {
 
 // 统一的图标使用方法
 function useIcon(iconName: string, isLocalSvg = true) {
-  if(Icons[iconName]){
+  if (Icons[iconName]) {
     return useElementPlusIcon(iconName);
-  }else if (isLocalSvg) {
+  } else if (isLocalSvg) {
     return useLocalSvgIcon(iconName);
   } else {
-    return useElementPlusIcon(iconName);
+    console.log(3333);
+    return '';
   }
 }
 
-export { useIcon };
+function renderIcon(iconName: string, isLocalSvg = true) {
+  if (Icons[iconName]) {
+    return h(useIcon(iconName))
+  } else if (isLocalSvg) {
+    return h(useIcon(iconName,isLocalSvg))
+  } else {
+    return '';
+  }
+}
+
+export { useIcon, renderIcon };

@@ -1,7 +1,8 @@
 <template>
   <div class='user'>
-    <RForm />
-    <button @click="showButton">展示异步组件</button>
+    <RForm ref="RFormRef" :formData="formData" />
+    <el-button @click="aaa">数据</el-button>
+    <el-button @click="showButton">展示异步组件</el-button>
     <Suspense v-if="isShowButton">
       <template #default>
         <AsyncViews />
@@ -14,26 +15,33 @@
 </template>
 
 <script lang='ts'>
-import RForm from '@/components/ELForm/RForm.vue';
+import RForm from '@/components/RElForm/RForm';
 interface user {
   isShowButton: boolean;
   showButton: () => void;
+  formData: Record<string, unknown>;
 }
-import { reactive, toRefs, defineComponent, ToRefs, defineAsyncComponent } from 'vue';
+import { toRefs, defineComponent, ToRefs, defineAsyncComponent, reactive, ref } from 'vue';
 export default defineComponent({
   name: 'User',
   props: [],
   setup() {
+
+    const RFormRef = ref();
+
 
     const initState = (): user => {
       return {
         isShowButton: false,
         showButton: () => {
           model.isShowButton = true;
+        },
+        formData: {
+          aaa: 111,
+          bbb: 111,
         }
       };
     };
-
 
 
     const model: user = reactive(initState());
@@ -42,9 +50,16 @@ export default defineComponent({
       Object.assign(model, initState());
     };
 
+    const aaa = () => {
+      console.log(model, RFormRef.value.rElFormRef );
+    };
+
+
     return {
       ...data,
       resetState,
+      aaa,
+      RFormRef,
     };
   },
 
